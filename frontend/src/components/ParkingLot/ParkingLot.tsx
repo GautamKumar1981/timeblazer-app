@@ -98,7 +98,7 @@ const ParkingLot: React.FC<ParkingLotProps> = ({ onConvertToTimebox }) => {
             ) : (
               <ul className="divide-y divide-gray-100 dark:divide-gray-700">
                 {items.map((item) => (
-                  <li key={item.id} className="flex items-center gap-2 px-3 py-2.5 hover:bg-gray-50 dark:hover:bg-gray-750 group">
+                  <li key={item.id} className="flex items-center gap-2 px-3 py-2.5 hover:bg-gray-50 dark:hover:bg-gray-700 group">
                     <span className="flex-1 text-sm text-gray-700 dark:text-gray-300 break-words">
                       {item.text}
                     </span>
