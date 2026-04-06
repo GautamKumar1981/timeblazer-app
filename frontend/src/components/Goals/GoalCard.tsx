@@ -104,7 +104,7 @@ const GoalCard: React.FC<GoalCardProps> = ({ goal, onEdit, onDelete }) => {
           </div>
           {/* Milestone list */}
           <ul className="mt-2 space-y-1">
-            {goal.milestones!.slice(0, 3).map((milestone) => (
+            {goal.milestones?.slice(0, 3).map((milestone) => (
               <li key={milestone.id} className="flex items-center gap-2 text-xs">
                 <span
                   className={`w-4 h-4 rounded border flex items-center justify-center flex-shrink-0 ${
@@ -126,9 +126,9 @@ const GoalCard: React.FC<GoalCardProps> = ({ goal, onEdit, onDelete }) => {
                 </span>
               </li>
             ))}
-            {goal.milestones!.length > 3 && (
+            {goal.milestones && goal.milestones.length > 3 && (
               <li className="text-xs text-gray-400 pl-6">
-                +{goal.milestones!.length - 3} more
+                +{goal.milestones.length - 3} more
               </li>
             )}
           </ul>

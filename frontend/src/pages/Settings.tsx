@@ -5,7 +5,6 @@ import type { AppDispatch, RootState } from '../store/store';
 import { api } from '../services/api';
 import LoadingSpinner from '../components/Common/LoadingSpinner';
 import Modal from '../components/Common/Modal';
-import type { User } from '../types';
 import { setCredentials } from '../store/slices/authSlice';
 
 const TIMEZONES = [
@@ -30,7 +29,7 @@ const TIMEZONES = [
 
 const Settings: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const { user } = useSelector((state: RootState) => state.auth);
+  const { user, accessToken, refreshToken } = useSelector((state: RootState) => state.auth);
   const [isLoading, setIsLoading] = useState(false);
 
   // Profile state
@@ -78,8 +77,8 @@ const Settings: React.FC = () => {
       if (user) {
         dispatch(setCredentials({
           user: data,
-          accessToken: '',
-          refreshToken: '',
+          accessToken: accessToken ?? '',
+          refreshToken: refreshToken ?? '',
         }));
       }
       toast.success('Profile updated!');

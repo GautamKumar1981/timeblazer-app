@@ -15,7 +15,13 @@ export const storage = {
 
   getUser: () => {
     const u = localStorage.getItem(KEYS.USER);
-    return u ? JSON.parse(u) : null;
+    if (!u) return null;
+    try {
+      return JSON.parse(u);
+    } catch {
+      localStorage.removeItem(KEYS.USER);
+      return null;
+    }
   },
   setUser: (user: object): void => localStorage.setItem(KEYS.USER, JSON.stringify(user)),
   removeUser: (): void => localStorage.removeItem(KEYS.USER),
