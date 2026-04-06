@@ -88,7 +88,7 @@ def create_timebox():
     try:
         timebox = TimeboxService.create_timebox(user_id, data)
     except TimeboxServiceError as exc:
-        return jsonify({"error": str(exc)}), exc.status_code
+        return jsonify({"error": exc.message}), exc.status_code
 
     result = timebox.to_dict()
     emit_to_user(user_id, TIMEBOX_CREATED, result)
@@ -118,7 +118,7 @@ def get_timebox(timebox_id):
     try:
         timebox = TimeboxService.get_timebox(timebox_id, user_id)
     except TimeboxServiceError as exc:
-        return jsonify({"error": str(exc)}), exc.status_code
+        return jsonify({"error": exc.message}), exc.status_code
     return jsonify(timebox.to_dict()), 200
 
 
@@ -156,7 +156,7 @@ def update_timebox(timebox_id):
     try:
         timebox = TimeboxService.update_timebox(timebox_id, user_id, data)
     except TimeboxServiceError as exc:
-        return jsonify({"error": str(exc)}), exc.status_code
+        return jsonify({"error": exc.message}), exc.status_code
 
     result = timebox.to_dict()
     emit_to_user(user_id, TIMEBOX_UPDATED, result)
@@ -186,7 +186,7 @@ def delete_timebox(timebox_id):
     try:
         TimeboxService.delete_timebox(timebox_id, user_id)
     except TimeboxServiceError as exc:
-        return jsonify({"error": str(exc)}), exc.status_code
+        return jsonify({"error": exc.message}), exc.status_code
 
     emit_to_user(user_id, TIMEBOX_DELETED, {"timebox_id": timebox_id})
     return "", 204
@@ -222,7 +222,7 @@ def update_status(timebox_id):
     try:
         timebox = TimeboxService.update_status(timebox_id, user_id, data["status"])
     except TimeboxServiceError as exc:
-        return jsonify({"error": str(exc)}), exc.status_code
+        return jsonify({"error": exc.message}), exc.status_code
 
     result = timebox.to_dict()
     emit_to_user(user_id, TIMEBOX_UPDATED, result)
@@ -259,7 +259,7 @@ def complete_timebox(timebox_id):
             timebox_id, user_id, actual_duration=data.get("actual_duration")
         )
     except TimeboxServiceError as exc:
-        return jsonify({"error": str(exc)}), exc.status_code
+        return jsonify({"error": exc.message}), exc.status_code
 
     result = timebox.to_dict()
     emit_to_user(user_id, TIMEBOX_UPDATED, result)
@@ -300,7 +300,7 @@ def create_batch():
     try:
         timeboxes = TimeboxService.create_batch(user_id, validated)
     except TimeboxServiceError as exc:
-        return jsonify({"error": str(exc)}), exc.status_code
+        return jsonify({"error": exc.message}), exc.status_code
 
     results = [t.to_dict() for t in timeboxes]
     for result in results:

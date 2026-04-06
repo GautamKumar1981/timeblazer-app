@@ -1,6 +1,7 @@
 from flask import Blueprint, jsonify, request
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from marshmallow import ValidationError
+from datetime import datetime, timezone
 
 from app import db
 from app.models.user import User
@@ -65,7 +66,6 @@ def update_settings():
         if field in data:
             setattr(user, field, data[field])
 
-    from datetime import datetime, timezone
     user.updated_at = datetime.now(timezone.utc)
     db.session.commit()
     return jsonify(user.to_dict()), 200

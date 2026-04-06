@@ -49,7 +49,7 @@ def register():
             timezone=data.get("timezone", "UTC"),
         )
     except AuthServiceError as exc:
-        return jsonify({"error": str(exc)}), exc.status_code
+        return jsonify({"error": exc.message}), exc.status_code
 
     return jsonify(result), 201
 
@@ -85,7 +85,7 @@ def login():
     try:
         result = AuthService.login_user(email=data["email"], password=data["password"])
     except AuthServiceError as exc:
-        return jsonify({"error": str(exc)}), exc.status_code
+        return jsonify({"error": exc.message}), exc.status_code
 
     return jsonify(result), 200
 

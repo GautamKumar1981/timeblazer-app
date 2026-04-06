@@ -11,8 +11,8 @@ def jwt_required_custom(fn):
     def wrapper(*args, **kwargs):
         try:
             verify_jwt_in_request()
-        except Exception as exc:
-            return jsonify({"error": str(exc), "code": "unauthorized"}), 401
+        except Exception:
+            return jsonify({"error": "Authentication required", "code": "unauthorized"}), 401
         return fn(*args, **kwargs)
     return wrapper
 

@@ -1,6 +1,7 @@
 from datetime import date, timedelta
 from typing import Optional
 from collections import defaultdict
+from calendar import monthrange
 
 from sqlalchemy import func
 
@@ -109,7 +110,6 @@ class AnalyticsService:
 
     @staticmethod
     def get_monthly_stats(user_id: int, month: int, year: int) -> dict:
-        from calendar import monthrange
         _, last_day = monthrange(year, month)
         month_start = date(year, month, 1)
         month_end = date(year, month, last_day)

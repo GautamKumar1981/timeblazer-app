@@ -54,7 +54,7 @@ def create_goal():
     try:
         goal = GoalService.create_goal(user_id, data)
     except GoalServiceError as exc:
-        return jsonify({"error": str(exc)}), exc.status_code
+        return jsonify({"error": exc.message}), exc.status_code
 
     result = goal.to_dict()
     emit_to_user(user_id, GOAL_CREATED, result)
@@ -84,7 +84,7 @@ def get_goal(goal_id):
     try:
         goal = GoalService.get_goal(goal_id, user_id)
     except GoalServiceError as exc:
-        return jsonify({"error": str(exc)}), exc.status_code
+        return jsonify({"error": exc.message}), exc.status_code
     return jsonify(goal.to_dict()), 200
 
 
@@ -122,7 +122,7 @@ def update_goal(goal_id):
     try:
         goal = GoalService.update_goal(goal_id, user_id, data)
     except GoalServiceError as exc:
-        return jsonify({"error": str(exc)}), exc.status_code
+        return jsonify({"error": exc.message}), exc.status_code
 
     result = goal.to_dict()
     emit_to_user(user_id, GOAL_UPDATED, result)
@@ -152,5 +152,5 @@ def delete_goal(goal_id):
     try:
         GoalService.delete_goal(goal_id, user_id)
     except GoalServiceError as exc:
-        return jsonify({"error": str(exc)}), exc.status_code
+        return jsonify({"error": exc.message}), exc.status_code
     return "", 204

@@ -1,5 +1,6 @@
 import enum
 from datetime import date, datetime, timezone
+from typing import Optional
 
 from app import db
 
@@ -44,7 +45,7 @@ class Goal(db.Model):
     )
 
     @property
-    def days_remaining(self) -> int | None:
+    def days_remaining(self) -> Optional[int]:
         if self.target_date is None:
             return None
         today = date.today()
