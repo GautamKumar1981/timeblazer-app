@@ -229,6 +229,7 @@ class AnalyticsService:
 
         qualifying_days = set()
         for row in rows:
+            # func.date() returns str on SQLite, date on PostgreSQL — normalise both
             day = row.day if isinstance(row.day, date) else date.fromisoformat(str(row.day))
             rate = AnalyticsService.calculate_completion_rate(user_id, day)
             if rate >= 75.0:
