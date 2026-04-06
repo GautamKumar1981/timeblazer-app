@@ -1,0 +1,59 @@
+{
+  "expo": {
+    "name": "Timeblazer",
+    "slug": "timeblazer-app",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "automatic",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#1a1a2e"
+    },
+    "assetBundlePatterns": ["**/*"],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.timeblazer.app",
+      "infoPlist": {
+        "NSCalendarsUsageDescription": "Timeblazer uses your calendar to sync timeboxes.",
+        "NSRemindersUsageDescription": "Timeblazer uses reminders to notify you about upcoming timeboxes.",
+        "UIBackgroundModes": ["fetch", "remote-notification"]
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#1a1a2e"
+      },
+      "package": "com.timeblazer.app",
+      "permissions": [
+        "RECEIVE_BOOT_COMPLETED",
+        "VIBRATE",
+        "SCHEDULE_EXACT_ALARM",
+        "READ_CALENDAR",
+        "WRITE_CALENDAR"
+      ]
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/notification-icon.png",
+          "color": "#6c63ff",
+          "sounds": [],
+          "androidMode": "default",
+          "androidCollapsedTitle": "Timeblazer"
+        }
+      ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "timeblazer-app"
+      }
+    }
+  }
+}
