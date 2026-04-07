@@ -3,6 +3,10 @@ from datetime import datetime, timezone
 from app import db
 
 
+def _utcnow() -> datetime:
+    return datetime.now(timezone.utc)
+
+
 class WeeklyReview(db.Model):
     __tablename__ = 'weekly_reviews'
 
@@ -14,8 +18,8 @@ class WeeklyReview(db.Model):
     improvements = db.Column(db.JSON, nullable=True, default=list)
     insights = db.Column(db.Text, nullable=True)
     mood = db.Column(db.Integer, nullable=True)  # 1-5
-    created_at = db.Column(db.DateTime(timezone=True), nullable=False, default=lambda: datetime.now(timezone.utc))
-    updated_at = db.Column(db.DateTime(timezone=True), nullable=False, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
+    created_at = db.Column(db.DateTime(timezone=True), nullable=False, default=_utcnow)
+    updated_at = db.Column(db.DateTime(timezone=True), nullable=False, default=_utcnow, onupdate=_utcnow)
 
     __table_args__ = (db.UniqueConstraint('user_id', 'week_start_date', name='uq_weekly_review_user_week'),)
 

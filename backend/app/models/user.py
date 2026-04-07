@@ -3,6 +3,10 @@ from datetime import datetime, timezone
 from app import db
 
 
+def _utcnow() -> datetime:
+    return datetime.now(timezone.utc)
+
+
 class User(db.Model):
     __tablename__ = 'users'
 
@@ -13,8 +17,8 @@ class User(db.Model):
     timezone = db.Column(db.String(50), nullable=False, default='UTC')
     theme = db.Column(db.String(20), nullable=False, default='light')
     notifications_enabled = db.Column(db.Boolean, nullable=False, default=True)
-    created_at = db.Column(db.DateTime(timezone=True), nullable=False, default=lambda: datetime.now(timezone.utc))
-    updated_at = db.Column(db.DateTime(timezone=True), nullable=False, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
+    created_at = db.Column(db.DateTime(timezone=True), nullable=False, default=_utcnow)
+    updated_at = db.Column(db.DateTime(timezone=True), nullable=False, default=_utcnow, onupdate=_utcnow)
 
     timeboxes = db.relationship('Timebox', back_populates='user', cascade='all, delete-orphan', lazy='dynamic')
     goals = db.relationship('Goal', back_populates='user', cascade='all, delete-orphan', lazy='dynamic')

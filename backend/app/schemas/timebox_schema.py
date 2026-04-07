@@ -1,4 +1,4 @@
-from marshmallow import Schema, fields, validate, validates, ValidationError
+from marshmallow import Schema, fields, validate
 
 
 class TimeboxCreateSchema(Schema):
@@ -9,10 +9,6 @@ class TimeboxCreateSchema(Schema):
     category = fields.Str(allow_none=True, validate=validate.Length(max=100))
     color = fields.Str(load_default='#4A90E2', validate=validate.Length(max=20))
     notes = fields.Str(allow_none=True)
-
-    @validates('end_time')
-    def validate_end_time(self, value, **kwargs):
-        pass  # Cross-field validation handled in service
 
 
 class TimeboxUpdateSchema(Schema):

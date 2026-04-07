@@ -3,6 +3,10 @@ from datetime import datetime, timezone
 from app import db
 
 
+def _utcnow() -> datetime:
+    return datetime.now(timezone.utc)
+
+
 class Analytics(db.Model):
     __tablename__ = 'analytics'
 
@@ -15,7 +19,7 @@ class Analytics(db.Model):
     accuracy_percentage = db.Column(db.Float, nullable=False, default=0.0)
     total_planned_minutes = db.Column(db.Integer, nullable=False, default=0)
     total_actual_minutes = db.Column(db.Integer, nullable=False, default=0)
-    created_at = db.Column(db.DateTime(timezone=True), nullable=False, default=lambda: datetime.now(timezone.utc))
+    created_at = db.Column(db.DateTime(timezone=True), nullable=False, default=_utcnow)
 
     __table_args__ = (db.UniqueConstraint('user_id', 'date', name='uq_analytics_user_date'),)
 

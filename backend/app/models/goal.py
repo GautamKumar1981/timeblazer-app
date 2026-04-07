@@ -3,6 +3,10 @@ from datetime import datetime, timezone
 from app import db
 
 
+def _utcnow() -> datetime:
+    return datetime.now(timezone.utc)
+
+
 class Goal(db.Model):
     __tablename__ = 'goals'
 
@@ -18,8 +22,8 @@ class Goal(db.Model):
     status = db.Column(db.String(20), nullable=False, default='active')
     progress = db.Column(db.Integer, nullable=False, default=0)  # 0-100
     milestones = db.Column(db.JSON, nullable=True, default=list)
-    created_at = db.Column(db.DateTime(timezone=True), nullable=False, default=lambda: datetime.now(timezone.utc))
-    updated_at = db.Column(db.DateTime(timezone=True), nullable=False, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
+    created_at = db.Column(db.DateTime(timezone=True), nullable=False, default=_utcnow)
+    updated_at = db.Column(db.DateTime(timezone=True), nullable=False, default=_utcnow, onupdate=_utcnow)
 
     user = db.relationship('User', back_populates='goals')
 

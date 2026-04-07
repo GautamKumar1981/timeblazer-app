@@ -127,7 +127,13 @@ def update_status(timebox_id: str):
         return jsonify({'error': 'Validation failed', 'details': e.messages}), 422
 
     updated = timebox_service.update_timebox(timebox_id, data)
-    event = TIMEBOX_STARTED if data['status'] == 'active' else TIMEBOX_COMPLETED if data['status'] == 'completed' else TIMEBOX_UPDATED
+    status = data['status']
+    if status == 'active':
+        event = TIMEBOX_STARTED
+    elif status == 'completed':
+        event = TIMEBOX_COMPLETED
+    else:
+        event = TIMEBOX_UPDATED
     emit_timebox_update(user_id, event, updated.to_dict())
     return jsonify({'timebox': updated.to_dict()}), 200
 

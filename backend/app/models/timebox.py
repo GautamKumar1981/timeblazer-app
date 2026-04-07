@@ -3,6 +3,10 @@ from datetime import datetime, timezone
 from app import db
 
 
+def _utcnow() -> datetime:
+    return datetime.now(timezone.utc)
+
+
 class Timebox(db.Model):
     __tablename__ = 'timeboxes'
 
@@ -21,8 +25,8 @@ class Timebox(db.Model):
     actual_end = db.Column(db.DateTime(timezone=True), nullable=True)
     actual_duration = db.Column(db.Integer, nullable=True)  # minutes
     notes = db.Column(db.Text, nullable=True)
-    created_at = db.Column(db.DateTime(timezone=True), nullable=False, default=lambda: datetime.now(timezone.utc))
-    updated_at = db.Column(db.DateTime(timezone=True), nullable=False, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
+    created_at = db.Column(db.DateTime(timezone=True), nullable=False, default=_utcnow)
+    updated_at = db.Column(db.DateTime(timezone=True), nullable=False, default=_utcnow, onupdate=_utcnow)
 
     user = db.relationship('User', back_populates='timeboxes')
 
