@@ -21,7 +21,7 @@ def analytics_productivity():
         return jsonify({'error': error}), 401
 
     days = request.args.get('days', 30, type=int) or 30
-    days = max(1, min(int(days), 365))
+    days = max(1, min(days, 365))
     result, status = AnalyticsService.get_productivity(user.id, days)
     return jsonify(result), status
 
@@ -33,6 +33,6 @@ def analytics_weekly():
         return jsonify({'error': error}), 401
 
     weeks = request.args.get('weeks', 8, type=int) or 8
-    weeks = max(1, min(int(weeks), 52))
+    weeks = max(1, min(weeks, 52))
     result, status = AnalyticsService.get_weekly(user.id, weeks)
     return jsonify(result), status

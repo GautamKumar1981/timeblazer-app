@@ -88,9 +88,18 @@ def update_review(review_id):
     if not data:
         return jsonify({'error': 'Request body required'}), 400
 
-    for field in ('accomplishments', 'challenges', 'goals_next_week', 'overall_rating'):
+    for field in ('accomplishments', 'challenges', 'goals_next_week'):
         if field in data:
             setattr(review, field, data[field])
+
+    if 'overall_rating' in data:
+        try:
+            rating = int(data['overall_rating'])
+        except (TypeError, ValueError):
+            return jsonify({'error': 'overall_rating must be an integer'}), 400
+        if not (1 <= rating <= 5):
+            return jsonify({'error': 'overall_rating must be between 1 and 5'}), 400
+        review.overall_rating = rating
 
     db.session.commit()
     return jsonify({'review': review.to_dict()}), 200

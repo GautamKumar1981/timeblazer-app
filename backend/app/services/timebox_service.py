@@ -91,7 +91,16 @@ class TimeboxService:
         if not timebox:
             return {'error': 'Timebox not found'}, 404
 
-        for field in ('title', 'description', 'category', 'color', 'completed', 'priority'):
+        if 'priority' in data:
+            try:
+                priority = int(data['priority'])
+            except (TypeError, ValueError):
+                return {'error': 'priority must be an integer'}, 400
+            if not (1 <= priority <= 5):
+                return {'error': 'priority must be between 1 and 5'}, 400
+            timebox.priority = priority
+
+        for field in ('title', 'description', 'category', 'color', 'completed'):
             if field in data:
                 setattr(timebox, field, data[field])
 
