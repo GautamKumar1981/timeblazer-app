@@ -1,15 +1,7 @@
 from flask import request, jsonify
 from app.api import api_bp
-from app.services.auth_service import AuthService
+from app.api.utils import get_current_user
 from app.services.timebox_service import TimeboxService
-
-
-def get_current_user():
-    auth_header = request.headers.get('Authorization')
-    if not auth_header or not auth_header.startswith('Bearer '):
-        return None, 'Token is missing'
-    token = auth_header.split(' ')[1]
-    return AuthService.get_current_user(token)
 
 
 @api_bp.route('/timeboxes', methods=['GET'])

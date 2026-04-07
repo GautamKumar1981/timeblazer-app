@@ -1,5 +1,6 @@
 from flask import request, jsonify
 from app.api import api_bp
+from app.api.utils import get_current_user
 from app.services.auth_service import AuthService
 
 
@@ -43,17 +44,7 @@ def logout():
 
 @api_bp.route('/auth/me', methods=['GET'])
 def me():
-    from app.services.auth_service import token_required
-    token = None
-    auth_header = request.headers.get('Authorization')
-    if auth_header and auth_header.startswith('Bearer '):
-        token = auth_header.split(' ')[1]
-
-    if not token:
-        return jsonify({'error': 'Token is missing'}), 401
-
-    user, error = AuthService.get_current_user(token)
+    user, error = get_current_user()
     if error:
         return jsonify({'error': error}), 401
-
     return jsonify({'user': user.to_dict()}), 200

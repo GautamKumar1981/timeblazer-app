@@ -56,7 +56,11 @@ class TimeboxService:
             return {'error': 'end_time must be after start_time'}, 400
 
         priority = data.get('priority', 3)
-        if not (1 <= int(priority) <= 5):
+        try:
+            priority = int(priority)
+        except (TypeError, ValueError):
+            return {'error': 'priority must be an integer between 1 and 5'}, 400
+        if not (1 <= priority <= 5):
             return {'error': 'priority must be between 1 and 5'}, 400
 
         timebox = Timebox(

@@ -31,7 +31,11 @@ class GoalService:
             return {'error': f'Invalid status. Must be one of: {", ".join(Goal.STATUSES)}'}, 400
 
         progress = data.get('progress', 0)
-        if not (0 <= int(progress) <= 100):
+        try:
+            progress = int(progress)
+        except (TypeError, ValueError):
+            return {'error': 'progress must be an integer between 0 and 100'}, 400
+        if not (0 <= progress <= 100):
             return {'error': 'progress must be between 0 and 100'}, 400
 
         target_date = None
@@ -70,8 +74,13 @@ class GoalService:
         if 'status' in data and data['status'] not in Goal.STATUSES:
             return {'error': f'Invalid status. Must be one of: {", ".join(Goal.STATUSES)}'}, 400
 
-        if 'progress' in data and not (0 <= int(data['progress']) <= 100):
-            return {'error': 'progress must be between 0 and 100'}, 400
+        if 'progress' in data:
+            try:
+                progress_val = int(data['progress'])
+            except (TypeError, ValueError):
+                return {'error': 'progress must be an integer between 0 and 100'}, 400
+            if not (0 <= progress_val <= 100):
+                return {'error': 'progress must be between 0 and 100'}, 400
 
         for field in ('title', 'description', 'status', 'progress', 'category'):
             if field in data:

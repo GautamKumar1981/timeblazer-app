@@ -1,17 +1,9 @@
 from flask import request, jsonify
 from app.api import api_bp
-from app.services.auth_service import AuthService
+from app.api.utils import get_current_user
 from app import db
 from app.models.review import Review
 from datetime import date
-
-
-def get_current_user():
-    auth_header = request.headers.get('Authorization')
-    if not auth_header or not auth_header.startswith('Bearer '):
-        return None, 'Token is missing'
-    token = auth_header.split(' ')[1]
-    return AuthService.get_current_user(token)
 
 
 @api_bp.route('/reviews', methods=['GET'])
@@ -46,8 +38,13 @@ def create_review():
         return jsonify({'error': 'Invalid date format, use YYYY-MM-DD'}), 400
 
     overall_rating = data.get('overall_rating')
-    if overall_rating is not None and not (1 <= int(overall_rating) <= 5):
-        return jsonify({'error': 'overall_rating must be between 1 and 5'}), 400
+    if overall_rating is not None:
+        try:
+            overall_rating = int(overall_rating)
+        except (TypeError, ValueError):
+            return jsonify({'error': 'overall_rating must be an integer between 1 and 5'}), 400
+        if not (1 <= overall_rating <= 5):
+            return jsonify({'error': 'overall_rating must be between 1 and 5'}), 400
 
     review = Review(
         user_id=user.id,
