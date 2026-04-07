@@ -1,0 +1,24 @@
+{
+  "expo": {
+    "name": "Timeblazer",
+    "slug": "timeblazer",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "automatic",
+    "splash": {
+      "resizeMode": "contain",
+      "backgroundColor": "#1A1A2E"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#1A1A2E"
+      },
+      "package": "com.timeblazer.app"
+    },
+    "ios": {
+      "bundleIdentifier": "com.timeblazer.app",
+      "supportsTablet": true
+    }
+  }
+}
