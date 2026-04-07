@@ -2,10 +2,11 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../store/store';
 import {
-  setWeeklyData, setMonthlyData, setPatterns, setStreaks
+  setWeeklyData, setMonthlyData, setPatterns, setStreaks,
+  DailyData, HourlyPatterns, Streaks
 } from '../store/slices/analyticsSlice';
 import { api } from '../services/api';
-import Chart from '../components/Analytics/Chart';
+import Chart, { ChartDataItem } from '../components/Analytics/Chart';
 import styles from './Analytics.module.css';
 
 function Analytics() {
@@ -23,10 +24,10 @@ function Analytics() {
           api.analytics.getPatterns(),
           api.analytics.getStreaks(),
         ]);
-        dispatch(setWeeklyData(weeklyRes.data.data || weeklyRes.data || []));
-        dispatch(setMonthlyData(monthlyRes.data.data || monthlyRes.data || []));
-        dispatch(setPatterns(patternsRes.data));
-        dispatch(setStreaks(streaksRes.data));
+        dispatch(setWeeklyData((weeklyRes.data.data || weeklyRes.data || []) as DailyData[]));
+        dispatch(setMonthlyData((monthlyRes.data.data || monthlyRes.data || []) as DailyData[]));
+        dispatch(setPatterns(patternsRes.data as HourlyPatterns));
+        dispatch(setStreaks(streaksRes.data as Streaks));
       } catch {}
     };
     fetchAll();
@@ -37,14 +38,14 @@ function Analytics() {
   const currentStreak = streaks?.current ?? 0;
   const bestStreak = streaks?.best ?? 0;
 
-  const patternData: Record<string, unknown>[] = patterns?.hourly
+  const patternData: ChartDataItem[] = patterns?.hourly
     ? Object.entries(patterns.hourly).map(([hour, count]) => ({
         hour: `${hour}:00`,
         completions: count,
       }))
     : [];
 
-  const categoryData: Record<string, unknown>[] = patterns?.by_category
+  const categoryData: ChartDataItem[] = patterns?.by_category
     ? Object.entries(patterns.by_category).map(([name, count]) => ({ name, value: count }))
     : [];
 

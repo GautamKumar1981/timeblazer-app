@@ -19,7 +19,7 @@ export function disconnect(): void {
   }
 }
 
-export function on(event: string, callback: (...args: any[]) => void): void {
+export function on(event: string, callback: (...args: unknown[]) => void): void {
   socket?.on(event, callback);
 }
 
@@ -27,7 +27,7 @@ export function off(event: string): void {
   socket?.off(event);
 }
 
-export function emit(event: string, data?: unknown): void {
+export function emit(event: string, data?: Record<string, unknown>): void {
   socket?.emit(event, data);
 }
 

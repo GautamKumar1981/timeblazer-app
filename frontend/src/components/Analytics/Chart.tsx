@@ -7,8 +7,12 @@ import styles from './Chart.module.css';
 
 const COLORS = ['#4A90E2', '#7B68EE', '#27AE60', '#F39C12', '#E74C3C', '#1ABC9C'];
 
+export type ChartDataItem = {
+  [key: string]: string | number;
+};
+
 interface ChartProps {
-  data: Record<string, unknown>[];
+  data: ChartDataItem[];
   type: 'bar' | 'line' | 'pie';
   title: string;
   dataKey: string;
