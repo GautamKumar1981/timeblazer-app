@@ -1,0 +1,132 @@
+.focusPage {
+  min-height: 100vh;
+  background: #0D0D1A;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+}
+
+.exitBtn {
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: var(--radius);
+  padding: 8px 16px;
+  font-size: 0.875rem;
+  transition: all 0.2s;
+}
+
+.exitBtn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+}
+
+.content {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  padding: 24px;
+}
+
+.category {
+  display: inline-block;
+  padding: 4px 16px;
+  border-radius: 20px;
+  color: white;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+}
+
+.taskTitle {
+  font-size: 2rem;
+  font-weight: 700;
+  color: white;
+  max-width: 600px;
+  line-height: 1.3;
+}
+
+.timerDisplay {
+  font-size: 5rem;
+  font-weight: 800;
+  color: white;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.05em;
+  text-shadow: 0 0 40px rgba(74, 144, 226, 0.5);
+}
+
+.controls {
+  display: flex;
+  gap: 16px;
+}
+
+.controlBtn {
+  padding: 14px 36px;
+  border-radius: 30px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: white;
+  transition: all 0.2s;
+}
+
+.controlBtn:hover {
+  transform: scale(1.05);
+}
+
+.startBtn {
+  background: var(--success);
+}
+
+.pauseBtn {
+  background: var(--warning);
+}
+
+.shortcuts {
+  display: flex;
+  gap: 24px;
+  color: rgba(255, 255, 255, 0.35);
+  font-size: 0.8rem;
+}
+
+.noTask {
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.noTaskIcon {
+  font-size: 3rem;
+}
+
+.noTask h2 {
+  font-size: 1.5rem;
+}
+
+.noTask p {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.backBtn {
+  background: var(--primary);
+  color: white;
+  padding: 10px 24px;
+  border-radius: var(--radius);
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-top: 8px;
+  transition: opacity 0.2s;
+}
+
+.backBtn:hover {
+  opacity: 0.85;
+}

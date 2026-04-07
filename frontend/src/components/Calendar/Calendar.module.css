@@ -1,0 +1,136 @@
+.calendar {
+  background: white;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.monthTitle {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.navBtn {
+  background: none;
+  font-size: 1.5rem;
+  color: var(--primary);
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+
+.navBtn:hover {
+  background: var(--bg-light);
+}
+
+.weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  background: var(--bg-light);
+}
+
+.weekday {
+  text-align: center;
+  padding: 10px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #666;
+  text-transform: uppercase;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  border-left: 1px solid var(--border-color);
+  border-top: 1px solid var(--border-color);
+}
+
+.cell {
+  min-height: 90px;
+  padding: 8px;
+  border-right: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.cell:hover {
+  background: #F0F7FF;
+}
+
+.emptyCell {
+  min-height: 90px;
+  border-right: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
+  background: #FAFAFA;
+}
+
+.selected {
+  background: #EBF3FF !important;
+}
+
+.today .dayNumber {
+  background: var(--primary);
+  color: white;
+  border-radius: 50%;
+  width: 26px;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.otherMonth {
+  opacity: 0.4;
+}
+
+.dayNumber {
+  font-size: 0.85rem;
+  font-weight: 500;
+  margin-bottom: 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+}
+
+.timeboxList {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.timeboxChip {
+  font-size: 0.7rem;
+  color: white;
+  padding: 2px 6px;
+  border-radius: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer;
+}
+
+.timeboxChip:hover {
+  opacity: 0.85;
+}
+
+.more {
+  font-size: 0.7rem;
+  color: var(--primary);
+  font-weight: 500;
+  padding: 2px 4px;
+}
