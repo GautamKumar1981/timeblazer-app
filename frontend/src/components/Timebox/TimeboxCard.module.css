@@ -1,0 +1,102 @@
+.card {
+  background: white;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 16px;
+  border-left: 4px solid var(--primary);
+  transition: box-shadow 0.2s;
+}
+
+.card:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+}
+
+.top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.time {
+  font-size: 0.8rem;
+  color: #666;
+  font-weight: 500;
+}
+
+.categoryBadge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 12px;
+  color: white;
+  font-size: 0.7rem;
+  font-weight: 600;
+}
+
+.statusBadge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 12px;
+  color: white;
+  font-size: 0.7rem;
+  font-weight: 600;
+}
+
+.title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-dark);
+  margin-bottom: 4px;
+}
+
+.description {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 12px;
+  line-height: 1.4;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.btn {
+  padding: 5px 12px;
+  border-radius: var(--radius);
+  font-size: 0.75rem;
+  font-weight: 500;
+  transition: opacity 0.2s;
+}
+
+.btn:hover {
+  opacity: 0.8;
+}
+
+.startBtn {
+  background: var(--success);
+  color: white;
+}
+
+.editBtn {
+  background: var(--primary);
+  color: white;
+}
+
+.doneBtn {
+  background: var(--success);
+  color: white;
+}
+
+.deleteBtn {
+  background: none;
+  color: var(--danger);
+  border: 1px solid var(--danger);
+}

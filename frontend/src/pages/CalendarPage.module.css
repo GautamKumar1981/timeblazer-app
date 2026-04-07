@@ -1,0 +1,110 @@
+.page {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+.title {
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 20px;
+}
+
+.calendarWrapper {
+  overflow: hidden;
+}
+
+.sidePanel {
+  background: white;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  height: fit-content;
+}
+
+.sidePanelHeader {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.sidePanelHeader h2 {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.count {
+  font-size: 0.8rem;
+  color: #888;
+}
+
+.empty {
+  padding: 32px;
+  text-align: center;
+  color: #888;
+}
+
+.list {
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 600px;
+  overflow-y: auto;
+}
+
+.timeRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.colorPicker {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding: 8px 0;
+}
+
+.colorSwatch {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  transition: transform 0.15s;
+  border: 3px solid transparent;
+}
+
+.colorSwatch:hover {
+  transform: scale(1.15);
+}
+
+.colorSelected {
+  border-color: #333;
+  transform: scale(1.15);
+}
+
+.modalActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+@media (max-width: 900px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,118 @@
+.card {
+  background: white;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition: box-shadow 0.2s;
+}
+
+.card:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.priority {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 12px;
+  color: white;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+
+.dDay {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+.overdue {
+  color: var(--danger);
+}
+
+.title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-dark);
+}
+
+.description {
+  font-size: 0.85rem;
+  color: #666;
+  line-height: 1.4;
+}
+
+.targetDate {
+  font-size: 0.8rem;
+  color: #888;
+}
+
+.progressSection {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.progressLabel {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8rem;
+  color: #666;
+}
+
+.progressBar {
+  height: 8px;
+  background: var(--border-color);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+.progressSlider {
+  width: 100%;
+  cursor: pointer;
+  accent-color: var(--primary);
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.btn {
+  padding: 6px 14px;
+  border-radius: var(--radius);
+  font-size: 0.8rem;
+  font-weight: 500;
+  transition: opacity 0.2s;
+}
+
+.btn:hover {
+  opacity: 0.8;
+}
+
+.editBtn {
+  background: var(--primary);
+  color: white;
+}
+
+.deleteBtn {
+  background: none;
+  border: 1px solid var(--danger);
+  color: var(--danger);
+}

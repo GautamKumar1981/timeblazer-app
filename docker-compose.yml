@@ -1,36 +1,73 @@
 version: '3.8'
 
 services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: timeblazer-postgres
+    environment:
+      POSTGRES_DB: timeblazer_db
+      POSTGRES_USER: timeblazer_user
+      POSTGRES_PASSWORD: timeblazer_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U timeblazer_user -d timeblazer_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - timeblazer-network
+
+  # Python Flask Backend
   backend:
-    image: my-backend-image:latest
     build:
       context: ./backend
       dockerfile: Dockerfile
-    volumes:
-      - ./backend:/app
+    container_name: timeblazer-backend
+    environment:
+      DATABASE_URL: postgresql://timeblazer_user:timeblazer_password@postgres:5432/timeblazer_db
+      SECRET_KEY: change-this-secret-key-in-production
+      JWT_SECRET_KEY: change-this-jwt-secret-in-production
+      FLASK_ENV: development
+      FLASK_APP: wsgi.py
+      CORS_ORIGINS: http://localhost:3000
     ports:
       - "5000:5000"
-    environment:
-      - DB_HOST=db
-        
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./backend:/app
+    networks:
+      - timeblazer-network
+    restart: unless-stopped
+
+  # React Frontend
   frontend:
-    image: my-frontend-image:latest
     build:
       context: ./frontend
       dockerfile: Dockerfile
-    volumes:
-      - ./frontend:/app
+    container_name: timeblazer-frontend
+    environment:
+      REACT_APP_API_URL: http://localhost:5000
+      REACT_APP_WS_URL: ws://localhost:5000
     ports:
       - "3000:3000"
-
-  db:
-    image: postgres:latest
+    depends_on:
+      - backend
     volumes:
-      - pg_data:/var/lib/postgresql/data
-    environment:
-      - POSTGRES_DB=mydb
-      - POSTGRES_USER=user
-      - POSTGRES_PASSWORD=password
+      - ./frontend:/app
+      - /app/node_modules
+    networks:
+      - timeblazer-network
+    restart: unless-stopped
 
 volumes:
-  pg_data:
+  postgres_data:
+
+networks:
+  timeblazer-network:
+    driver: bridge
