@@ -22,7 +22,7 @@ def create_app(config_name=None):
 
     db.init_app(app)
     CORS(app, origins=app.config.get('CORS_ORIGINS', '*'))
-    socketio.init_app(app, cors_allowed_origins=app.config.get('CORS_ORIGINS', '*'), async_mode='threading')
+    socketio.init_app(app, cors_allowed_origins=app.config.get('CORS_ORIGINS', '*'), async_mode='eventlet')
     limiter.init_app(app)
 
     from app.api import api_bp
