@@ -1,5 +1,6 @@
 import jwt
 import datetime
+from datetime import timezone
 from functools import wraps
 from flask import request, jsonify, current_app
 from app.extensions import db
@@ -56,7 +57,7 @@ def register():
     token = jwt.encode(
         {
             'user_id': user.id,
-            'exp': datetime.datetime.utcnow() + datetime.timedelta(days=7),
+            'exp': datetime.datetime.now(timezone.utc) + datetime.timedelta(days=7),
         },
         current_app.config['JWT_SECRET_KEY'],
         algorithm='HS256',
@@ -84,7 +85,7 @@ def login():
     token = jwt.encode(
         {
             'user_id': user.id,
-            'exp': datetime.datetime.utcnow() + datetime.timedelta(days=7),
+            'exp': datetime.datetime.now(timezone.utc) + datetime.timedelta(days=7),
         },
         current_app.config['JWT_SECRET_KEY'],
         algorithm='HS256',
