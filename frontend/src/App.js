@@ -120,10 +120,13 @@ function Dashboard({ user, onLogout }) {
   const [goalTitle, setGoalTitle] = useState('');
   const [goalDate, setGoalDate] = useState('');
   const [goalError, setGoalError] = useState('');
+  const [fetchError, setFetchError] = useState('');
 
   useEffect(() => {
-    getTimeboxes().then(r => setTimeboxes(r.data.timeboxes)).catch(() => {});
-    getGoals().then(r => setGoals(r.data.goals)).catch(() => {});
+    Promise.all([
+      getTimeboxes().then(r => setTimeboxes(r.data.timeboxes)),
+      getGoals().then(r => setGoals(r.data.goals))
+    ]).catch(() => setFetchError('Failed to load data. Please refresh.'));
   }, []);
 
   const handleCreateTimebox = async (e) => {
@@ -165,6 +168,7 @@ function Dashboard({ user, onLogout }) {
       </nav>
       <div style={styles.dashContainer}>
         <h2 style={{ marginTop: 24, fontSize: 22, color: '#1a1a2e' }}>Welcome back, {user.name}! 👋</h2>
+        {fetchError && <div style={{ ...styles.error, marginTop: 16 }}>{fetchError}</div>}
         <div style={styles.grid}>
           {/* Timeboxes */}
           <div>
