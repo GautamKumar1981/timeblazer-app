@@ -132,6 +132,10 @@ function Dashboard({ user, onLogout }) {
   const handleCreateTimebox = async (e) => {
     e.preventDefault();
     setTbError('');
+    if (new Date(tbEnd) <= new Date(tbStart)) {
+      setTbError('End time must be after start time');
+      return;
+    }
     try {
       const res = await createTimebox(tbTitle, new Date(tbStart).toISOString(), new Date(tbEnd).toISOString());
       setTimeboxes([res.data.timebox, ...timeboxes]);

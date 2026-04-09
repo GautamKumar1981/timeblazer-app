@@ -120,6 +120,9 @@ def register_routes(app):
         except (ValueError, AttributeError):
             return jsonify({'error': 'Invalid date format. Use ISO 8601.'}), 400
 
+        if end_dt <= start_dt:
+            return jsonify({'error': 'end_time must be after start_time'}), 400
+
         timebox = Timebox(
             user_id=current_user.id,
             title=title,
