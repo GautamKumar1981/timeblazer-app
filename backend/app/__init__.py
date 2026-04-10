@@ -28,6 +28,5 @@ def create_app(config_name=None):
         except Exception as e:
             # Log but don't crash - tables might already exist
             print(f"Database initialization note: {str(e)}")
-            pass
 
     return app

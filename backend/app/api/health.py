@@ -8,7 +8,7 @@ def health_check():
     try:
         db.session.execute(db.text('SELECT 1'))
         db_status = 'ok'
-    except Exception as e:
-        db_status = f'error: {str(e)}'
+    except Exception:
+        db_status = 'error'
 
     return jsonify({'status': 'ok', 'database': db_status}), 200
