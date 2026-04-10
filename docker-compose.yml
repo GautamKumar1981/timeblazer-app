@@ -2,35 +2,42 @@ version: '3.8'
 
 services:
   backend:
-    image: my-backend-image:latest
     build:
       context: ./backend
       dockerfile: Dockerfile
-    volumes:
-      - ./backend:/app
     ports:
       - "5000:5000"
     environment:
-      - DB_HOST=db
-        
+      - SQLALCHEMY_DATABASE_URI=postgresql://user:password@db:5432/timeblazer
+      - SECRET_KEY=change-me-in-production
+      - JWT_SECRET_KEY=change-jwt-secret-in-production
+    depends_on:
+      - db
+    restart: unless-stopped
+
   frontend:
-    image: my-frontend-image:latest
     build:
       context: ./frontend
       dockerfile: Dockerfile
-    volumes:
-      - ./frontend:/app
     ports:
       - "3000:3000"
+    environment:
+      - REACT_APP_API_URL=http://localhost:5000/api
+    depends_on:
+      - backend
+    restart: unless-stopped
 
   db:
-    image: postgres:latest
+    image: postgres:15-alpine
     volumes:
       - pg_data:/var/lib/postgresql/data
     environment:
-      - POSTGRES_DB=mydb
+      - POSTGRES_DB=timeblazer
       - POSTGRES_USER=user
       - POSTGRES_PASSWORD=password
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
 
 volumes:
   pg_data:
