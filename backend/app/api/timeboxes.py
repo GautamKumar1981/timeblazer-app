@@ -66,8 +66,8 @@ def create_timebox():
     try:
         start_time = _parse_datetime(start_time_str)
         end_time = _parse_datetime(end_time_str)
-    except ValueError as e:
-        return jsonify({'error': str(e)}), 400
+    except ValueError:
+        return jsonify({'error': 'Invalid datetime format'}), 400
 
     timebox = Timebox(
         title=title,
@@ -119,13 +119,13 @@ def update_timebox(id):
     if 'start_time' in data:
         try:
             timebox.start_time = _parse_datetime(data['start_time'])
-        except ValueError as e:
-            return jsonify({'error': str(e)}), 400
+        except ValueError:
+            return jsonify({'error': 'Invalid datetime format'}), 400
     if 'end_time' in data:
         try:
             timebox.end_time = _parse_datetime(data['end_time'])
-        except ValueError as e:
-            return jsonify({'error': str(e)}), 400
+        except ValueError:
+            return jsonify({'error': 'Invalid datetime format'}), 400
 
     timebox.updated_at = datetime.utcnow()
     db.session.commit()

@@ -48,8 +48,8 @@ def create_goal():
     if data.get('target_date'):
         try:
             target_date = _parse_datetime(data['target_date'])
-        except ValueError as e:
-            return jsonify({'error': str(e)}), 400
+        except ValueError:
+            return jsonify({'error': 'Invalid datetime format'}), 400
 
     goal = Goal(
         title=title,
@@ -97,8 +97,8 @@ def update_goal(id):
     if 'target_date' in data:
         try:
             goal.target_date = _parse_datetime(data['target_date'])
-        except ValueError as e:
-            return jsonify({'error': str(e)}), 400
+        except ValueError:
+            return jsonify({'error': 'Invalid datetime format'}), 400
 
     goal.updated_at = datetime.utcnow()
     db.session.commit()
