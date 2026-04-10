@@ -1,4 +1,4 @@
-from flask import Flask
+﻿from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from flask_socketio import SocketIO
@@ -29,6 +29,10 @@ def create_app(config_name=None):
     app.register_blueprint(api_bp, url_prefix='/api')
 
     with app.app_context():
-        db.create_all()
+        try:
+            db.create_all()
+        except Exception as e:
+            print(f"Warning: Database initialization: {e}")
+            pass
 
     return app
