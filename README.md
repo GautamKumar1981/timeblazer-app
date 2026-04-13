@@ -1,2 +1,2 @@
-# timeblazer-app
-Complete Timeblazer Timeboxing App - Web, Mobile &amp; Backend
+# timecheck-app
+Complete Timecheck Timeboxing App - Web, Mobile &amp; Backend
