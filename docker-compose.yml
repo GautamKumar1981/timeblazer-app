@@ -1,36 +1,54 @@
-version: '3.8'
-
 services:
+  db:
+    image: postgres:15-alpine
+    container_name: timeblazer-postgres
+    environment:
+      POSTGRES_DB: timeblazer_db
+      POSTGRES_USER: timeblazer_user
+      POSTGRES_PASSWORD: timeblazer_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U timeblazer_user"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   backend:
-    image: my-backend-image:latest
     build:
       context: ./backend
       dockerfile: Dockerfile
-    volumes:
-      - ./backend:/app
+    container_name: timeblazer-backend
+    environment:
+      DATABASE_URL: postgresql://timeblazer_user:timeblazer_password@db:5432/timeblazer_db
+      FLASK_ENV: development
+      JWT_SECRET_KEY: your-secret-key-change-in-production
     ports:
       - "5000:5000"
-    environment:
-      - DB_HOST=db
-        
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./backend:/app
+
   frontend:
-    image: my-frontend-image:latest
     build:
       context: ./frontend
       dockerfile: Dockerfile
-    volumes:
-      - ./frontend:/app
+    container_name: timeblazer-frontend
+    environment:
+      REACT_APP_API_URL: http://localhost:5000
+      BROWSER: none
+      CI: true
     ports:
       - "3000:3000"
-
-  db:
-    image: postgres:latest
+    depends_on:
+      - backend
     volumes:
-      - pg_data:/var/lib/postgresql/data
-    environment:
-      - POSTGRES_DB=mydb
-      - POSTGRES_USER=user
-      - POSTGRES_PASSWORD=password
+      - ./frontend:/app
+      - /app/node_modules
 
 volumes:
-  pg_data:
+  postgres_data:
