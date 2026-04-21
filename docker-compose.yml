@@ -2,35 +2,53 @@ version: '3.8'
 
 services:
   backend:
-    image: my-backend-image:latest
     build:
       context: ./backend
       dockerfile: Dockerfile
-    volumes:
-      - ./backend:/app
+    container_name: timeblazer-backend
     ports:
       - "5000:5000"
     environment:
-      - DB_HOST=db
-        
+      - FLASK_ENV=production
+      - DATABASE_URL=postgresql://timeblazer:timeblazer@db:5432/timeblazer
+      - SECRET_KEY=${SECRET_KEY:-change-me-in-production}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY:-change-jwt-key-in-production}
+      - CORS_ORIGINS=${CORS_ORIGINS:-*}
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+
   frontend:
-    image: my-frontend-image:latest
     build:
       context: ./frontend
       dockerfile: Dockerfile
-    volumes:
-      - ./frontend:/app
+    container_name: timeblazer-frontend
     ports:
       - "3000:3000"
+    environment:
+      - REACT_APP_API_URL=http://localhost:5000
+    depends_on:
+      - backend
+    restart: unless-stopped
 
   db:
-    image: postgres:latest
+    image: postgres:15-alpine
+    container_name: timeblazer-postgres
     volumes:
       - pg_data:/var/lib/postgresql/data
     environment:
-      - POSTGRES_DB=mydb
-      - POSTGRES_USER=user
-      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=timeblazer
+      - POSTGRES_USER=timeblazer
+      - POSTGRES_PASSWORD=timeblazer
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U timeblazer -d timeblazer"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
 
 volumes:
   pg_data:
