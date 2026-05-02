@@ -1,4 +1,5 @@
-﻿from flask import Flask, jsonify
+import os
+from flask import Flask, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from flask_socketio import SocketIO
@@ -11,11 +12,16 @@ db = SQLAlchemy()
 socketio = SocketIO()
 limiter = Limiter(key_func=get_remote_address)
 
+_db_initialized = False
+
 
 def create_app(config_name=None):
-    import os
     if config_name is None:
-        config_name = os.environ.get('FLASK_ENV', 'development')
+        # If DATABASE_URL is present we're on a real server — use production config.
+        if os.environ.get('DATABASE_URL'):
+            config_name = 'production'
+        else:
+            config_name = os.environ.get('FLASK_ENV', 'development')
 
     app = Flask(__name__)
     app.config.from_object(config.get(config_name, config['development']))
@@ -28,14 +34,21 @@ def create_app(config_name=None):
     from app.api import api_bp
     app.register_blueprint(api_bp, url_prefix='/api')
 
+    # Health check — must respond instantly with no DB dependency.
     @app.route('/health')
     def health():
         return jsonify({'status': 'ok'}), 200
 
-    with app.app_context():
-        try:
-            db.create_all()
-        except Exception as e:
-            print(f"Database initialization note: {e}")
+    # Lazy DB init: runs on the first real request, not at startup.
+    # This lets gunicorn bind to PORT immediately so the health check passes.
+    @app.before_request
+    def init_db_once():
+        global _db_initialized
+        if not _db_initialized:
+            try:
+                db.create_all()
+                _db_initialized = True
+            except Exception as e:
+                print(f"DB init warning: {e}")
 
     return app
