@@ -14,8 +14,11 @@ def register():
     username = data.get('username', '').strip()
     password = data.get('password', '')
 
-    if not email or not username or not password:
-        return jsonify({'error': 'email, username and password are required'}), 400
+    if not email or not password:
+        return jsonify({'error': 'email and password are required'}), 400
+
+    if not username:
+        username = email.split('@')[0]
 
     result, status = AuthService.register(email, username, password)
     return jsonify(result), status

@@ -1,4 +1,4 @@
-﻿from flask import Flask
+﻿from flask import Flask, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from flask_socketio import SocketIO
@@ -28,11 +28,14 @@ def create_app(config_name=None):
     from app.api import api_bp
     app.register_blueprint(api_bp, url_prefix='/api')
 
+    @app.route('/health')
+    def health():
+        return jsonify({'status': 'ok'}), 200
+
     with app.app_context():
         try:
             db.create_all()
         except Exception as e:
-            print(f"Warning: Database initialization: {e}")
-            pass
+            print(f"Database initialization note: {e}")
 
     return app

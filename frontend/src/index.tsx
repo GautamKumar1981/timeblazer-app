@@ -5,16 +5,31 @@ import { BrowserRouter } from 'react-router-dom';
 import { store } from './store/store';
 import App from './App';
 
-const root = ReactDOM.createRoot(
-  document.getElementById('root') as HTMLElement
-);
+const renderApp = () => {
+  const root = ReactDOM.createRoot(
+    document.getElementById('root') as HTMLElement
+  );
+  root.render(
+    <React.StrictMode>
+      <Provider store={store}>
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </Provider>
+    </React.StrictMode>
+  );
+};
 
-root.render(
-  <React.StrictMode>
-    <Provider store={store}>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
-    </Provider>
-  </React.StrictMode>
-);
+// On native (Capacitor) wait for the device to be ready before rendering,
+// then hide the splash screen. On web, render immediately.
+if (typeof window !== 'undefined' && (window as any).Capacitor?.isNativePlatform?.()) {
+  document.addEventListener('deviceready', async () => {
+    renderApp();
+    try {
+      const { SplashScreen } = await import('@capacitor/splash-screen');
+      await SplashScreen.hide({ fadeOutDuration: 300 });
+    } catch {}
+  }, false);
+} else {
+  renderApp();
+}

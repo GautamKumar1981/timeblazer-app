@@ -31,8 +31,11 @@ class TestingConfig(BaseConfig):
 
 class ProductionConfig(BaseConfig):
     DEBUG = False
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL')
+    _db_url = os.environ.get('DATABASE_URL', '')
+    # Railway supplies postgres:// but SQLAlchemy requires postgresql://
+    SQLALCHEMY_DATABASE_URI = _db_url.replace('postgres://', 'postgresql://', 1) if _db_url else None
     RATELIMIT_ENABLED = True
+    CORS_ORIGINS = os.environ.get('CORS_ORIGINS', '*').split(',')
 
 
 config = {

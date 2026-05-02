@@ -1,55 +1,48 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
-import { useAppSelector } from './store/store';
-import Login from './pages/Login';
-import Dashboard from './pages/Dashboard';
-import Calendar from './pages/Calendar';
-import Goals from './pages/Goals';
-import Analytics from './pages/Analytics';
-import Settings from './pages/Settings';
-import WeeklyReview from './pages/WeeklyReview';
-import FocusMode from './pages/FocusMode';
+import { useAppSelector, useAppDispatch } from './store/store';
+import { fetchSubscriptionStatus } from './store/slices/subscriptionSlice';
+import { useAndroidBack } from './hooks/useAndroidBack';
+import Login            from './pages/Login';
+import Dashboard        from './pages/Dashboard';
+import BaziProfile      from './pages/BaziProfile';
+import BaziChart        from './pages/BaziChart';
+import DailyForecast    from './pages/DailyForecast';
+import CalendarView     from './pages/CalendarView';
+import BusinessTiming   from './pages/BusinessTiming';
+import LuckPillars      from './pages/LuckPillars';
+import StoriesPage      from './pages/StoriesPage';
+import ArtifactsShop    from './pages/ArtifactsShop';
+import SubscriptionPage from './pages/SubscriptionPage';
+import Settings         from './pages/Settings';
 
 const App: React.FC = () => {
+  const dispatch = useAppDispatch();
   const { token } = useAppSelector((state) => state.auth);
-  const isAuthenticated = Boolean(token);
+  const auth = Boolean(token);
+
+  useAndroidBack();
+
+  useEffect(() => {
+    if (auth) dispatch(fetchSubscriptionStatus());
+  }, [auth, dispatch]);
 
   return (
-    <div style={{ fontFamily: 'Segoe UI, Roboto, Arial, sans-serif', minHeight: '100vh', backgroundColor: '#f5f7fa' }}>
+    <div style={{ fontFamily: 'Segoe UI, Roboto, Arial, sans-serif', minHeight: '100vh', backgroundColor: '#0f0e1a' }}>
       <Routes>
-        <Route
-          path="/"
-          element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <Login />}
-        />
-        <Route
-          path="/dashboard"
-          element={isAuthenticated ? <Dashboard /> : <Navigate to="/" replace />}
-        />
-        <Route
-          path="/calendar"
-          element={isAuthenticated ? <Calendar /> : <Navigate to="/" replace />}
-        />
-        <Route
-          path="/goals"
-          element={isAuthenticated ? <Goals /> : <Navigate to="/" replace />}
-        />
-        <Route
-          path="/analytics"
-          element={isAuthenticated ? <Analytics /> : <Navigate to="/" replace />}
-        />
-        <Route
-          path="/settings"
-          element={isAuthenticated ? <Settings /> : <Navigate to="/" replace />}
-        />
-        <Route
-          path="/weekly-review"
-          element={isAuthenticated ? <WeeklyReview /> : <Navigate to="/" replace />}
-        />
-        <Route
-          path="/focus"
-          element={isAuthenticated ? <FocusMode /> : <Navigate to="/" replace />}
-        />
-        <Route path="*" element={<Navigate to="/" replace />} />
+        <Route path="/"                element={auth ? <Navigate to="/dashboard" replace /> : <Login />} />
+        <Route path="/dashboard"       element={auth ? <Dashboard />        : <Navigate to="/" replace />} />
+        <Route path="/profile"         element={auth ? <BaziProfile />      : <Navigate to="/" replace />} />
+        <Route path="/chart"           element={auth ? <BaziChart />        : <Navigate to="/" replace />} />
+        <Route path="/daily"           element={auth ? <DailyForecast />    : <Navigate to="/" replace />} />
+        <Route path="/calendar"        element={auth ? <CalendarView />     : <Navigate to="/" replace />} />
+        <Route path="/business-timing" element={auth ? <BusinessTiming />   : <Navigate to="/" replace />} />
+        <Route path="/luck-pillars"    element={auth ? <LuckPillars />      : <Navigate to="/" replace />} />
+        <Route path="/stories"         element={auth ? <StoriesPage />      : <Navigate to="/" replace />} />
+        <Route path="/artifacts"       element={auth ? <ArtifactsShop />   : <Navigate to="/" replace />} />
+        <Route path="/subscription"    element={auth ? <SubscriptionPage /> : <Navigate to="/" replace />} />
+        <Route path="/settings"        element={auth ? <Settings />         : <Navigate to="/" replace />} />
+        <Route path="*"                element={<Navigate to="/" replace />} />
       </Routes>
     </div>
   );

@@ -3,13 +3,54 @@
   <head>
     <meta charset="utf-8" />
     <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#000000" />
+
+    <!-- Mobile viewport — disables user scaling for app-like feel -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+
+    <!-- Status bar colour (Android Chrome / PWA) -->
+    <meta name="theme-color" content="#0f0e1a" />
+
+    <!-- iOS / Safari PWA settings -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="DragonHour" />
+
+    <!-- Android Chrome PWA -->
+    <meta name="mobile-web-app-capable" content="yes" />
+
+    <!-- Disable phone number auto-detection -->
+    <meta name="format-detection" content="telephone=no" />
+
     <meta
       name="description"
-      content="Timeblazer - Smart time management and productivity app"
+      content="DragonHour — Bazi timing system for auspicious hours, daily forecasts and personalised Chinese metaphysics"
     />
-    <title>Timeblazer - Time Management App</title>
+
+    <title>DragonHour — Bazi Timing System</title>
+
+    <style>
+      /* Safe-area insets for notch / Dynamic Island / home-indicator */
+      :root {
+        --sat: env(safe-area-inset-top);
+        --sar: env(safe-area-inset-right);
+        --sab: env(safe-area-inset-bottom);
+        --sal: env(safe-area-inset-left);
+      }
+
+      * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
+
+      body {
+        margin: 0;
+        padding: 0;
+        background-color: #0f0e1a;
+        overscroll-behavior: none;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      /* Prevent rubber-banding on iOS */
+      html, body { height: 100%; overflow: hidden; }
+      #root { height: 100%; overflow-y: auto; }
+    </style>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>

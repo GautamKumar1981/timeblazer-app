@@ -1,8 +1,14 @@
 {
-  "name": "timeblazer-frontend",
+  "name": "dragonhour-frontend",
   "version": "1.0.0",
   "private": true,
   "dependencies": {
+    "@capacitor/android": "^5.7.0",
+    "@capacitor/app": "^5.0.7",
+    "@capacitor/core": "^5.7.0",
+    "@capacitor/ios": "^5.7.0",
+    "@capacitor/splash-screen": "^5.0.7",
+    "@capacitor/status-bar": "^5.0.7",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-scripts": "5.0.1",
@@ -23,7 +29,12 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "mobile:build": "react-scripts build && npx cap sync",
+    "mobile:android": "react-scripts build && npx cap sync android && npx cap open android",
+    "mobile:ios": "react-scripts build && npx cap sync ios && npx cap open ios",
+    "cap:add:android": "npx cap add android",
+    "cap:add:ios": "npx cap add ios"
   },
   "eslintConfig": {
     "extends": ["react-app", "react-app/jest"]

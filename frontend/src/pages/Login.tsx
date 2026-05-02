@@ -3,37 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../store/store';
 import { loginUser, registerUser } from '../store/slices/authSlice';
 
-const inputStyle: React.CSSProperties = {
-  width: '100%',
-  padding: '10px 14px',
-  marginBottom: '14px',
-  border: '1px solid #d1d5db',
-  borderRadius: '6px',
-  fontSize: '15px',
-  outline: 'none',
-  boxSizing: 'border-box',
-};
-
-const btnPrimary: React.CSSProperties = {
-  width: '100%',
-  padding: '11px',
-  backgroundColor: '#4f46e5',
-  color: '#fff',
-  border: 'none',
-  borderRadius: '6px',
-  fontSize: '15px',
-  fontWeight: 600,
-  cursor: 'pointer',
-  marginBottom: '10px',
-};
-
 const Login: React.FC = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const { loading, error } = useAppSelector((state) => state.auth);
+  const { loading, error } = useAppSelector((s) => s.auth);
 
   const [isRegister, setIsRegister] = useState(false);
-  const [form, setForm] = useState({ email: '', password: '', name: '' });
+  const [form, setForm] = useState({ email: '', password: '' });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -42,7 +18,7 @@ const Login: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (isRegister) {
-      const result = await dispatch(registerUser({ email: form.email, password: form.password, name: form.name }));
+      const result = await dispatch(registerUser({ email: form.email, password: form.password }));
       if (registerUser.fulfilled.match(result)) navigate('/dashboard');
     } else {
       const result = await dispatch(loginUser({ email: form.email, password: form.password }));
@@ -51,65 +27,105 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#f5f7fa' }}>
-      <div style={{ backgroundColor: '#fff', padding: '40px', borderRadius: '12px', boxShadow: '0 4px 24px rgba(0,0,0,0.10)', width: '380px', maxWidth: '95vw' }}>
-        <div style={{ textAlign: 'center', marginBottom: '28px' }}>
-          <h1 style={{ fontSize: '28px', fontWeight: 700, color: '#4f46e5', margin: 0 }}>⏱ Timeblazer</h1>
-          <p style={{ color: '#6b7280', marginTop: '6px', fontSize: '14px' }}>
-            {isRegister ? 'Create your account' : 'Sign in to your account'}
-          </p>
+    <div style={{
+      minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center',
+      backgroundColor: '#0f0e1a',
+      background: 'radial-gradient(ellipse at 50% 0%, rgba(124,58,237,0.18) 0%, #0f0e1a 60%)',
+    }}>
+      <div style={{
+        backgroundColor: '#16152e', padding: '44px 40px', borderRadius: 16,
+        boxShadow: '0 8px 40px rgba(0,0,0,0.5)', width: 380, maxWidth: '95vw',
+        border: '1px solid rgba(139,92,246,0.25)',
+      }}>
+        {/* Brand */}
+        <div style={{ textAlign: 'center', marginBottom: 32 }}>
+          <div style={{ fontSize: 44, marginBottom: 10 }}>🐉</div>
+          <h1 style={{ fontSize: 22, fontWeight: 800, color: '#c4b5fd', margin: '0 0 4px', letterSpacing: 0.5 }}>
+            DragonHour
+          </h1>
+          <p style={{ color: '#6b7280', margin: 0, fontSize: 13 }}>Bazi Timing System</p>
+        </div>
+
+        {/* Mode label */}
+        <div style={{ fontSize: 14, fontWeight: 600, color: '#9ca3af', marginBottom: 20, textAlign: 'center' }}>
+          {isRegister ? 'Create your account' : 'Welcome back'}
         </div>
 
         <form onSubmit={handleSubmit}>
-          {isRegister && (
-            <input
-              style={inputStyle}
-              type="text"
-              name="name"
-              placeholder="Full name"
-              value={form.name}
-              onChange={handleChange}
-              required
-            />
-          )}
           <input
-            style={inputStyle}
+            style={{
+              width: '100%', padding: '11px 14px', marginBottom: 14,
+              backgroundColor: '#1a1830', border: '1px solid rgba(255,255,255,0.1)',
+              borderRadius: 8, fontSize: 14, color: '#e5e7eb', outline: 'none',
+              boxSizing: 'border-box',
+            }}
             type="email"
             name="email"
             placeholder="Email address"
             value={form.email}
             onChange={handleChange}
             required
+            autoComplete="email"
           />
           <input
-            style={inputStyle}
+            style={{
+              width: '100%', padding: '11px 14px', marginBottom: 6,
+              backgroundColor: '#1a1830', border: '1px solid rgba(255,255,255,0.1)',
+              borderRadius: 8, fontSize: 14, color: '#e5e7eb', outline: 'none',
+              boxSizing: 'border-box',
+            }}
             type="password"
             name="password"
             placeholder="Password"
             value={form.password}
             onChange={handleChange}
             required
+            autoComplete={isRegister ? 'new-password' : 'current-password'}
           />
 
           {error && (
-            <div style={{ color: '#dc2626', fontSize: '13px', marginBottom: '10px', backgroundColor: '#fef2f2', padding: '8px', borderRadius: '4px' }}>
+            <div style={{
+              color: '#fca5a5', fontSize: 12, marginBottom: 10, marginTop: 4,
+              backgroundColor: 'rgba(239,68,68,0.1)', padding: '8px 12px',
+              borderRadius: 6, border: '1px solid rgba(239,68,68,0.25)',
+            }}>
               {error}
             </div>
           )}
 
-          <button style={btnPrimary} type="submit" disabled={loading}>
-            {loading ? 'Please wait...' : isRegister ? 'Create Account' : 'Sign In'}
+          <button
+            type="submit"
+            disabled={loading}
+            style={{
+              width: '100%', marginTop: 14, padding: '12px 0',
+              backgroundColor: '#7c3aed', color: '#fff',
+              border: 'none', borderRadius: 9, cursor: 'pointer',
+              fontSize: 14, fontWeight: 700, letterSpacing: 0.3,
+              opacity: loading ? 0.7 : 1,
+            }}
+          >
+            {loading ? 'Please wait…' : isRegister ? '🐉 Create Account' : 'Sign In'}
           </button>
         </form>
 
-        <div style={{ textAlign: 'center', marginTop: '12px' }}>
+        <div style={{ textAlign: 'center', marginTop: 20 }}>
           <button
             onClick={() => setIsRegister(!isRegister)}
-            style={{ background: 'none', border: 'none', color: '#4f46e5', cursor: 'pointer', fontSize: '14px', textDecoration: 'underline' }}
+            style={{
+              background: 'none', border: 'none', color: '#8b5cf6',
+              cursor: 'pointer', fontSize: 13,
+            }}
           >
-            {isRegister ? 'Already have an account? Sign in' : "Don't have an account? Register"}
+            {isRegister ? 'Already have an account? Sign in' : "New here? Create an account"}
           </button>
         </div>
+
+        {isRegister && (
+          <p style={{ textAlign: 'center', fontSize: 11, color: '#4b5563', marginTop: 14, lineHeight: 1.5 }}>
+            Your Bazi profile is set up from the Dashboard after sign-in.<br />
+            No name required — just your email and password.
+          </p>
+        )}
       </div>
     </div>
   );
