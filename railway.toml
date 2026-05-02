@@ -2,7 +2,7 @@
 rootDirectory = "backend"
 
 [deploy]
-startCommand = "gunicorn --bind 0.0.0.0:$PORT --workers 2 --threads 2 --timeout 120 wsgi:app"
+startCommand = "gunicorn -c gunicorn.conf.py wsgi:app"
 healthcheckPath = "/health"
 healthcheckTimeout = 120
 restartPolicyType = "ON_FAILURE"
