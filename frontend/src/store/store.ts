@@ -4,6 +4,8 @@ import authReducer from './slices/authSlice';
 import timeboxReducer from './slices/timeboxSlice';
 import goalsReducer from './slices/goalsSlice';
 import analyticsReducer from './slices/analyticsSlice';
+import baziReducer from './slices/baziSlice';
+import subscriptionReducer from './slices/subscriptionSlice';
 
 export const store = configureStore({
   reducer: {
@@ -11,6 +13,8 @@ export const store = configureStore({
     timebox: timeboxReducer,
     goals: goalsReducer,
     analytics: analyticsReducer,
+    bazi: baziReducer,
+    subscription: subscriptionReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({ serializableCheck: false }),
