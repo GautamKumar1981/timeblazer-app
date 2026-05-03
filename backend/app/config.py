@@ -33,7 +33,10 @@ class ProductionConfig(BaseConfig):
     DEBUG = False
     _db_url = os.environ.get('DATABASE_URL', '')
     # Railway supplies postgres:// but SQLAlchemy requires postgresql://
-    SQLALCHEMY_DATABASE_URI = _db_url.replace('postgres://', 'postgresql://', 1) if _db_url else None
+    SQLALCHEMY_DATABASE_URI = (
+        _db_url.replace('postgres://', 'postgresql://', 1)
+        if _db_url else 'sqlite:///timeblazer.db'
+    )
     RATELIMIT_ENABLED = True
     CORS_ORIGINS = os.environ.get('CORS_ORIGINS', '*').split(',')
 
