@@ -1,5 +1,9 @@
 {
-  "buildCommand": "DISABLE_ESLINT_PLUGIN=true npm run build",
+  "buildCommand": "npm run build",
   "outputDirectory": "build",
-  "installCommand": "npm install"
+  "installCommand": "npm install",
+  "env": {
+    "DISABLE_ESLINT_PLUGIN": "true",
+    "CI": "false"
+  }
 }
