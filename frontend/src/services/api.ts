@@ -12,9 +12,7 @@ const api: AxiosInstance = axios.create({
 api.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
     const token = getToken();
-    if (token && config.headers) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
+    if (token && config.headers) config.headers.Authorization = `Bearer ${token}`;
     return config;
   },
   (error) => Promise.reject(error)
@@ -31,50 +29,76 @@ api.interceptors.response.use(
   }
 );
 
-// --- Auth ---
+// ── Auth ──────────────────────────────────────────────────────────────────────
 export const authAPI = {
-  login: (email: string, password: string) => api.post('/auth/login', { email, password }),
-  register: (name: string, email: string, password: string) => api.post('/auth/register', { name, email, password }),
-  me: () => api.get('/auth/me'),
+  login:         (email: string, password: string) => api.post('/auth/login', { email, password }),
+  register:      (name: string, email: string, password: string) => api.post('/auth/register', { username: name, email, password }),
+  me:            () => api.get('/auth/me'),
   updateProfile: (data: { name?: string; email?: string }) => api.put('/auth/profile', data),
 };
 
-// --- Timeboxes ---
-export const timeboxAPI = {
-  getAll: (params?: { date?: string; startDate?: string; endDate?: string }) => api.get('/timeboxes', { params }),
-  getById: (id: string) => api.get(`/timeboxes/${id}`),
-  create: (data: object) => api.post('/timeboxes', data),
-  update: (id: string, data: object) => api.put(`/timeboxes/${id}`, data),
-  delete: (id: string) => api.delete(`/timeboxes/${id}`),
-  complete: (id: string) => api.patch(`/timeboxes/${id}/complete`),
+// ── Bazi ──────────────────────────────────────────────────────────────────────
+export const baziAPI = {
+  getProfile:     () => api.get('/bazi/profile'),
+  saveProfile:    (data: object) => api.post('/bazi/profile', data),
+  getChart:       () => api.get('/bazi/chart'),
+  getLuckPillars: () => api.get('/bazi/luck-pillars'),
+  getDaily:       (date?: string) => api.get('/bazi/daily', { params: date ? { date } : {} }),
+  getCalendar:    (year: number, month: number) => api.get('/bazi/calendar', { params: { year, month } }),
+  businessTiming: (activity: string, days_ahead?: number) =>
+    api.post('/bazi/business-timing', { activity, days_ahead: days_ahead ?? 30 }),
+  getActivities:  () => api.get('/bazi/activities'),
+  getToday:       () => api.get('/bazi/today'),
 };
 
-// --- Goals ---
+// ── Subscription ──────────────────────────────────────────────────────────────
+export const subscriptionAPI = {
+  getStatus:  () => api.get('/subscription/status'),
+  subscribe:  () => api.post('/subscription/subscribe'),
+};
+
+// ── Artifacts ─────────────────────────────────────────────────────────────────
+export const artifactsAPI = {
+  getAll:  (element?: string) => api.get('/artifacts', { params: element ? { element } : {} }),
+  getById: (id: number) => api.get(`/artifacts/${id}`),
+};
+
+// ── Stories ───────────────────────────────────────────────────────────────────
+export const storiesAPI = {
+  getAll:    () => api.get('/stories'),
+  getStem:   (index: number) => api.get(`/stories/stem/${index}`),
+  getBranch: (index: number) => api.get(`/stories/branch/${index}`),
+};
+
+// ── Legacy stubs (keep old slices compiling) ─────────────────────────────────
 export const goalsAPI = {
-  getAll: () => api.get('/goals'),
-  getById: (id: string) => api.get(`/goals/${id}`),
-  create: (data: object) => api.post('/goals', data),
-  update: (id: string, data: object) => api.put(`/goals/${id}`, data),
-  delete: (id: string) => api.delete(`/goals/${id}`),
+  getAll:   ()                         => api.get('/goals'),
+  getById:  (id: string)               => api.get(`/goals/${id}`),
+  create:   (data: object)             => api.post('/goals', data),
+  update:   (id: string, data: object) => api.put(`/goals/${id}`, data),
+  delete:   (id: string)               => api.delete(`/goals/${id}`),
 };
 
-// --- Priorities ---
 export const prioritiesAPI = {
-  getByDate: (date: string) => api.get('/priorities', { params: { date } }),
-  set: (date: string, priorities: string[]) => api.post('/priorities', { date, priorities }),
+  getByDate: (date: string)              => api.get('/priorities', { params: { date } }),
+  set:       (date: string, p: string[]) => api.post('/priorities', { date, priorities: p }),
 };
 
-// --- Analytics ---
-export const analyticsAPI = {
-  getSummary: (period: 'weekly' | 'monthly') => api.get('/analytics/summary', { params: { period } }),
-  getProductivity: (startDate: string, endDate: string) => api.get('/analytics/productivity', { params: { startDate, endDate } }),
+export const timeboxAPI = {
+  getAll:   (params?: object)            => api.get('/timeboxes', { params }),
+  create:   (data: object)               => api.post('/timeboxes', data),
+  update:   (id: string, data: object)   => api.put(`/timeboxes/${id}`, data),
+  delete:   (id: string)                 => api.delete(`/timeboxes/${id}`),
+  complete: (id: string)                 => api.patch(`/timeboxes/${id}/complete`),
 };
 
-// --- Weekly Reviews ---
 export const reviewsAPI = {
   getAll: () => api.get('/reviews'),
   create: (data: object) => api.post('/reviews', data),
-  getById: (id: string) => api.get(`/reviews/${id}`),
+};
+
+export const analyticsAPI = {
+  getSummary: (period: 'weekly' | 'monthly') => api.get('/analytics/summary', { params: { period } }),
 };
 
 export default api;
