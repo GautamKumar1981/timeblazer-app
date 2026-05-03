@@ -37,7 +37,10 @@
     "cap:add:ios": "npx cap add ios"
   },
   "eslintConfig": {
-    "extends": ["react-app", "react-app/jest"]
+    "extends": ["react-app", "react-app/jest"],
+    "rules": {
+      "import/named": "off"
+    }
   },
   "browserslist": {
     "production": [">0.2%", "not dead", "not op_mini all"],
