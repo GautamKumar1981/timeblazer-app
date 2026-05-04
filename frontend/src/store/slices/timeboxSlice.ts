@@ -96,7 +96,7 @@ const timeboxSlice = createSlice({
       .addCase(fetchTimeboxes.pending, (state) => { state.loading = true; state.error = null; })
       .addCase(fetchTimeboxes.fulfilled, (state, action: PayloadAction<Timebox[]>) => {
         state.loading = false;
-        state.timeboxes = action.payload;
+        state.timeboxes = Array.isArray(action.payload) ? action.payload : [];
       })
       .addCase(fetchTimeboxes.rejected, (state, action) => {
         state.loading = false;
