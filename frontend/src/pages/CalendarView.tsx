@@ -116,25 +116,25 @@ const CalendarView: React.FC = () => {
   );
 
   return (
-    <div style={{ display: 'flex', minHeight: '100vh', backgroundColor: '#0f0e1a' }}>
+    <div style={{ display: 'flex', minHeight: '100vh', backgroundColor: '#f8f6ff' }}>
       <Sidebar />
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
         <Header />
         <main style={{ flex: 1, padding: 32, overflowY: 'auto' }}>
-          <h2 style={{ margin: '0 0 4px', fontSize: 22, fontWeight: 700, color: '#e9d5ff' }}>📅 Tong Shu Power Planner</h2>
-          <p style={{ color: '#6b7280', fontSize: 13, margin: '0 0 20px' }}>
+          <h2 style={{ margin: '0 0 4px', fontSize: 22, fontWeight: 700, color: '#2e1065' }}>📅 Tong Shu Power Planner</h2>
+          <p style={{ color: '#9ca3af', fontSize: 13, margin: '0 0 20px' }}>
             Chinese almanac calendar — colour-coded by your Bazi element compatibility. Click any day for your personalised power guide.
           </p>
 
           {/* Subscription banner */}
           {sub && !hasPremium && (
-            <div style={{ backgroundColor: 'rgba(124,58,237,0.12)', borderRadius: 12, padding: '16px 20px', border: '1px solid rgba(124,58,237,0.4)', marginBottom: 20, display: 'flex', alignItems: 'center', gap: 16, flexWrap: 'wrap' }}>
+            <div style={{ backgroundColor: '#ede9fe', borderRadius: 12, padding: '16px 20px', border: '1px solid #c4b5fd', marginBottom: 20, display: 'flex', alignItems: 'center', gap: 16, flexWrap: 'wrap' }}>
               <div style={{ flex: 1 }}>
-                <div style={{ fontSize: 14, fontWeight: 700, color: '#c4b5fd', marginBottom: 4 }}>✨ Unlock Your Full Monthly Planner</div>
-                <div style={{ fontSize: 13, color: '#9ca3af' }}>Subscribe for £2.99/month to access the complete Tong Shu calendar, daily remedies, and strategic timing for every day.</div>
+                <div style={{ fontSize: 14, fontWeight: 700, color: '#4c1d95', marginBottom: 4 }}>✨ Unlock Your Full Monthly Planner</div>
+                <div style={{ fontSize: 13, color: '#6b7280' }}>Subscribe for £0.99/month to access the complete Tong Shu calendar, daily remedies, and strategic timing for every day.</div>
               </div>
-              <button onClick={() => navigate('/subscription')} style={{ padding: '10px 24px', backgroundColor: '#7c3aed', color: '#fff', border: 'none', borderRadius: 8, cursor: 'pointer', fontSize: 13, fontWeight: 700, whiteSpace: 'nowrap' }}>
-                Subscribe — £2.99/mo
+              <button onClick={() => navigate('/upgrade')} style={{ padding: '10px 24px', backgroundColor: '#7c3aed', color: '#fff', border: 'none', borderRadius: 8, cursor: 'pointer', fontSize: 13, fontWeight: 700, whiteSpace: 'nowrap' }}>
+                Subscribe — £0.99/mo
               </button>
             </div>
           )}
@@ -144,20 +144,20 @@ const CalendarView: React.FC = () => {
             {[['#22c55e','Auspicious'],['#f59e0b','Neutral'],['#ef4444','Challenging']].map(([c, l]) => (
               <div key={l} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                 <div style={{ width: 12, height: 12, borderRadius: 3, backgroundColor: c }} />
-                <span style={{ fontSize: 12, color: '#9ca3af' }}>{l}</span>
+                <span style={{ fontSize: 12, color: '#6b7280' }}>{l}</span>
               </div>
             ))}
-            {!hasPremium && <div style={{ fontSize: 11, color: '#6b7280', marginLeft: 'auto' }}>🔒 7-day preview — subscribe for full month</div>}
+            {!hasPremium && <div style={{ fontSize: 11, color: '#9ca3af', marginLeft: 'auto' }}>🔒 7-day preview — subscribe for full month</div>}
           </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: selected ? '1fr 380px' : '1fr', gap: 20, alignItems: 'start' }}>
 
             {/* ── Calendar grid ── */}
-            <div style={{ backgroundColor: '#16152e', borderRadius: 12, padding: 20, border: '1px solid rgba(139,92,246,0.2)' }}>
+            <div style={{ backgroundColor: '#fff', borderRadius: 12, padding: 20, border: '1px solid #e8e3f8', boxShadow: '0 2px 8px rgba(124,58,237,0.06)' }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
-                <button onClick={prevMonth} style={{ background: 'none', border: '1px solid rgba(255,255,255,0.1)', color: '#9ca3af', padding: '6px 12px', borderRadius: 6, cursor: 'pointer', fontSize: 16 }}>‹</button>
-                <span style={{ fontSize: 16, fontWeight: 700, color: '#e5e7eb' }}>{MONTHS[month - 1]} {year}</span>
-                <button onClick={nextMonth} style={{ background: 'none', border: '1px solid rgba(255,255,255,0.1)', color: '#9ca3af', padding: '6px 12px', borderRadius: 6, cursor: 'pointer', fontSize: 16 }}>›</button>
+                <button onClick={prevMonth} style={{ background: 'none', border: '1px solid #e8e3f8', color: '#6b7280', padding: '6px 12px', borderRadius: 6, cursor: 'pointer', fontSize: 16 }}>‹</button>
+                <span style={{ fontSize: 16, fontWeight: 700, color: '#2e1065' }}>{MONTHS[month - 1]} {year}</span>
+                <button onClick={nextMonth} style={{ background: 'none', border: '1px solid #e8e3f8', color: '#6b7280', padding: '6px 12px', borderRadius: 6, cursor: 'pointer', fontSize: 16 }}>›</button>
               </div>
 
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7,1fr)', gap: 4, marginBottom: 8 }}>
@@ -175,8 +175,8 @@ const CalendarView: React.FC = () => {
 
                   if (!visible) {
                     return (
-                      <div key={day.date} onClick={() => navigate('/subscription')} title="Subscribe to unlock" style={{ aspectRatio: '1', borderRadius: 8, cursor: 'pointer', backgroundColor: '#1a1830', border: '1px solid rgba(255,255,255,0.04)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 2, opacity: 0.35 }}>
-                        <span style={{ fontSize: 12, color: '#4b5563' }}>{d.getDate()}</span>
+                      <div key={day.date} onClick={() => navigate('/upgrade')} title="Subscribe to unlock" style={{ aspectRatio: '1', borderRadius: 8, cursor: 'pointer', backgroundColor: '#f5f3ff', border: '1px solid #e8e3f8', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 2, opacity: 0.5 }}>
+                        <span style={{ fontSize: 12, color: '#9ca3af' }}>{d.getDate()}</span>
                         <span style={{ fontSize: 9 }}>🔒</span>
                       </div>
                     );
@@ -185,27 +185,27 @@ const CalendarView: React.FC = () => {
                   return (
                     <div key={day.date} onClick={() => setSelected(isSel ? null : day)} style={{ aspectRatio: '1', borderRadius: 8, cursor: 'pointer', backgroundColor: isSel ? day.color + '40' : day.color + '18', border: `1px solid ${isSel ? day.color : day.color + '44'}`, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 2, position: 'relative', transition: 'all 0.15s' }}>
                       {isToday && <div style={{ position: 'absolute', top: 3, right: 3, width: 6, height: 6, borderRadius: '50%', backgroundColor: '#8b5cf6' }} />}
-                      <span style={{ fontSize: 12, fontWeight: isToday ? 800 : 500, color: '#e5e7eb' }}>{d.getDate()}</span>
+                      <span style={{ fontSize: 12, fontWeight: isToday ? 800 : 500, color: '#1f2937' }}>{d.getDate()}</span>
                       <span style={{ fontSize: 9, color: day.color }}>{day.pillar.name}</span>
                     </div>
                   );
                 })}
               </div>
 
-              {loading && <div style={{ textAlign: 'center', color: '#6b7280', fontSize: 12, marginTop: 12 }}>Loading…</div>}
+              {loading && <div style={{ textAlign: 'center', color: '#9ca3af', fontSize: 12, marginTop: 12 }}>Loading…</div>}
             </div>
 
             {/* ── Detail + Tong Shu panel ── */}
             {selected && (
-              <div style={{ backgroundColor: '#16152e', borderRadius: 12, border: '1px solid rgba(139,92,246,0.2)', position: 'sticky', top: 20, overflow: 'hidden' }}>
+              <div style={{ backgroundColor: '#fff', borderRadius: 12, border: '1px solid #e8e3f8', position: 'sticky', top: 20, overflow: 'hidden', boxShadow: '0 2px 8px rgba(124,58,237,0.06)' }}>
 
                 {/* Day header */}
-                <div style={{ padding: '20px 20px 16px', borderBottom: '1px solid rgba(139,92,246,0.15)' }}>
+                <div style={{ padding: '20px 20px 16px', borderBottom: '1px solid #e8e3f8' }}>
                   <div style={{ fontSize: 12, color: '#6b7280', marginBottom: 6 }}>
                     {new Date(selected.date + 'T00:00:00').toLocaleDateString('en-GB', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
                   </div>
-                  <div style={{ fontSize: 36, fontWeight: 900, color: '#e5e7eb', marginBottom: 2 }}>{selected.pillar.name}</div>
-                  <div style={{ fontSize: 12, color: '#9ca3af', marginBottom: 10 }}>
+                  <div style={{ fontSize: 36, fontWeight: 900, color: '#2e1065', marginBottom: 2 }}>{selected.pillar.name}</div>
+                  <div style={{ fontSize: 12, color: '#6b7280', marginBottom: 10 }}>
                     {selected.pillar.stem.pinyin} · {selected.pillar.branch.en} · {selected.pillar.stem.en}
                   </div>
                   <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: 10 }}>
@@ -214,26 +214,26 @@ const CalendarView: React.FC = () => {
                       <span key={e} style={{ padding: '4px 10px', borderRadius: 12, fontSize: 12, backgroundColor: ELEM_COLOR[e] + '28', color: ELEM_COLOR[e], border: `1px solid ${ELEM_COLOR[e]}55` }}>{e}</span>
                     ))}
                   </div>
-                  <div style={{ width: '100%', height: 5, backgroundColor: '#1f1f2e', borderRadius: 4, overflow: 'hidden' }}>
+                  <div style={{ width: '100%', height: 5, backgroundColor: '#f5f3ff', borderRadius: 4, overflow: 'hidden' }}>
                     <div style={{ width: `${selected.score}%`, height: '100%', backgroundColor: selected.color, borderRadius: 4 }} />
                   </div>
-                  <div style={{ fontSize: 11, color: '#4b5563', marginTop: 4 }}>Day Score: {Math.round(selected.score)}/100</div>
+                  <div style={{ fontSize: 11, color: '#6b7280', marginTop: 4 }}>Day Score: {Math.round(selected.score)}/100</div>
                 </div>
 
                 {/* Tong Shu Power Planner */}
                 <div style={{ padding: '16px 20px', maxHeight: 520, overflowY: 'auto' }}>
-                  <div style={{ fontSize: 12, fontWeight: 700, color: '#a78bfa', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 14 }}>
+                  <div style={{ fontSize: 12, fontWeight: 700, color: '#7c3aed', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 14 }}>
                     📖 Tong Shu Power Guide
                   </div>
 
                   {/* Day Officer */}
                   {officer && (
-                    <div style={{ backgroundColor: 'rgba(139,92,246,0.1)', borderRadius: 10, padding: '12px 14px', marginBottom: 12, border: '1px solid rgba(139,92,246,0.2)' }}>
+                    <div style={{ backgroundColor: '#ede9fe', borderRadius: 10, padding: '12px 14px', marginBottom: 12, border: '1px solid #c4b5fd' }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 6 }}>
-                        <span style={{ fontSize: 24, fontWeight: 900, color: '#c4b5fd' }}>{officer.zh}</span>
+                        <span style={{ fontSize: 24, fontWeight: 900, color: '#7c3aed' }}>{officer.zh}</span>
                         <div>
-                          <div style={{ fontSize: 14, fontWeight: 700, color: '#e9d5ff' }}>Day Officer: {officer.name}</div>
-                          <div style={{ fontSize: 12, color: '#9ca3af' }}>{officer.energy}</div>
+                          <div style={{ fontSize: 14, fontWeight: 700, color: '#2e1065' }}>Day Officer: {officer.name}</div>
+                          <div style={{ fontSize: 12, color: '#6b7280' }}>{officer.energy}</div>
                         </div>
                       </div>
                     </div>
@@ -242,43 +242,43 @@ const CalendarView: React.FC = () => {
                   {/* Good For */}
                   {officer && (
                     <div style={{ marginBottom: 12 }}>
-                      <div style={{ fontSize: 12, fontWeight: 600, color: '#4ade80', marginBottom: 6 }}>✅ Auspicious Activities</div>
-                      <div>{officer.good.map(a => chip(a, '#22c55e'))}</div>
+                      <div style={{ fontSize: 12, fontWeight: 600, color: '#16a34a', marginBottom: 6 }}>✅ Auspicious Activities</div>
+                      <div>{officer.good.map(a => chip(a, '#16a34a'))}</div>
                     </div>
                   )}
 
                   {/* Avoid */}
                   {officer && (
                     <div style={{ marginBottom: 12 }}>
-                      <div style={{ fontSize: 12, fontWeight: 600, color: '#f87171', marginBottom: 6 }}>⚠️ Best to Avoid</div>
-                      <div>{officer.avoid.map(a => chip(a, '#ef4444'))}</div>
+                      <div style={{ fontSize: 12, fontWeight: 600, color: '#dc2626', marginBottom: 6 }}>⚠️ Best to Avoid</div>
+                      <div>{officer.avoid.map(a => chip(a, '#dc2626'))}</div>
                     </div>
                   )}
 
                   {/* Element Wisdom */}
                   {stemElem && (
-                    <div style={{ backgroundColor: 'rgba(245,158,11,0.08)', borderRadius: 10, padding: '12px 14px', marginBottom: 12, border: '1px solid rgba(245,158,11,0.2)' }}>
-                      <div style={{ fontSize: 12, fontWeight: 700, color: '#fbbf24', marginBottom: 6 }}>⚡ Stem Energy: {stemElem.focus}</div>
-                      <div style={{ marginBottom: 8 }}>{stemElem.bestFor.map(a => chip(a, '#f59e0b'))}</div>
-                      <div style={{ fontSize: 12, color: '#9ca3af' }}>
-                        <span style={{ color: '#fcd34d' }}>Challenge:</span> {stemElem.challenge}
+                    <div style={{ backgroundColor: '#fffbeb', borderRadius: 10, padding: '12px 14px', marginBottom: 12, border: '1px solid #fde68a' }}>
+                      <div style={{ fontSize: 12, fontWeight: 700, color: '#b45309', marginBottom: 6 }}>⚡ Stem Energy: {stemElem.focus}</div>
+                      <div style={{ marginBottom: 8 }}>{stemElem.bestFor.map(a => chip(a, '#b45309'))}</div>
+                      <div style={{ fontSize: 12, color: '#6b7280' }}>
+                        <span style={{ color: '#b45309', fontWeight: 600 }}>Challenge:</span> {stemElem.challenge}
                       </div>
-                      <div style={{ fontSize: 12, color: '#9ca3af', marginTop: 4 }}>
-                        <span style={{ color: '#fcd34d' }}>Remedy:</span> {stemElem.remedy}
+                      <div style={{ fontSize: 12, color: '#6b7280', marginTop: 4 }}>
+                        <span style={{ color: '#b45309', fontWeight: 600 }}>Remedy:</span> {stemElem.remedy}
                       </div>
                     </div>
                   )}
 
                   {/* Lucky Hour */}
                   {branchHr && (
-                    <div style={{ backgroundColor: 'rgba(59,130,246,0.08)', borderRadius: 10, padding: '12px 14px', marginBottom: 14, border: '1px solid rgba(59,130,246,0.2)' }}>
-                      <div style={{ fontSize: 12, fontWeight: 700, color: '#93c5fd', marginBottom: 4 }}>🕐 Peak Energy Hour</div>
-                      <div style={{ fontSize: 16, fontWeight: 700, color: '#e5e7eb', marginBottom: 2 }}>{branchHr.hours}</div>
-                      <div style={{ fontSize: 12, color: '#9ca3af' }}>{branchHr.peak}</div>
+                    <div style={{ backgroundColor: '#eff6ff', borderRadius: 10, padding: '12px 14px', marginBottom: 14, border: '1px solid #bfdbfe' }}>
+                      <div style={{ fontSize: 12, fontWeight: 700, color: '#1d4ed8', marginBottom: 4 }}>🕐 Peak Energy Hour</div>
+                      <div style={{ fontSize: 16, fontWeight: 700, color: '#1f2937', marginBottom: 2 }}>{branchHr.hours}</div>
+                      <div style={{ fontSize: 12, color: '#6b7280' }}>{branchHr.peak}</div>
                     </div>
                   )}
 
-                  <button onClick={() => navigate(`/daily?date=${selected.date}`)} style={{ width: '100%', padding: '9px 0', backgroundColor: 'rgba(124,58,237,0.15)', color: '#c4b5fd', border: '1px solid rgba(124,58,237,0.3)', borderRadius: 8, cursor: 'pointer', fontSize: 12, fontWeight: 600 }}>
+                  <button onClick={() => navigate(`/daily?date=${selected.date}`)} style={{ width: '100%', padding: '9px 0', backgroundColor: '#ede9fe', color: '#7c3aed', border: '1px solid #c4b5fd', borderRadius: 8, cursor: 'pointer', fontSize: 12, fontWeight: 600 }}>
                     ⏰ View Hourly Forecast + Remedies →
                   </button>
                 </div>
@@ -287,7 +287,7 @@ const CalendarView: React.FC = () => {
 
             {/* Empty state when nothing selected */}
             {!selected && (
-              <div style={{ backgroundColor: '#16152e', borderRadius: 12, padding: 30, border: '1px solid rgba(139,92,246,0.2)', textAlign: 'center', color: '#4b5563' }}>
+              <div style={{ backgroundColor: '#f5f3ff', borderRadius: 12, padding: 30, border: '1px solid #e8e3f8', textAlign: 'center' }}>
                 <div style={{ fontSize: 32, marginBottom: 10 }}>📖</div>
                 <div style={{ fontSize: 13, color: '#6b7280' }}>Click a day to open your Tong Shu Power Guide</div>
               </div>

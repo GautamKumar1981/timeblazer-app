@@ -66,17 +66,17 @@ const LUCKY_ITEMS: Record<string, {
 };
 
 const card: React.CSSProperties = {
-  backgroundColor: '#16152e', borderRadius: 12, padding: '18px 20px',
-  border: '1px solid rgba(139,92,246,0.2)',
+  backgroundColor: '#fff', borderRadius: 14, padding: '18px 20px',
+  border: '1px solid #e8e3f8', boxShadow: '0 2px 8px rgba(124,58,237,0.06)',
 };
 
 const ComingSoon: React.FC<{ name: string; benefit: string }> = ({ name, benefit }) => (
-  <div style={{ backgroundColor: '#1a1830', borderRadius: 8, padding: '12px 14px', border: '1px solid rgba(255,255,255,0.06)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 10 }}>
+  <div style={{ backgroundColor: '#f5f3ff', borderRadius: 8, padding: '12px 14px', border: '1px solid #e8e3f8', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 10 }}>
     <div>
-      <div style={{ fontSize: 13, fontWeight: 600, color: '#e5e7eb' }}>{name}</div>
-      <div style={{ fontSize: 12, color: '#9ca3af' }}>{benefit}</div>
+      <div style={{ fontSize: 13, fontWeight: 600, color: '#2e1065' }}>{name}</div>
+      <div style={{ fontSize: 12, color: '#6b7280' }}>{benefit}</div>
     </div>
-    <span style={{ fontSize: 11, padding: '3px 8px', borderRadius: 6, backgroundColor: 'rgba(139,92,246,0.15)', color: '#a78bfa', border: '1px solid rgba(139,92,246,0.3)', whiteSpace: 'nowrap', cursor: 'default' }}>
+    <span style={{ fontSize: 11, padding: '3px 8px', borderRadius: 6, backgroundColor: '#ede9fe', color: '#6d28d9', border: '1px solid #c4b5fd', whiteSpace: 'nowrap', cursor: 'default' }}>
       🔗 Coming Soon
     </span>
   </div>
@@ -97,13 +97,13 @@ const Remedies: React.FC = () => {
   const elemColor = ELEM_COLOR[primaryElem] ?? '#8b5cf6';
 
   return (
-    <div style={{ display: 'flex', minHeight: '100vh', backgroundColor: '#0f0e1a' }}>
+    <div style={{ display: 'flex', minHeight: '100vh', backgroundColor: '#f8f6ff' }}>
       <Sidebar />
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
         <Header />
-        <main style={{ flex: 1, padding: 32, overflowY: 'auto' }}>
-          <h2 style={{ margin: '0 0 4px', fontSize: 22, fontWeight: 700, color: '#e9d5ff' }}>💎 Remedies & Lucky Charms</h2>
-          <p style={{ color: '#6b7280', fontSize: 13, margin: '0 0 24px' }}>
+        <main style={{ flex: 1, padding: '28px 32px', overflowY: 'auto' }}>
+          <h2 style={{ margin: '0 0 4px', fontSize: 22, fontWeight: 800, color: '#2e1065' }}>💎 Remedies & Lucky Charms</h2>
+          <p style={{ color: '#9ca3af', fontSize: 13, margin: '0 0 24px' }}>
             Personalised remedies based on your Bazi chart — aligned to today's energy, the current month, and the year.
           </p>
 
@@ -119,31 +119,31 @@ const Remedies: React.FC = () => {
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20, marginBottom: 24 }}>
             {/* Daily Remedies */}
             <div style={card}>
-              <div style={{ fontSize: 14, fontWeight: 700, color: '#c4b5fd', marginBottom: 14 }}>🌅 Today's Remedies ({dayElem} Day)</div>
+              <div style={{ fontSize: 14, fontWeight: 700, color: '#4c1d95', marginBottom: 14 }}>🌅 Today's Remedies ({dayElem} Day)</div>
               {[
-                { time: 'Morning', text: daily.morning, color: '#f59e0b' },
-                { time: 'Afternoon', text: daily.afternoon, color: '#ef4444' },
-                { time: 'Evening', text: daily.evening, color: '#3b82f6' },
+                { time: 'Morning', text: daily.morning, color: '#d97706' },
+                { time: 'Afternoon', text: daily.afternoon, color: '#dc2626' },
+                { time: 'Evening', text: daily.evening, color: '#2563eb' },
               ].map(r => (
                 <div key={r.time} style={{ marginBottom: 12 }}>
-                  <div style={{ fontSize: 11, fontWeight: 600, color: r.color, marginBottom: 4 }}>{r.time}</div>
-                  <div style={{ fontSize: 13, color: '#d1d5db', lineHeight: 1.6 }}>{r.text}</div>
+                  <div style={{ fontSize: 11, fontWeight: 700, color: r.color, marginBottom: 4 }}>{r.time}</div>
+                  <div style={{ fontSize: 13, color: '#374151', lineHeight: 1.6 }}>{r.text}</div>
                 </div>
               ))}
-              <div style={{ marginTop: 10, padding: '10px 12px', backgroundColor: 'rgba(239,68,68,0.1)', borderRadius: 8, border: '1px solid rgba(239,68,68,0.2)' }}>
-                <div style={{ fontSize: 11, color: '#f87171', fontWeight: 600, marginBottom: 3 }}>⚠️ Avoid Today</div>
-                <div style={{ fontSize: 12, color: '#9ca3af' }}>{daily.avoid}</div>
+              <div style={{ marginTop: 10, padding: '10px 12px', backgroundColor: '#fef2f2', borderRadius: 8, border: '1px solid #fecaca' }}>
+                <div style={{ fontSize: 11, color: '#dc2626', fontWeight: 700, marginBottom: 3 }}>⚠️ Avoid Today</div>
+                <div style={{ fontSize: 12, color: '#6b7280' }}>{daily.avoid}</div>
               </div>
             </div>
 
             {/* Monthly Remedies */}
             <div style={card}>
-              <div style={{ fontSize: 14, fontWeight: 700, color: '#c4b5fd', marginBottom: 14 }}>🌙 Monthly Activations ({monthElem} Month)</div>
+              <div style={{ fontSize: 14, fontWeight: 700, color: '#4c1d95', marginBottom: 14 }}>🌙 Monthly Activations ({monthElem} Month)</div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                 {monthly.map((tip, i) => (
                   <div key={i} style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
                     <span style={{ fontSize: 16, flexShrink: 0 }}>{'🌿🔆💛🔮🌊'[i] ?? '✦'}</span>
-                    <div style={{ fontSize: 13, color: '#d1d5db', lineHeight: 1.6 }}>{tip}</div>
+                    <div style={{ fontSize: 13, color: '#374151', lineHeight: 1.6 }}>{tip}</div>
                   </div>
                 ))}
               </div>
@@ -152,37 +152,37 @@ const Remedies: React.FC = () => {
 
           {/* Yearly Remedies */}
           <div style={{ ...card, marginBottom: 24 }}>
-            <div style={{ fontSize: 14, fontWeight: 700, color: '#fca5a5', marginBottom: 6 }}>🔥 2026 Annual Remedies — {yearly.theme}</div>
+            <div style={{ fontSize: 14, fontWeight: 700, color: '#dc2626', marginBottom: 6 }}>🔥 2026 Annual Remedies — {yearly.theme}</div>
             <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', marginBottom: 14 }}>
               {yearly.tips.map((tip, i) => (
-                <div key={i} style={{ flex: 1, minWidth: 200, backgroundColor: 'rgba(239,68,68,0.08)', borderRadius: 8, padding: '10px 14px', border: '1px solid rgba(239,68,68,0.2)', fontSize: 13, color: '#e5e7eb', lineHeight: 1.6 }}>{tip}</div>
+                <div key={i} style={{ flex: 1, minWidth: 200, backgroundColor: '#fef2f2', borderRadius: 8, padding: '10px 14px', border: '1px solid #fecaca', fontSize: 13, color: '#374151', lineHeight: 1.6 }}>{tip}</div>
               ))}
             </div>
-            <div style={{ backgroundColor: 'rgba(139,92,246,0.1)', borderRadius: 8, padding: '10px 14px', border: '1px solid rgba(139,92,246,0.25)', fontSize: 13, color: '#c4b5fd', fontStyle: 'italic', textAlign: 'center' }}>
+            <div style={{ backgroundColor: '#ede9fe', borderRadius: 8, padding: '10px 14px', border: '1px solid #c4b5fd', fontSize: 13, color: '#6d28d9', fontStyle: 'italic', textAlign: 'center' }}>
               ✨ Annual Affirmation: "{yearly.affirmation}"
             </div>
           </div>
 
           {/* Lucky Items */}
-          <h3 style={{ margin: '0 0 16px', fontSize: 16, fontWeight: 700, color: '#e9d5ff' }}>🛍️ Your Lucky Charms & Amulets ({primaryElem} Element)</h3>
+          <h3 style={{ margin: '0 0 16px', fontSize: 16, fontWeight: 700, color: '#2e1065' }}>🛍️ Your Lucky Charms & Amulets ({primaryElem} Element)</h3>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 16, marginBottom: 24 }}>
             {/* Gemstones */}
             <div style={card}>
-              <div style={{ fontSize: 13, fontWeight: 700, color: '#c4b5fd', marginBottom: 12 }}>💎 Lucky Gemstones</div>
+              <div style={{ fontSize: 13, fontWeight: 700, color: '#4c1d95', marginBottom: 12 }}>💎 Lucky Gemstones</div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                 {items.gemstones.map(g => <ComingSoon key={g.name} name={g.name} benefit={g.benefit} />)}
               </div>
             </div>
             {/* Bracelets */}
             <div style={card}>
-              <div style={{ fontSize: 13, fontWeight: 700, color: '#c4b5fd', marginBottom: 12 }}>📿 Lucky Bracelets</div>
+              <div style={{ fontSize: 13, fontWeight: 700, color: '#4c1d95', marginBottom: 12 }}>📿 Lucky Bracelets</div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                 {items.bracelets.map(b => <ComingSoon key={b.name} name={b.name} benefit={b.benefit} />)}
               </div>
             </div>
             {/* Amulets */}
             <div style={card}>
-              <div style={{ fontSize: 13, fontWeight: 700, color: '#c4b5fd', marginBottom: 12 }}>🏮 Lucky Amulets</div>
+              <div style={{ fontSize: 13, fontWeight: 700, color: '#4c1d95', marginBottom: 12 }}>🏮 Lucky Amulets</div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                 {items.amulets.map(a => <ComingSoon key={a.name} name={a.name} benefit={a.benefit} />)}
               </div>
@@ -190,9 +190,9 @@ const Remedies: React.FC = () => {
           </div>
 
           {/* Coming soon notice */}
-          <div style={{ backgroundColor: 'rgba(139,92,246,0.08)', border: '1px solid rgba(139,92,246,0.2)', borderRadius: 12, padding: '16px 20px', textAlign: 'center' }}>
-            <div style={{ fontSize: 14, fontWeight: 600, color: '#c4b5fd', marginBottom: 6 }}>🛒 DragonHour Lucky Shop — Coming Soon</div>
-            <div style={{ fontSize: 13, color: '#9ca3af' }}>
+          <div style={{ backgroundColor: '#ede9fe', border: '1px solid #c4b5fd', borderRadius: 12, padding: '16px 20px', textAlign: 'center' }}>
+            <div style={{ fontSize: 14, fontWeight: 600, color: '#6d28d9', marginBottom: 6 }}>🛒 DragonHour Lucky Shop — Coming Soon</div>
+            <div style={{ fontSize: 13, color: '#6b7280' }}>
               We are curating a collection of authentic Bazi-aligned crystals, amulets, and ritual tools hand-selected by our masters.
               Subscribe to get early access and an exclusive founding member discount.
             </div>

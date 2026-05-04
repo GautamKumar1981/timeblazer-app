@@ -209,10 +209,10 @@ const Meditation: React.FC = () => {
   const col = deity.colour;
 
   return (
-    <div style={{ minHeight: '100vh', backgroundColor: '#0a0916', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-start', color: '#fff', position: 'relative', padding: '24px 16px 48px' }}>
+    <div style={{ minHeight: '100vh', backgroundColor: '#f8f6ff', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-start', color: '#1f2937', position: 'relative', padding: '24px 16px 48px' }}>
       <button
         onClick={() => { stopEarly(); navigate('/dashboard'); }}
-        style={{ position: 'fixed', top: 20, left: 20, background: 'rgba(255,255,255,0.07)', border: 'none', color: '#9ca3af', padding: '8px 16px', borderRadius: 8, cursor: 'pointer', fontSize: 14, zIndex: 10 }}
+        style={{ position: 'fixed', top: 20, left: 20, background: '#fff', border: '1px solid #e8e3f8', color: '#6b7280', padding: '8px 16px', borderRadius: 8, cursor: 'pointer', fontSize: 14, zIndex: 10 }}
       >
         ← Exit
       </button>
@@ -231,26 +231,26 @@ const Meditation: React.FC = () => {
                 style={{ width: '100%', height: 280, objectFit: 'cover', display: 'block' }}
               />
             ) : (
-              <div style={{ width: '100%', height: 280, background: `radial-gradient(circle at 40% 50%, ${col}44 0%, #0a0916 70%)`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <div style={{ width: '100%', height: 280, background: `radial-gradient(circle at 40% 50%, ${col}44 0%, #f8f6ff 70%)`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <span style={{ fontSize: 96 }}>{deity.emoji}</span>
               </div>
             )}
-            {/* gradient overlay */}
-            <div style={{ position: 'absolute', inset: 0, background: `linear-gradient(to top, #0a0916ee 0%, transparent 55%)` }} />
+            {/* gradient overlay — kept dark so white text remains readable over image */}
+            <div style={{ position: 'absolute', inset: 0, background: `linear-gradient(to top, rgba(0,0,0,0.75) 0%, transparent 55%)` }} />
             <div style={{ position: 'absolute', bottom: 18, left: 22 }}>
               <div style={{ fontSize: 26, fontWeight: 900, color: '#fff', lineHeight: 1.1 }}>{deity.name}</div>
               <div style={{ fontSize: 20, color: col, fontWeight: 700, letterSpacing: 3, marginTop: 2 }}>{deity.cn}</div>
-              <div style={{ fontSize: 12, color: '#9ca3af', marginTop: 4 }}>{deity.title}</div>
+              <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.75)', marginTop: 4 }}>{deity.title}</div>
             </div>
           </div>
 
           {/* Description */}
-          <div style={{ fontSize: 13, color: '#d1d5db', lineHeight: 1.75, marginBottom: 14, padding: '0 4px' }}>
+          <div style={{ fontSize: 13, color: '#374151', lineHeight: 1.75, marginBottom: 14, padding: '0 4px' }}>
             {deity.desc}
           </div>
 
           {/* Folklore toggle */}
-          <div style={{ backgroundColor: '#16152e', borderRadius: 12, padding: 16, marginBottom: 16, border: `1px solid ${col}22` }}>
+          <div style={{ backgroundColor: '#fff', borderRadius: 12, padding: 16, marginBottom: 16, border: `1px solid ${col}33`, boxShadow: '0 2px 8px rgba(124,58,237,0.06)' }}>
             <button
               onClick={() => setShowLore(l => !l)}
               style={{ background: 'none', border: 'none', color: col, cursor: 'pointer', fontSize: 13, fontWeight: 600, padding: 0, display: 'flex', alignItems: 'center', gap: 6 }}
@@ -259,52 +259,52 @@ const Meditation: React.FC = () => {
               <span>{showLore ? 'Hide' : 'Read'} Folklore & Origins</span>
             </button>
             {showLore && (
-              <div style={{ fontSize: 13, color: '#c4b5fd', lineHeight: 1.8, marginTop: 14, borderTop: '1px solid rgba(255,255,255,0.06)', paddingTop: 14 }}>
+              <div style={{ fontSize: 13, color: '#4c1d95', lineHeight: 1.8, marginTop: 14, borderTop: '1px solid #e8e3f8', paddingTop: 14 }}>
                 {deity.lore}
               </div>
             )}
           </div>
 
           {/* Mantra */}
-          <div style={{ backgroundColor: '#16152e', borderRadius: 12, padding: '14px 18px', marginBottom: 16, border: `1px solid ${col}33`, display: 'flex', flexDirection: 'column', gap: 6 }}>
+          <div style={{ backgroundColor: '#fff', borderRadius: 12, padding: '14px 18px', marginBottom: 16, border: `1px solid ${col}33`, display: 'flex', flexDirection: 'column', gap: 6, boxShadow: '0 2px 8px rgba(124,58,237,0.06)' }}>
             <div style={{ fontSize: 11, fontWeight: 700, color: col, textTransform: 'uppercase', letterSpacing: 0.8 }}>Sacred Mantra</div>
-            <div style={{ fontSize: 18, fontWeight: 800, color: '#e9d5ff', fontStyle: 'italic', letterSpacing: 1.5 }}>{deity.mantra}</div>
-            <div style={{ fontSize: 12, color: '#9ca3af', lineHeight: 1.6 }}>{deity.mantraDesc}</div>
+            <div style={{ fontSize: 18, fontWeight: 800, color: '#2e1065', fontStyle: 'italic', letterSpacing: 1.5 }}>{deity.mantra}</div>
+            <div style={{ fontSize: 12, color: '#6b7280', lineHeight: 1.6 }}>{deity.mantraDesc}</div>
           </div>
 
           {/* Track selector */}
-          <div style={{ backgroundColor: '#16152e', borderRadius: 12, padding: 18, border: '1px solid rgba(139,92,246,0.2)', marginBottom: 14 }}>
-            <div style={{ fontSize: 13, fontWeight: 600, color: '#c4b5fd', marginBottom: 12 }}>🎵 Choose Meditation Sound</div>
+          <div style={{ backgroundColor: '#fff', borderRadius: 12, padding: 18, border: '1px solid #e8e3f8', marginBottom: 14, boxShadow: '0 2px 8px rgba(124,58,237,0.06)' }}>
+            <div style={{ fontSize: 13, fontWeight: 600, color: '#4c1d95', marginBottom: 12 }}>🎵 Choose Meditation Sound</div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
               {TRACKS.map((t, idx) => (
                 <button key={t.id} onClick={() => setTrack(t)} style={{
                   padding: '10px 14px', borderRadius: 8,
-                  border: `1px solid ${track.id === t.id ? 'rgba(139,92,246,0.6)' : 'rgba(255,255,255,0.08)'}`,
-                  backgroundColor: track.id === t.id ? 'rgba(139,92,246,0.2)' : '#1a1830',
-                  color: track.id === t.id ? '#e9d5ff' : '#9ca3af',
+                  border: `1px solid ${track.id === t.id ? '#7c3aed' : '#e8e3f8'}`,
+                  backgroundColor: track.id === t.id ? '#ede9fe' : '#f5f3ff',
+                  color: track.id === t.id ? '#2e1065' : '#6b7280',
                   cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 12, textAlign: 'left',
                 }}>
                   <span style={{ fontSize: 16 }}>{TRACK_ICONS[idx]}</span>
                   <div style={{ flex: 1 }}>
                     <div style={{ fontSize: 13, fontWeight: 600 }}>{t.name}</div>
-                    <div style={{ fontSize: 11, opacity: 0.7 }}>{t.id === 6 ? `${deity.mantra} — spoken slowly on loop` : t.desc}</div>
+                    <div style={{ fontSize: 11, opacity: 0.8 }}>{t.id === 6 ? `${deity.mantra} — spoken slowly on loop` : t.desc}</div>
                   </div>
-                  {track.id === t.id && <span style={{ color: '#8b5cf6' }}>●</span>}
+                  {track.id === t.id && <span style={{ color: '#7c3aed' }}>●</span>}
                 </button>
               ))}
             </div>
           </div>
 
           {/* Duration selector */}
-          <div style={{ backgroundColor: '#16152e', borderRadius: 12, padding: 18, border: '1px solid rgba(139,92,246,0.2)', marginBottom: 24 }}>
-            <div style={{ fontSize: 13, fontWeight: 600, color: '#c4b5fd', marginBottom: 12 }}>⏱ Session Length</div>
+          <div style={{ backgroundColor: '#fff', borderRadius: 12, padding: 18, border: '1px solid #e8e3f8', marginBottom: 24, boxShadow: '0 2px 8px rgba(124,58,237,0.06)' }}>
+            <div style={{ fontSize: 13, fontWeight: 600, color: '#4c1d95', marginBottom: 12 }}>⏱ Session Length</div>
             <div style={{ display: 'flex', gap: 8, justifyContent: 'center' }}>
               {DURATIONS.map(d => (
                 <button key={d} onClick={() => setDuration(d)} style={{
                   padding: '10px 16px', borderRadius: 8,
-                  border: `1px solid ${duration === d ? 'rgba(139,92,246,0.6)' : 'rgba(255,255,255,0.08)'}`,
-                  backgroundColor: duration === d ? '#7c3aed' : '#1a1830',
-                  color: '#fff', cursor: 'pointer', fontSize: 13, fontWeight: duration === d ? 700 : 400,
+                  border: `1px solid ${duration === d ? '#7c3aed' : '#e8e3f8'}`,
+                  backgroundColor: duration === d ? '#7c3aed' : '#f5f3ff',
+                  color: duration === d ? '#fff' : '#6b7280', cursor: 'pointer', fontSize: 13, fontWeight: duration === d ? 700 : 400,
                 }}>{d} min</button>
               ))}
             </div>
@@ -324,7 +324,7 @@ const Meditation: React.FC = () => {
             {!imgError ? (
               <img src={deity.image} alt={deity.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} onError={() => setImgError(true)} />
             ) : (
-              <div style={{ width: '100%', height: '100%', background: `radial-gradient(circle, ${col}44, #0a0916)`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 48 }}>
+              <div style={{ width: '100%', height: '100%', background: `radial-gradient(circle, ${col}44, #f8f6ff)`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 48 }}>
                 {deity.emoji}
               </div>
             )}
@@ -336,7 +336,7 @@ const Meditation: React.FC = () => {
           {/* Circular timer */}
           <div style={{ position: 'relative', width: 148, height: 148, margin: '0 auto 28px' }}>
             <svg width={148} height={148} style={{ transform: 'rotate(-90deg)' }}>
-              <circle cx={74} cy={74} r={54} fill="none" stroke="rgba(255,255,255,0.07)" strokeWidth={7} />
+              <circle cx={74} cy={74} r={54} fill="none" stroke="#e8e3f8" strokeWidth={7} />
               <circle cx={74} cy={74} r={54} fill="none" stroke={col} strokeWidth={7}
                 strokeDasharray={circumference}
                 strokeDashoffset={circumference * progress}
@@ -344,16 +344,16 @@ const Meditation: React.FC = () => {
                 style={{ transition: 'stroke-dashoffset 1s linear' }} />
             </svg>
             <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-              <div style={{ fontSize: 30, fontWeight: 900, color: '#e5e7eb', fontVariantNumeric: 'tabular-nums' }}>{mins}:{secs}</div>
+              <div style={{ fontSize: 30, fontWeight: 900, color: '#1f2937', fontVariantNumeric: 'tabular-nums' }}>{mins}:{secs}</div>
               <div style={{ fontSize: 10, color: '#6b7280' }}>remaining</div>
             </div>
           </div>
 
           <div style={{ fontSize: 16, color: col, marginBottom: 6, fontStyle: 'italic', fontWeight: 600, letterSpacing: 1 }}>"{deity.mantra}"</div>
-          <div style={{ fontSize: 12, color: '#4b5563', marginBottom: 8 }}>{deity.mantraDesc}</div>
+          <div style={{ fontSize: 12, color: '#6b7280', marginBottom: 8 }}>{deity.mantraDesc}</div>
           <div style={{ fontSize: 12, color: '#374151', marginBottom: 32 }}>Breathe deeply. You are held.</div>
 
-          <button onClick={stopEarly} style={{ padding: '11px 32px', backgroundColor: 'rgba(255,255,255,0.07)', color: '#9ca3af', border: '1px solid rgba(255,255,255,0.12)', borderRadius: 8, cursor: 'pointer', fontSize: 14 }}>
+          <button onClick={stopEarly} style={{ padding: '11px 32px', backgroundColor: '#fff', color: '#6b7280', border: '1px solid #e8e3f8', borderRadius: 8, cursor: 'pointer', fontSize: 14 }}>
             ⏹ Stop Session
           </button>
         </div>
@@ -362,24 +362,24 @@ const Meditation: React.FC = () => {
       {/* ── DONE PHASE ───────────────────────────────────────────────────── */}
       {phase === 'done' && (
         <div style={{ textAlign: 'center', maxWidth: 400, marginTop: 48 }}>
-          <div style={{ width: 100, height: 100, borderRadius: '50%', overflow: 'hidden', margin: '0 auto 20px', border: `3px solid ${col}`, boxShadow: `0 0 40px ${col}88` }}>
+          <div style={{ width: 100, height: 100, borderRadius: '50%', overflow: 'hidden', margin: '0 auto 20px', border: `3px solid ${col}`, boxShadow: `0 0 40px ${col}66` }}>
             {!imgError ? (
               <img src={deity.image} alt={deity.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} onError={() => setImgError(true)} />
             ) : (
-              <div style={{ width: '100%', height: '100%', background: `radial-gradient(circle, ${col}44, #0a0916)`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 40 }}>
+              <div style={{ width: '100%', height: '100%', background: `radial-gradient(circle, ${col}44, #f8f6ff)`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 40 }}>
                 {deity.emoji}
               </div>
             )}
           </div>
           <div style={{ fontSize: 24, fontWeight: 800, color: col, marginBottom: 8 }}>Session Complete</div>
-          <div style={{ fontSize: 14, color: '#9ca3af', marginBottom: 12 }}>You meditated for {duration} minutes with {deity.name}</div>
-          <div style={{ fontSize: 13, color: '#6b7280', marginBottom: 28, lineHeight: 1.7, fontStyle: 'italic', padding: '0 12px' }}>
+          <div style={{ fontSize: 14, color: '#6b7280', marginBottom: 12 }}>You meditated for {duration} minutes with {deity.name}</div>
+          <div style={{ fontSize: 13, color: '#374151', marginBottom: 28, lineHeight: 1.7, fontStyle: 'italic', padding: '0 12px' }}>
             "{deity.mantra}"<br />
             May {deity.name}'s blessings flow through all you do today.
           </div>
           <div style={{ display: 'flex', gap: 12, justifyContent: 'center' }}>
             <button onClick={() => setPhase('setup')} style={{ padding: '11px 26px', backgroundColor: '#7c3aed', color: '#fff', border: 'none', borderRadius: 8, cursor: 'pointer', fontWeight: 700 }}>Meditate Again</button>
-            <button onClick={() => navigate('/dashboard')} style={{ padding: '11px 26px', backgroundColor: 'rgba(255,255,255,0.08)', color: '#9ca3af', border: 'none', borderRadius: 8, cursor: 'pointer' }}>Dashboard</button>
+            <button onClick={() => navigate('/dashboard')} style={{ padding: '11px 26px', backgroundColor: '#fff', color: '#6b7280', border: '1px solid #e8e3f8', borderRadius: 8, cursor: 'pointer' }}>Dashboard</button>
           </div>
         </div>
       )}

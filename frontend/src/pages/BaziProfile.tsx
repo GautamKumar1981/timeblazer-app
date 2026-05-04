@@ -18,15 +18,16 @@ const TZ_OPTIONS = [
 ];
 
 const inp: React.CSSProperties = {
-  width: '100%', padding: '10px 12px', backgroundColor: '#1e1c3a',
-  border: '1px solid rgba(255,255,255,0.12)', borderRadius: 8,
-  color: '#e5e7eb', fontSize: 14, boxSizing: 'border-box',
+  width: '100%', padding: '10px 12px', backgroundColor: '#fff',
+  border: '1px solid #e2d9f3', borderRadius: 8,
+  color: '#1f2937', fontSize: 14, boxSizing: 'border-box', outline: 'none',
 };
 
 const BaziProfile: React.FC = () => {
   const dispatch  = useAppDispatch();
   const navigate  = useNavigate();
   const { profile, loading, error } = useAppSelector((s) => s.bazi);
+  const { user } = useAppSelector((s) => s.auth);
 
   const [form, setForm] = useState({
     birth_date: '', birth_hour: '8', birth_minute: '0',
@@ -62,31 +63,42 @@ const BaziProfile: React.FC = () => {
   };
 
   const label = (text: string) => (
-    <label style={{ display: 'block', fontSize: 12, color: '#9ca3af', marginBottom: 6, fontWeight: 500 }}>
+    <label style={{ display: 'block', fontSize: 12, color: '#6b7280', marginBottom: 6, fontWeight: 600 }}>
       {text}
     </label>
   );
 
   return (
-    <div style={{ display: 'flex', minHeight: '100vh', backgroundColor: '#0f0e1a' }}>
+    <div style={{ display: 'flex', minHeight: '100vh', backgroundColor: '#f8f6ff' }}>
       <Sidebar />
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
         <Header />
-        <main style={{ flex: 1, padding: 32, overflowY: 'auto' }}>
-          <h2 style={{ margin: '0 0 6px', fontSize: 22, fontWeight: 700, color: '#e9d5ff' }}>
+        <main style={{ flex: 1, padding: '28px 32px', overflowY: 'auto' }}>
+
+          {/* User greeting */}
+          {user?.name && (
+            <div style={{ marginBottom: 20, display: 'flex', alignItems: 'center', gap: 12 }}>
+              <div style={{ width: 44, height: 44, borderRadius: '50%', background: 'linear-gradient(135deg, #7c3aed, #a855f7)', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: 18 }}>
+                {user.name[0].toUpperCase()}
+              </div>
+              <div>
+                <div style={{ fontSize: 16, fontWeight: 700, color: '#2e1065' }}>Hello, {user.name}</div>
+                <div style={{ fontSize: 12, color: '#9ca3af' }}>Let's calculate your Four Pillars chart</div>
+              </div>
+            </div>
+          )}
+
+          <h2 style={{ margin: '0 0 6px', fontSize: 22, fontWeight: 800, color: '#2e1065' }}>
             👤 Birth Profile Setup
           </h2>
-          <p style={{ color: '#6b7280', fontSize: 13, margin: '0 0 28px' }}>
+          <p style={{ color: '#9ca3af', fontSize: 13, margin: '0 0 28px' }}>
             Your birth date, time, and gender are used to calculate your Four Pillars (四柱八字).
           </p>
 
-          <div style={{ maxWidth: 520 }}>
+          <div style={{ maxWidth: 540 }}>
             <form onSubmit={handleSubmit}>
-              <div style={{
-                backgroundColor: '#16152e', borderRadius: 12, padding: 28,
-                border: '1px solid rgba(139,92,246,0.2)', marginBottom: 20,
-              }}>
-                <h3 style={{ margin: '0 0 20px', fontSize: 15, color: '#c4b5fd', fontWeight: 600 }}>
+              <div style={{ backgroundColor: '#fff', borderRadius: 14, padding: 28, border: '1px solid #e8e3f8', marginBottom: 20, boxShadow: '0 2px 8px rgba(124,58,237,0.06)' }}>
+                <h3 style={{ margin: '0 0 20px', fontSize: 15, color: '#4c1d95', fontWeight: 700 }}>
                   Birth Information
                 </h3>
 
@@ -116,10 +128,10 @@ const BaziProfile: React.FC = () => {
                       <button key={v} type="button"
                         onClick={() => setForm({ ...form, gender: v })}
                         style={{
-                          flex: 1, padding: '10px 0', borderRadius: 8, fontWeight: 600, fontSize: 14,
-                          border: `2px solid ${form.gender === v ? '#8b5cf6' : 'rgba(255,255,255,0.1)'}`,
-                          backgroundColor: form.gender === v ? 'rgba(139,92,246,0.2)' : 'transparent',
-                          color: form.gender === v ? '#c4b5fd' : '#9ca3af', cursor: 'pointer',
+                          flex: 1, padding: '10px 0', borderRadius: 9, fontWeight: 700, fontSize: 14,
+                          border: `2px solid ${form.gender === v ? '#7c3aed' : '#e2d9f3'}`,
+                          backgroundColor: form.gender === v ? '#ede9fe' : '#fff',
+                          color: form.gender === v ? '#6d28d9' : '#9ca3af', cursor: 'pointer',
                         }}>
                         {l}
                       </button>
@@ -129,7 +141,7 @@ const BaziProfile: React.FC = () => {
 
                 <div>
                   {label('Timezone')}
-                  <select style={{ ...inp, appearance: 'none' }} value={form.timezone_offset}
+                  <select style={{ ...inp, appearance: 'none' as any }} value={form.timezone_offset}
                     onChange={(e) => setForm({ ...form, timezone_offset: e.target.value })}>
                     {TZ_OPTIONS.map(({ label: l, value: v }) => (
                       <option key={v} value={v}>{l}</option>
@@ -139,24 +151,24 @@ const BaziProfile: React.FC = () => {
               </div>
 
               {error && (
-                <div style={{ backgroundColor: '#3f0a0a', color: '#fca5a5', padding: '10px 14px', borderRadius: 8, fontSize: 13, marginBottom: 14 }}>
+                <div style={{ backgroundColor: '#fef2f2', color: '#dc2626', padding: '10px 14px', borderRadius: 9, fontSize: 13, marginBottom: 14, border: '1px solid #fecaca' }}>
                   {error}
                 </div>
               )}
 
               {saved && (
-                <div style={{ backgroundColor: '#052e16', color: '#86efac', padding: '10px 14px', borderRadius: 8, fontSize: 13, marginBottom: 14 }}>
-                  ✓ Profile saved — redirecting to your Bazi Chart…
+                <div style={{ backgroundColor: '#d1fae5', color: '#065f46', padding: '10px 14px', borderRadius: 9, fontSize: 13, marginBottom: 14, border: '1px solid #6ee7b7' }}>
+                  ✓ Profile saved — redirecting to your chart…
                 </div>
               )}
 
               <button type="submit" disabled={loading} style={{
-                width: '100%', padding: '12px 0', backgroundColor: '#7c3aed',
-                color: '#fff', border: 'none', borderRadius: 8, fontSize: 15,
+                width: '100%', padding: '13px 0', backgroundColor: '#7c3aed',
+                color: '#fff', border: 'none', borderRadius: 9, fontSize: 15,
                 fontWeight: 700, cursor: loading ? 'not-allowed' : 'pointer',
                 opacity: loading ? 0.7 : 1,
               }}>
-                {loading ? 'Saving…' : 'Save & Calculate My Chart →'}
+                {loading ? 'Saving…' : profile ? 'Update My Chart →' : 'Calculate My Four Pillars Chart →'}
               </button>
             </form>
           </div>

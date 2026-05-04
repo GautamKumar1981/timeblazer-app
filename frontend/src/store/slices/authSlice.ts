@@ -16,8 +16,15 @@ interface AuthState {
   error: string | null;
 }
 
+const getStoredUser = (): User | null => {
+  try {
+    const u = localStorage.getItem('dragonhour_user');
+    return u ? JSON.parse(u) : null;
+  } catch { return null; }
+};
+
 const initialState: AuthState = {
-  user: null,
+  user: getStoredUser(),
   token: getToken(),
   loading: false,
   error: null,
@@ -38,9 +45,9 @@ export const loginUser = createAsyncThunk(
 
 export const registerUser = createAsyncThunk(
   'auth/register',
-  async (payload: { email: string; password: string }, { rejectWithValue }) => {
+  async (payload: { name: string; email: string; password: string }, { rejectWithValue }) => {
     try {
-      const data = await authService.register('', payload.email, payload.password);
+      const data = await authService.register(payload.name, payload.email, payload.password);
       return data;
     } catch (err: unknown) {
       const error = err as { response?: { data?: { message?: string } } };
@@ -71,6 +78,7 @@ const authSlice = createSlice({
       state.user = null;
       state.token = null;
       state.error = null;
+      localStorage.removeItem('dragonhour_user');
     },
     clearError(state) {
       state.error = null;
@@ -83,6 +91,7 @@ const authSlice = createSlice({
         state.loading = false;
         state.token = action.payload.token;
         state.user = action.payload.user;
+        localStorage.setItem('dragonhour_user', JSON.stringify(action.payload.user));
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.loading = false;
@@ -93,6 +102,7 @@ const authSlice = createSlice({
         state.loading = false;
         state.token = action.payload.token;
         state.user = action.payload.user;
+        localStorage.setItem('dragonhour_user', JSON.stringify(action.payload.user));
       })
       .addCase(registerUser.rejected, (state, action) => {
         state.loading = false;
@@ -100,6 +110,7 @@ const authSlice = createSlice({
       })
       .addCase(updateProfile.fulfilled, (state, action: PayloadAction<User>) => {
         state.user = action.payload;
+        localStorage.setItem('dragonhour_user', JSON.stringify(action.payload));
       });
   },
 });

@@ -103,19 +103,19 @@ const PillarCard: React.FC<{ pillar: Pillar; title: string }> = ({ pillar, title
   const sColor = ELEM_COLOR[pillar.stem.element];
   const bColor = ELEM_COLOR[pillar.branch.element];
   return (
-    <div style={{ backgroundColor: '#16152e', borderRadius: 12, padding: '20px 16px', border: '1px solid rgba(139,92,246,0.2)', textAlign: 'center', flex: 1 }}>
+    <div style={{ backgroundColor: '#fff', borderRadius: 12, padding: '20px 16px', border: '1px solid #e8e3f8', textAlign: 'center', flex: 1, boxShadow: '0 2px 8px rgba(124,58,237,0.06)' }}>
       <div style={{ fontSize: 11, color: '#6b7280', marginBottom: 12, fontWeight: 600, letterSpacing: 1, textTransform: 'uppercase' }}>{title}</div>
       <div style={{ marginBottom: 8 }}>
-        <div style={{ fontSize: 42, fontWeight: 900, color: sColor, textShadow: `0 0 20px ${sColor}66`, lineHeight: 1 }}>{pillar.stem.cn}</div>
-        <div style={{ fontSize: 11, color: sColor + 'cc', marginTop: 4 }}>{pillar.stem.en}</div>
+        <div style={{ fontSize: 42, fontWeight: 900, color: sColor, lineHeight: 1 }}>{pillar.stem.cn}</div>
+        <div style={{ fontSize: 11, color: sColor, marginTop: 4 }}>{pillar.stem.en}</div>
       </div>
       <div style={{ backgroundColor: bColor + '18', border: `1px solid ${bColor}44`, borderRadius: 8, padding: '10px 8px', marginBottom: 10 }}>
         <div style={{ fontSize: 36, fontWeight: 900, color: bColor }}>{pillar.branch.cn}</div>
-        <div style={{ fontSize: 11, color: bColor + 'cc', marginTop: 2 }}>{pillar.branch.en} · {pillar.branch.element}</div>
+        <div style={{ fontSize: 11, color: bColor, marginTop: 2 }}>{pillar.branch.en} · {pillar.branch.element}</div>
       </div>
       {pillar.hidden_stems.length > 0 && (
         <div>
-          <div style={{ fontSize: 10, color: '#4b5563', marginBottom: 4 }}>Hidden Stems 藏干</div>
+          <div style={{ fontSize: 10, color: '#9ca3af', marginBottom: 4 }}>Hidden Stems 藏干</div>
           <div style={{ display: 'flex', justifyContent: 'center', gap: 4, flexWrap: 'wrap' }}>
             {pillar.hidden_stems.map((s: Stem) => (
               <span key={s.cn} style={{ fontSize: 12, padding: '2px 7px', borderRadius: 10, backgroundColor: ELEM_COLOR[s.element] + '22', color: ELEM_COLOR[s.element], border: `1px solid ${ELEM_COLOR[s.element]}44` }}>{s.cn}</span>
@@ -131,7 +131,7 @@ const ElementBar: React.FC<{ balance: Record<string, number> }> = ({ balance }) 
   const total = Object.values(balance).reduce((a, b) => a + b, 0) || 1;
   return (
     <div>
-      <div style={{ fontSize: 13, color: '#9ca3af', marginBottom: 10, fontWeight: 600 }}>Element Balance 五行</div>
+      <div style={{ fontSize: 13, color: '#4c1d95', marginBottom: 10, fontWeight: 600 }}>Element Balance 五行</div>
       <div style={{ display: 'flex', borderRadius: 8, overflow: 'hidden', height: 12, marginBottom: 12 }}>
         {Object.entries(balance).map(([elem, cnt]) => (
           <div key={elem} style={{ flex: cnt / total, backgroundColor: ELEM_COLOR[elem], transition: 'flex 0.4s' }} title={`${elem}: ${cnt}`} />
@@ -141,7 +141,7 @@ const ElementBar: React.FC<{ balance: Record<string, number> }> = ({ balance }) 
         {Object.entries(balance).map(([elem, cnt]) => (
           <div key={elem} style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
             <div style={{ width: 10, height: 10, borderRadius: '50%', backgroundColor: ELEM_COLOR[elem] }} />
-            <span style={{ fontSize: 12, color: '#d1d5db' }}>{elem}</span>
+            <span style={{ fontSize: 12, color: '#374151' }}>{elem}</span>
             <span style={{ fontSize: 11, color: '#6b7280' }}>×{cnt}</span>
           </div>
         ))}
@@ -154,20 +154,20 @@ const AnimalCard: React.FC<{ animal: string; pillarTitle: string }> = ({ animal,
   const profile = ANIMAL_PROFILE[animal];
   if (!profile) return null;
   return (
-    <div style={{ backgroundColor: '#16152e', borderRadius: 12, padding: '18px 20px', border: '1px solid rgba(139,92,246,0.2)', flex: 1, minWidth: 240 }}>
+    <div style={{ backgroundColor: '#fff', borderRadius: 12, padding: '18px 20px', border: '1px solid #e8e3f8', flex: 1, minWidth: 240, boxShadow: '0 2px 8px rgba(124,58,237,0.06)' }}>
       <div style={{ fontSize: 11, color: '#6b7280', marginBottom: 6, fontWeight: 600, letterSpacing: 1, textTransform: 'uppercase' }}>{pillarTitle}</div>
-      <div style={{ fontSize: 18, fontWeight: 800, color: '#e9d5ff', marginBottom: 10 }}>The {animal}</div>
+      <div style={{ fontSize: 18, fontWeight: 800, color: '#2e1065', marginBottom: 10 }}>The {animal}</div>
       <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap', marginBottom: 12 }}>
         {profile.traits.map(t => (
-          <span key={t} style={{ padding: '2px 8px', borderRadius: 12, fontSize: 11, backgroundColor: 'rgba(139,92,246,0.15)', color: '#c4b5fd', border: '1px solid rgba(139,92,246,0.3)' }}>{t}</span>
+          <span key={t} style={{ padding: '2px 8px', borderRadius: 12, fontSize: 11, backgroundColor: '#ede9fe', color: '#6d28d9', border: '1px solid #c4b5fd' }}>{t}</span>
         ))}
       </div>
-      <div style={{ fontSize: 13, color: '#d1d5db', lineHeight: 1.6, marginBottom: 8 }}><strong style={{ color: '#a78bfa' }}>Strengths:</strong> {profile.strengths}</div>
-      <div style={{ fontSize: 13, color: '#9ca3af', lineHeight: 1.6, marginBottom: 8 }}><strong style={{ color: '#6b7280' }}>Growth Edge:</strong> {profile.challenge}</div>
-      <div style={{ fontSize: 12, color: '#6b7280', fontStyle: 'italic', marginBottom: 12, lineHeight: 1.5 }}>Life Theme: "{profile.lifeTheme}"</div>
-      <div style={{ backgroundColor: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.25)', borderRadius: 8, padding: '10px 12px' }}>
-        <div style={{ fontSize: 11, fontWeight: 700, color: '#fca5a5', marginBottom: 4 }}>🔥 {YEAR_ENERGY.year} Forecast</div>
-        <div style={{ fontSize: 12, color: '#e5e7eb', lineHeight: 1.6 }}>{profile.year2026}</div>
+      <div style={{ fontSize: 13, color: '#374151', lineHeight: 1.6, marginBottom: 8 }}><strong style={{ color: '#7c3aed' }}>Strengths:</strong> {profile.strengths}</div>
+      <div style={{ fontSize: 13, color: '#6b7280', lineHeight: 1.6, marginBottom: 8 }}><strong style={{ color: '#4c1d95' }}>Growth Edge:</strong> {profile.challenge}</div>
+      <div style={{ fontSize: 12, color: '#9ca3af', fontStyle: 'italic', marginBottom: 12, lineHeight: 1.5 }}>Life Theme: "{profile.lifeTheme}"</div>
+      <div style={{ backgroundColor: '#fef2f2', border: '1px solid #fecaca', borderRadius: 8, padding: '10px 12px' }}>
+        <div style={{ fontSize: 11, fontWeight: 700, color: '#dc2626', marginBottom: 4 }}>🔥 {YEAR_ENERGY.year} Forecast</div>
+        <div style={{ fontSize: 12, color: '#374151', lineHeight: 1.6 }}>{profile.year2026}</div>
       </div>
       <div style={{ fontSize: 11, color: '#6b7280', marginTop: 10 }}>🤝 {profile.compatibility}</div>
     </div>
@@ -184,7 +184,7 @@ const BaziChart: React.FC = () => {
   useEffect(() => { dispatch(fetchBaziChart()); }, [dispatch]);
 
   if (loading) return (
-    <div style={{ display: 'flex', minHeight: '100vh', backgroundColor: '#0f0e1a' }}>
+    <div style={{ display: 'flex', minHeight: '100vh', backgroundColor: '#f8f6ff' }}>
       <Sidebar /><div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}><Header />
         <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#9ca3af' }}>Calculating your chart…</div>
       </div>
@@ -192,11 +192,11 @@ const BaziChart: React.FC = () => {
   );
 
   if (error || !chart) return (
-    <div style={{ display: 'flex', minHeight: '100vh', backgroundColor: '#0f0e1a' }}>
+    <div style={{ display: 'flex', minHeight: '100vh', backgroundColor: '#f8f6ff' }}>
       <Sidebar /><div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}><Header />
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
           <div style={{ fontSize: 48, marginBottom: 16 }}>☯</div>
-          <div style={{ color: '#c4b5fd', fontSize: 18, fontWeight: 600, marginBottom: 8 }}>Profile Required</div>
+          <div style={{ color: '#4c1d95', fontSize: 18, fontWeight: 600, marginBottom: 8 }}>Profile Required</div>
           <div style={{ color: '#6b7280', fontSize: 14, marginBottom: 24 }}>Enter your birth data to generate your Bazi chart.</div>
           <button onClick={() => navigate('/profile')} style={{ padding: '10px 24px', backgroundColor: '#7c3aed', color: '#fff', border: 'none', borderRadius: 8, cursor: 'pointer', fontSize: 14, fontWeight: 600 }}>Set Up Profile →</button>
         </div>
@@ -213,13 +213,13 @@ const BaziChart: React.FC = () => {
   const dmColor = ELEM_COLOR[chart.day_master.element];
 
   return (
-    <div style={{ display: 'flex', minHeight: '100vh', backgroundColor: '#0f0e1a' }}>
+    <div style={{ display: 'flex', minHeight: '100vh', backgroundColor: '#f8f6ff' }}>
       <Sidebar />
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
         <Header />
         <main style={{ flex: 1, padding: 32, overflowY: 'auto' }}>
-          <h2 style={{ margin: '0 0 6px', fontSize: 22, fontWeight: 700, color: '#e9d5ff' }}>🀄 Four Pillars Chart 四柱八字</h2>
-          <p style={{ color: '#6b7280', fontSize: 13, margin: '0 0 28px' }}>Your Bazi (八字) — the eight characters that define your elemental blueprint.</p>
+          <h2 style={{ margin: '0 0 6px', fontSize: 22, fontWeight: 700, color: '#2e1065' }}>🀄 Four Pillars Chart 四柱八字</h2>
+          <p style={{ color: '#9ca3af', fontSize: 13, margin: '0 0 28px' }}>Your Bazi (八字) — the eight characters that define your elemental blueprint.</p>
 
           {/* Day Master */}
           <div style={{ backgroundColor: dmColor + '18', border: `1px solid ${dmColor}44`, borderRadius: 12, padding: '16px 22px', marginBottom: 24, display: 'flex', alignItems: 'center', gap: 20, flexWrap: 'wrap' }}>
@@ -227,7 +227,7 @@ const BaziChart: React.FC = () => {
               <span style={{ fontSize: 38, color: dmColor }}>{chart.day_master.cn}</span>
               <div>
                 <div style={{ fontSize: 16, fontWeight: 700, color: dmColor }}>{chart.day_master.en}</div>
-                <div style={{ fontSize: 12, color: '#9ca3af' }}>Day Master · {chart.day_master_strength}</div>
+                <div style={{ fontSize: 12, color: '#6b7280' }}>Day Master · {chart.day_master_strength}</div>
               </div>
             </div>
             <div style={{ flex: 1, display: 'flex', gap: 20, flexWrap: 'wrap' }}>
@@ -243,7 +243,7 @@ const BaziChart: React.FC = () => {
                 <div style={{ fontSize: 11, color: '#6b7280', marginBottom: 6 }}>Avoid</div>
                 <div style={{ display: 'flex', gap: 6 }}>
                   {chart.unfavorable_elements.map((e) => (
-                    <span key={e} style={{ padding: '3px 10px', borderRadius: 12, fontSize: 12, fontWeight: 600, backgroundColor: '#1f1f2e', color: '#6b7280', border: '1px solid rgba(255,255,255,0.1)' }}>{e}</span>
+                    <span key={e} style={{ padding: '3px 10px', borderRadius: 12, fontSize: 12, fontWeight: 600, backgroundColor: '#f5f3ff', color: '#6b7280', border: '1px solid #e8e3f8' }}>{e}</span>
                   ))}
                 </div>
               </div>
@@ -256,43 +256,43 @@ const BaziChart: React.FC = () => {
           </div>
 
           {/* Element balance */}
-          <div style={{ backgroundColor: '#16152e', borderRadius: 12, padding: 22, border: '1px solid rgba(139,92,246,0.2)', marginBottom: 24 }}>
+          <div style={{ backgroundColor: '#fff', borderRadius: 12, padding: 22, border: '1px solid #e8e3f8', marginBottom: 24, boxShadow: '0 2px 8px rgba(124,58,237,0.06)' }}>
             <ElementBar balance={chart.element_balance} />
           </div>
 
           {/* ── Animal Characterisations ── */}
           <div style={{ marginBottom: 8, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <h3 style={{ margin: 0, fontSize: 16, fontWeight: 700, color: '#e9d5ff' }}>🐉 Your Animal Signs & {YEAR_ENERGY.year} Predictions</h3>
-            <button onClick={() => setShowYear(v => !v)} style={{ background: 'none', border: '1px solid rgba(139,92,246,0.3)', color: '#9ca3af', padding: '5px 12px', borderRadius: 6, cursor: 'pointer', fontSize: 12 }}>
+            <h3 style={{ margin: 0, fontSize: 16, fontWeight: 700, color: '#2e1065' }}>🐉 Your Animal Signs & {YEAR_ENERGY.year} Predictions</h3>
+            <button onClick={() => setShowYear(v => !v)} style={{ background: 'none', border: '1px solid #e8e3f8', color: '#6b7280', padding: '5px 12px', borderRadius: 6, cursor: 'pointer', fontSize: 12 }}>
               {showYear ? 'Hide' : 'Show'} Year Energy
             </button>
           </div>
 
           {/* Current year energy banner */}
           {showYear && (
-            <div style={{ backgroundColor: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.3)', borderRadius: 12, padding: '16px 20px', marginBottom: 16 }}>
+            <div style={{ backgroundColor: '#fef2f2', border: '1px solid #fecaca', borderRadius: 12, padding: '16px 20px', marginBottom: 16 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 10, flexWrap: 'wrap' }}>
                 <div>
                   <div style={{ fontSize: 28, fontWeight: 900, color: '#ef4444', lineHeight: 1 }}>{YEAR_ENERGY.cn}</div>
-                  <div style={{ fontSize: 11, color: '#9ca3af' }}>{YEAR_ENERGY.pinyin}</div>
+                  <div style={{ fontSize: 11, color: '#6b7280' }}>{YEAR_ENERGY.pinyin}</div>
                 </div>
                 <div>
-                  <div style={{ fontSize: 15, fontWeight: 700, color: '#fca5a5' }}>{YEAR_ENERGY.year} · {YEAR_ENERGY.name}</div>
-                  <div style={{ fontSize: 12, color: '#9ca3af' }}>{YEAR_ENERGY.theme}</div>
+                  <div style={{ fontSize: 15, fontWeight: 700, color: '#dc2626' }}>{YEAR_ENERGY.year} · {YEAR_ENERGY.name}</div>
+                  <div style={{ fontSize: 12, color: '#6b7280' }}>{YEAR_ENERGY.theme}</div>
                 </div>
               </div>
-              <p style={{ fontSize: 13, color: '#e5e7eb', lineHeight: 1.7, margin: '0 0 10px' }}>{YEAR_ENERGY.overview}</p>
+              <p style={{ fontSize: 13, color: '#374151', lineHeight: 1.7, margin: '0 0 10px' }}>{YEAR_ENERGY.overview}</p>
               <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
                 <div>
-                  <div style={{ fontSize: 11, color: '#4ade80', fontWeight: 600, marginBottom: 4 }}>✅ Favoured in {YEAR_ENERGY.year}</div>
+                  <div style={{ fontSize: 11, color: '#16a34a', fontWeight: 600, marginBottom: 4 }}>✅ Favoured in {YEAR_ENERGY.year}</div>
                   <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap' }}>
-                    {YEAR_ENERGY.goodFor.map(g => <span key={g} style={{ fontSize: 11, padding: '2px 8px', borderRadius: 10, backgroundColor: 'rgba(34,197,94,0.15)', color: '#4ade80', border: '1px solid rgba(34,197,94,0.3)' }}>{g}</span>)}
+                    {YEAR_ENERGY.goodFor.map(g => <span key={g} style={{ fontSize: 11, padding: '2px 8px', borderRadius: 10, backgroundColor: 'rgba(34,197,94,0.12)', color: '#16a34a', border: '1px solid rgba(34,197,94,0.3)' }}>{g}</span>)}
                   </div>
                 </div>
                 <div>
-                  <div style={{ fontSize: 11, color: '#f87171', fontWeight: 600, marginBottom: 4 }}>⚠️ Watch Out</div>
+                  <div style={{ fontSize: 11, color: '#dc2626', fontWeight: 600, marginBottom: 4 }}>⚠️ Watch Out</div>
                   <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap' }}>
-                    {YEAR_ENERGY.watchOut.map(w => <span key={w} style={{ fontSize: 11, padding: '2px 8px', borderRadius: 10, backgroundColor: 'rgba(239,68,68,0.12)', color: '#f87171', border: '1px solid rgba(239,68,68,0.3)' }}>{w}</span>)}
+                    {YEAR_ENERGY.watchOut.map(w => <span key={w} style={{ fontSize: 11, padding: '2px 8px', borderRadius: 10, backgroundColor: '#fef2f2', color: '#dc2626', border: '1px solid #fecaca' }}>{w}</span>)}
                   </div>
                 </div>
               </div>
@@ -307,14 +307,14 @@ const BaziChart: React.FC = () => {
           </div>
 
           {/* Pinyin reference */}
-          <div style={{ backgroundColor: '#16152e', borderRadius: 12, padding: 20, border: '1px solid rgba(255,255,255,0.06)' }}>
-            <div style={{ fontSize: 13, color: '#9ca3af', marginBottom: 14, fontWeight: 600 }}>Pillar Reference 柱名对照</div>
+          <div style={{ backgroundColor: '#fff', borderRadius: 12, padding: 20, border: '1px solid #e8e3f8', boxShadow: '0 2px 8px rgba(124,58,237,0.06)' }}>
+            <div style={{ fontSize: 13, color: '#4c1d95', marginBottom: 14, fontWeight: 600 }}>Pillar Reference 柱名对照</div>
             <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
               {pillars.map(({ title, pillar }) => (
                 <div key={title} style={{ minWidth: 110 }}>
                   <div style={{ fontSize: 11, color: '#6b7280', marginBottom: 4 }}>{title.split(' ')[0]}</div>
-                  <div style={{ fontSize: 18, color: '#e5e7eb' }}>{pillar.name}</div>
-                  <div style={{ fontSize: 11, color: '#9ca3af' }}>{pillar.stem.pinyin} {pillar.branch.pinyin}</div>
+                  <div style={{ fontSize: 18, color: '#2e1065' }}>{pillar.name}</div>
+                  <div style={{ fontSize: 11, color: '#6b7280' }}>{pillar.stem.pinyin} {pillar.branch.pinyin}</div>
                 </div>
               ))}
             </div>
