@@ -11,9 +11,9 @@ const NAV_ITEMS: NavItem[] = [
   { to: '/dashboard', icon: '🏠', label: 'Dashboard' },
   { to: '/calendar', icon: '📅', label: 'Calendar' },
   { to: '/goals', icon: '🎯', label: 'Goals' },
-  { to: '/analytics', icon: '📊', label: 'Analytics' },
+  { to: '/analytics', icon: '💎', label: 'Remedies' },
   { to: '/weekly-review', icon: '📝', label: 'Weekly Review' },
-  { to: '/focus', icon: '⏱', label: 'Focus Mode' },
+  { to: '/focus', icon: '🧘', label: 'Meditation' },
   { to: '/settings', icon: '⚙️', label: 'Settings' },
 ];
 
