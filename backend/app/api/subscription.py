@@ -7,13 +7,6 @@ from app.api.utils import get_current_user
 from app import db
 from app.models.subscription import UserSubscription
 
-stripe.api_key = os.environ.get('STRIPE_SECRET_KEY', '')
-
-PRICE_IDS = {
-    'monthly': os.environ.get('STRIPE_PRICE_MONTHLY', ''),
-    'annual':  os.environ.get('STRIPE_PRICE_ANNUAL', ''),
-}
-
 PLAN_DAYS = {
     'monthly': 31,
     'annual':  366,
@@ -42,14 +35,21 @@ def create_checkout():
     if err:
         return jsonify({'error': err}), 401
 
+    # Read at request time so Railway env var changes take effect without redeploy
+    stripe.api_key = os.environ.get('STRIPE_SECRET_KEY', '')
+    price_ids = {
+        'monthly': os.environ.get('STRIPE_PRICE_MONTHLY', ''),
+        'annual':  os.environ.get('STRIPE_PRICE_ANNUAL', ''),
+    }
+
     data = request.get_json() or {}
     plan = data.get('plan', 'monthly')
-    if plan not in PRICE_IDS:
+    if plan not in price_ids:
         return jsonify({'error': 'Invalid plan. Use "monthly" or "annual".'}), 400
 
-    price_id = PRICE_IDS[plan]
+    price_id = price_ids[plan]
     if not price_id:
-        return jsonify({'error': 'Stripe price not configured for this plan.'}), 500
+        return jsonify({'error': f'Stripe price not configured for plan: {plan}. Set STRIPE_PRICE_{plan.upper()} in Railway.'}), 500
 
     frontend_url = os.environ.get('FRONTEND_URL', 'http://localhost:3000')
 
