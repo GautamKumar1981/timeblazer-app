@@ -88,7 +88,7 @@ const goalsSlice = createSlice({
       .addCase(fetchGoals.pending, (state) => { state.loading = true; state.error = null; })
       .addCase(fetchGoals.fulfilled, (state, action: PayloadAction<Goal[]>) => {
         state.loading = false;
-        state.goals = action.payload;
+        state.goals = Array.isArray(action.payload) ? action.payload : [];
       })
       .addCase(fetchGoals.rejected, (state, action) => {
         state.loading = false;

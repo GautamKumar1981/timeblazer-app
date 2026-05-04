@@ -1,5 +1,5 @@
 import os
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request, Response
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from flask_socketio import SocketIO
@@ -30,8 +30,7 @@ def create_app(config_name=None):
     cors_origins = app.config.get('CORS_ORIGINS', '*')
     CORS(app, origins=cors_origins,
          allow_headers=['Content-Type', 'Authorization'],
-         methods=['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-         automatic_options=True)
+         methods=['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'])
     socketio.init_app(app, cors_allowed_origins=cors_origins, async_mode='threading')
     limiter.init_app(app)
 
@@ -43,8 +42,18 @@ def create_app(config_name=None):
     def health():
         return jsonify({'status': 'ok'}), 200
 
+    # Explicitly handle OPTIONS preflight before any other logic runs.
+    @app.before_request
+    def handle_preflight():
+        if request.method == 'OPTIONS':
+            res = Response()
+            res.headers['Access-Control-Allow-Origin']  = '*'
+            res.headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization'
+            res.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, PATCH, DELETE, OPTIONS'
+            res.headers['Access-Control-Max-Age']       = '86400'
+            return res, 200
+
     # Lazy DB init: runs on the first real request, not at startup.
-    # This lets gunicorn bind to PORT immediately so the health check passes.
     @app.before_request
     def init_db_once():
         global _db_initialized
