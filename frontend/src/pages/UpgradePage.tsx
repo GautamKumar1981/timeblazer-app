@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppSelector } from '../store/store';
+import { subscriptionAPI } from '../services/api';
 
 const FEATURES = [
   '🀄  Full Four Pillars Bazi Chart with animal profiles',
@@ -14,11 +15,25 @@ const FEATURES = [
 ];
 
 const UpgradePage: React.FC = () => {
-  const navigate   = useNavigate();
-  const { data }   = useAppSelector((s) => s.subscription);
-  const { user }   = useAppSelector((s) => s.auth);
-  const daysLeft   = data?.trial_days_remaining ?? 0;
+  const navigate    = useNavigate();
+  const { data }    = useAppSelector((s) => s.subscription);
+  const { user }    = useAppSelector((s) => s.auth);
+  const daysLeft    = data?.trial_days_remaining ?? 0;
   const trialActive = data?.is_trial_active ?? false;
+  const [loading, setLoading] = useState<'monthly' | 'annual' | null>(null);
+  const [checkoutError, setCheckoutError] = useState('');
+
+  const handleSubscribe = async (plan: 'monthly' | 'annual') => {
+    setLoading(plan);
+    setCheckoutError('');
+    try {
+      const res = await subscriptionAPI.createCheckout(plan);
+      window.location.href = res.data.url;
+    } catch {
+      setCheckoutError('Could not start checkout. Please try again.');
+      setLoading(null);
+    }
+  };
 
   return (
     <div style={{ minHeight: '100vh', backgroundColor: '#f8f6ff', display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '40px 16px 60px' }}>
@@ -70,12 +85,13 @@ const UpgradePage: React.FC = () => {
           </div>
           <div style={{ fontSize: 12, color: '#9ca3af', marginBottom: 24 }}>Billed monthly · Cancel anytime</div>
           <button
-            style={{ width: '100%', padding: '12px 0', backgroundColor: '#7c3aed', color: '#fff', border: 'none', borderRadius: 10, cursor: 'not-allowed', fontSize: 14, fontWeight: 700, opacity: 0.85 }}
-            disabled
+            onClick={() => handleSubscribe('monthly')}
+            disabled={loading !== null}
+            style={{ width: '100%', padding: '12px 0', backgroundColor: '#7c3aed', color: '#fff', border: 'none', borderRadius: 10, cursor: loading ? 'not-allowed' : 'pointer', fontSize: 14, fontWeight: 700, opacity: loading ? 0.7 : 1 }}
           >
-            🔗 Coming Soon
+            {loading === 'monthly' ? 'Redirecting…' : 'Subscribe Monthly →'}
           </button>
-          <div style={{ fontSize: 11, color: '#9ca3af', marginTop: 8 }}>Stripe payment coming soon</div>
+          <div style={{ fontSize: 11, color: '#9ca3af', marginTop: 8 }}>Secure payment via Stripe</div>
         </div>
 
         {/* Annual — highlighted */}
@@ -91,14 +107,21 @@ const UpgradePage: React.FC = () => {
           </div>
           <div style={{ fontSize: 12, color: '#6d28d9', marginBottom: 24 }}>= £0.83/month · Best value</div>
           <button
-            style={{ width: '100%', padding: '12px 0', backgroundColor: '#7c3aed', color: '#fff', border: 'none', borderRadius: 10, cursor: 'not-allowed', fontSize: 14, fontWeight: 700, opacity: 0.85 }}
-            disabled
+            onClick={() => handleSubscribe('annual')}
+            disabled={loading !== null}
+            style={{ width: '100%', padding: '12px 0', backgroundColor: '#7c3aed', color: '#fff', border: 'none', borderRadius: 10, cursor: loading ? 'not-allowed' : 'pointer', fontSize: 14, fontWeight: 700, opacity: loading ? 0.7 : 1 }}
           >
-            🔗 Coming Soon
+            {loading === 'annual' ? 'Redirecting…' : 'Subscribe Annually →'}
           </button>
-          <div style={{ fontSize: 11, color: '#6d28d9', marginTop: 8 }}>Stripe payment coming soon</div>
+          <div style={{ fontSize: 11, color: '#6d28d9', marginTop: 8 }}>Secure payment via Stripe</div>
         </div>
       </div>
+
+      {checkoutError && (
+        <div style={{ backgroundColor: '#fef2f2', color: '#dc2626', border: '1px solid #fecaca', borderRadius: 10, padding: '12px 20px', marginBottom: 16, fontSize: 13, maxWidth: 560, width: '100%', textAlign: 'center' }}>
+          {checkoutError}
+        </div>
+      )}
 
       {/* Feature list */}
       <div style={{ width: '100%', maxWidth: 560, backgroundColor: '#ffffff', borderRadius: 16, padding: '24px 28px', border: '1px solid #e8e3f8', boxShadow: '0 2px 8px rgba(124,58,237,0.06)', marginBottom: 28 }}>

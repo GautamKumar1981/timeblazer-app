@@ -53,8 +53,9 @@ export const baziAPI = {
 
 // ── Subscription ──────────────────────────────────────────────────────────────
 export const subscriptionAPI = {
-  getStatus:  () => api.get('/subscription/status'),
-  subscribe:  () => api.post('/subscription/subscribe'),
+  getStatus:      () => api.get('/subscription/status'),
+  createCheckout: (plan: 'monthly' | 'annual') =>
+    api.post('/subscription/create-checkout', { plan }),
 };
 
 // ── Artifacts ─────────────────────────────────────────────────────────────────
