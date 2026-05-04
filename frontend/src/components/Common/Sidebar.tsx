@@ -1,30 +1,44 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 
-interface NavItem {
-  to: string;
-  icon: string;
-  label: string;
-}
+interface NavItem { to: string; icon: string; label: string }
 
 const NAV_ITEMS: NavItem[] = [
-  { to: '/dashboard', icon: '🏠', label: 'Dashboard' },
-  { to: '/calendar', icon: '📅', label: 'Calendar' },
-  { to: '/goals', icon: '🎯', label: 'Goals' },
-  { to: '/analytics', icon: '💎', label: 'Remedies' },
-  { to: '/weekly-review', icon: '📝', label: 'Weekly Review' },
-  { to: '/focus', icon: '🧘', label: 'Meditation' },
-  { to: '/settings', icon: '⚙️', label: 'Settings' },
+  { to: '/dashboard',       icon: '🏠',  label: 'Dashboard'         },
+  { to: '/calendar',        icon: '📅',  label: 'Calendar'          },
+  { to: '/chart',           icon: '🀄',  label: 'Four Pillars'      },
+  { to: '/analytics',       icon: '💎',  label: 'Remedies'          },
+  { to: '/weekly-review',   icon: '📝',  label: 'Weekly Review'     },
+  { to: '/focus',           icon: '🧘',  label: 'Meditation'        },
+  { to: '/settings',        icon: '⚙️',  label: 'Settings'          },
 ];
 
 const Sidebar: React.FC = () => {
   return (
     <aside style={{
-      width: '220px', minWidth: '220px', backgroundColor: '#1e1b4b',
+      width: 230, minWidth: 230, backgroundColor: '#f0eeff',
       display: 'flex', flexDirection: 'column', padding: '20px 0',
+      borderRight: '1px solid #e2daff',
     }}>
-      <div style={{ padding: '0 16px 20px', borderBottom: '1px solid rgba(255,255,255,0.08)', marginBottom: '12px' }}>
-        <span style={{ fontSize: '18px', fontWeight: 800, color: '#a5b4fc' }}>⏱ Timeblazer</span>
+      {/* Logo */}
+      <div style={{ padding: '0 16px 20px', borderBottom: '1px solid #e2daff', marginBottom: 10 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 9 }}>
+          <div style={{
+            width: 38, height: 38, borderRadius: 10,
+            background: 'linear-gradient(135deg, #7c3aed 0%, #db2777 100%)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            fontSize: 20, boxShadow: '0 3px 10px rgba(124,58,237,0.35)',
+            flexShrink: 0,
+          }}>🐉</div>
+          <div style={{ lineHeight: 1.1 }}>
+            <div style={{
+              fontSize: 15, fontWeight: 900,
+              background: 'linear-gradient(90deg, #7c3aed, #db2777)',
+              WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
+            }}>DragonHour</div>
+            <div style={{ fontSize: 8, fontWeight: 700, color: '#a78bfa', letterSpacing: 2 }}>BAZI ASTROLOGY</div>
+          </div>
+        </div>
       </div>
 
       <nav style={{ flex: 1 }}>
@@ -33,15 +47,16 @@ const Sidebar: React.FC = () => {
             key={item.to}
             to={item.to}
             style={({ isActive }) => ({
-              display: 'flex', alignItems: 'center', gap: '10px',
-              padding: '10px 16px', textDecoration: 'none', fontSize: '14px', fontWeight: 500,
-              color: isActive ? '#fff' : '#94a3b8',
-              backgroundColor: isActive ? 'rgba(99,102,241,0.3)' : 'transparent',
-              borderLeft: isActive ? '3px solid #6366f1' : '3px solid transparent',
-              transition: 'background 0.15s, color 0.15s',
+              display: 'flex', alignItems: 'center', gap: 10,
+              padding: '10px 16px', textDecoration: 'none',
+              fontSize: 14, fontWeight: isActive ? 700 : 500,
+              color: isActive ? '#3b0764' : '#6d28d9',
+              backgroundColor: isActive ? '#ddd6fe' : 'transparent',
+              borderLeft: isActive ? '3px solid #7c3aed' : '3px solid transparent',
+              transition: 'background 0.12s, color 0.12s',
             })}
           >
-            <span style={{ fontSize: '16px' }}>{item.icon}</span>
+            <span style={{ fontSize: 16 }}>{item.icon}</span>
             <span>{item.label}</span>
           </NavLink>
         ))}

@@ -7,18 +7,18 @@ import Sidebar from '../components/Common/Sidebar';
 import Header  from '../components/Common/Header';
 
 const ELEM_COLOR: Record<string, string> = {
-  Wood: '#22c55e', Fire: '#ef4444', Earth: '#f59e0b', Metal: '#94a3b8', Water: '#3b82f6',
+  Wood: '#16a34a', Fire: '#dc2626', Earth: '#d97706', Metal: '#6b7280', Water: '#2563eb',
 };
 
 const ELEM_ICON: Record<string, string> = {
   Wood: '🌱', Fire: '🔥', Earth: '⛰️', Metal: '⚙️', Water: '💧',
 };
 
-const BRANCH_ANIMAL: Record<number, { en: string; zh: string }> = {
-  0: { en: 'Rat', zh: '子' }, 1: { en: 'Ox', zh: '丑' }, 2: { en: 'Tiger', zh: '寅' },
-  3: { en: 'Rabbit', zh: '卯' }, 4: { en: 'Dragon', zh: '辰' }, 5: { en: 'Snake', zh: '巳' },
-  6: { en: 'Horse', zh: '午' }, 7: { en: 'Goat', zh: '未' }, 8: { en: 'Monkey', zh: '申' },
-  9: { en: 'Rooster', zh: '酉' }, 10: { en: 'Dog', zh: '戌' }, 11: { en: 'Pig', zh: '亥' },
+const BRANCH_ANIMAL: Record<number, { en: string }> = {
+  0: { en: 'Rat' }, 1: { en: 'Ox' }, 2: { en: 'Tiger' },
+  3: { en: 'Rabbit' }, 4: { en: 'Dragon' }, 5: { en: 'Snake' },
+  6: { en: 'Horse' }, 7: { en: 'Goat' }, 8: { en: 'Monkey' },
+  9: { en: 'Rooster' }, 10: { en: 'Dog' }, 11: { en: 'Pig' },
 };
 
 const DAILY_REMEDIES: Record<string, { morning: string; afternoon: string; evening: string; wear: string; avoid: string }> = {
@@ -59,14 +59,15 @@ const DAILY_REMEDIES: Record<string, { morning: string; afternoon: string; eveni
   },
 };
 
-const StatCard: React.FC<{ label: string; value: React.ReactNode; sub?: string; color?: string }> = ({ label, value, sub, color = '#8b5cf6' }) => (
+const StatCard: React.FC<{ label: string; value: React.ReactNode; sub?: string; color?: string }> = ({ label, value, sub, color = '#7c3aed' }) => (
   <div style={{
-    backgroundColor: '#16152e', borderRadius: 12, padding: '18px 20px',
+    backgroundColor: '#fff', borderRadius: 14, padding: '18px 20px',
     border: `1px solid ${color}33`, flex: 1, minWidth: 140,
+    boxShadow: '0 2px 8px rgba(124,58,237,0.07)',
   }}>
-    <div style={{ fontSize: 11, color: '#6b7280', marginBottom: 8, fontWeight: 600, textTransform: 'uppercase', letterSpacing: 0.5 }}>{label}</div>
-    <div style={{ fontSize: 24, fontWeight: 800, color }}>{value}</div>
-    {sub && <div style={{ fontSize: 11, color: '#9ca3af', marginTop: 4 }}>{sub}</div>}
+    <div style={{ fontSize: 10, color: '#9ca3af', marginBottom: 8, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.7 }}>{label}</div>
+    <div style={{ fontSize: 22, fontWeight: 800, color }}>{value}</div>
+    {sub && <div style={{ fontSize: 11, color: '#6b7280', marginTop: 4 }}>{sub}</div>}
   </div>
 );
 
@@ -74,35 +75,34 @@ const Dashboard: React.FC = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { today, chart, loading } = useAppSelector((s) => s.bazi);
-  const { user } = useAppSelector((s) => s.auth);
+  const { user }   = useAppSelector((s) => s.auth);
+  const sub        = useAppSelector((s) => s.subscription.data);
 
   useEffect(() => {
     dispatch(fetchToday());
     dispatch(fetchBaziChart());
   }, [dispatch]);
 
+  const greeting = new Date().getHours() < 12 ? 'morning' : new Date().getHours() < 18 ? 'afternoon' : 'evening';
+
   // Profile not set up yet
   if (!loading && (today as any)?.profile_required) {
     return (
-      <div style={{ display: 'flex', minHeight: '100vh', backgroundColor: '#0f0e1a' }}>
+      <div style={{ display: 'flex', minHeight: '100vh', backgroundColor: '#f8f6ff' }}>
         <Sidebar />
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
           <Header />
           <main style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: 32 }}>
             <div style={{ fontSize: 64, marginBottom: 20 }}>🐉</div>
-            <h2 style={{ color: '#c4b5fd', fontSize: 24, fontWeight: 700, margin: '0 0 10px', textAlign: 'center' }}>
-              Welcome to DragonHour, {user?.name}
+            <h2 style={{ color: '#2e1065', fontSize: 24, fontWeight: 700, margin: '0 0 10px', textAlign: 'center' }}>
+              Welcome to DragonHour, {user?.name}!
             </h2>
             <p style={{ color: '#6b7280', fontSize: 15, margin: '0 0 28px', textAlign: 'center', maxWidth: 420 }}>
               Enter your birth date, time, and gender to calculate your personalised Bazi chart and unlock your timing insights.
             </p>
             <button
               onClick={() => navigate('/profile')}
-              style={{
-                padding: '13px 32px', backgroundColor: '#7c3aed', color: '#fff',
-                border: 'none', borderRadius: 10, cursor: 'pointer',
-                fontSize: 16, fontWeight: 700, letterSpacing: 0.3,
-              }}
+              style={{ padding: '13px 32px', backgroundColor: '#7c3aed', color: '#fff', border: 'none', borderRadius: 10, cursor: 'pointer', fontSize: 16, fontWeight: 700 }}
             >
               🐉 Calculate My Bazi Chart →
             </button>
@@ -112,136 +112,127 @@ const Dashboard: React.FC = () => {
     );
   }
 
-  const forecast  = today?.forecast;
-  const dmElem    = today?.day_master?.element ?? chart?.day_master_element;
-  const dmColor   = dmElem ? ELEM_COLOR[dmElem] : '#8b5cf6';
-  const favElems  = today?.favorable_elements ?? chart?.favorable_elements ?? [];
-  const topHours  = forecast?.hours?.filter((h: HourForecast) => h.score >= 75).slice(0, 4) ?? [];
+  const forecast = today?.forecast;
+  const dmElem   = today?.day_master?.element ?? chart?.day_master_element;
+  const dmColor  = dmElem ? ELEM_COLOR[dmElem] : '#7c3aed';
+  const favElems = today?.favorable_elements ?? chart?.favorable_elements ?? [];
+  const topHours = forecast?.hours?.filter((h: HourForecast) => h.score >= 75).slice(0, 4) ?? [];
 
   return (
-    <div style={{ display: 'flex', minHeight: '100vh', backgroundColor: '#0f0e1a' }}>
+    <div style={{ display: 'flex', minHeight: '100vh', backgroundColor: '#f8f6ff' }}>
       <Sidebar />
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
         <Header />
-        <main style={{ flex: 1, padding: 32, overflowY: 'auto' }}>
+        <main style={{ flex: 1, padding: '28px 32px', overflowY: 'auto' }}>
+
+          {/* Trial banner */}
+          {sub && !sub.has_premium_access && (
+            <div style={{ backgroundColor: '#fce7f3', borderRadius: 12, padding: '12px 20px', marginBottom: 20, border: '1px solid #fbcfe8', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <span style={{ fontSize: 13, color: '#9d174d', fontWeight: 600 }}>🔒 Your 7-day trial has ended. Subscribe to unlock all features.</span>
+              <button onClick={() => navigate('/upgrade')} style={{ padding: '6px 16px', backgroundColor: '#db2777', color: '#fff', border: 'none', borderRadius: 8, cursor: 'pointer', fontSize: 12, fontWeight: 700 }}>Upgrade</button>
+            </div>
+          )}
+          {sub?.is_trial_active && (
+            <div style={{ backgroundColor: '#ede9fe', borderRadius: 12, padding: '12px 20px', marginBottom: 20, border: '1px solid #c4b5fd', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <span style={{ fontSize: 13, color: '#4c1d95', fontWeight: 600 }}>⏳ Free trial: {sub.trial_days_remaining} day{sub.trial_days_remaining !== 1 ? 's' : ''} remaining</span>
+              <button onClick={() => navigate('/upgrade')} style={{ padding: '6px 16px', backgroundColor: '#7c3aed', color: '#fff', border: 'none', borderRadius: 8, cursor: 'pointer', fontSize: 12, fontWeight: 700 }}>View Plans</button>
+            </div>
+          )}
 
           {/* Greeting */}
-          <div style={{ marginBottom: 28 }}>
-            <h2 style={{ margin: '0 0 4px', fontSize: 22, fontWeight: 700, color: '#e9d5ff' }}>
-              Good {new Date().getHours() < 12 ? 'morning' : new Date().getHours() < 18 ? 'afternoon' : 'evening'}, {user?.name} ✨
+          <div style={{ marginBottom: 24 }}>
+            <h2 style={{ margin: '0 0 4px', fontSize: 22, fontWeight: 800, color: '#2e1065' }}>
+              Good {greeting}, {user?.name} ✨
             </h2>
-            <p style={{ color: '#6b7280', fontSize: 13, margin: 0 }}>
-              {new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
+            <p style={{ color: '#9ca3af', fontSize: 13, margin: 0 }}>
+              {new Date().toLocaleDateString('en-GB', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
             </p>
           </div>
 
           {/* Top stats row */}
           <div style={{ display: 'flex', gap: 14, marginBottom: 24, flexWrap: 'wrap' }}>
             {forecast && (
-              <StatCard
-                label="Today's Rating"
-                value={forecast.rating}
-                sub={`Score: ${Math.round(forecast.score)}/100`}
-                color={forecast.color}
-              />
+              <StatCard label="Today's Rating" value={forecast.rating} sub={`Score: ${Math.round(forecast.score)}/100`} color={forecast.color} />
             )}
             {today?.day_master && (
               <StatCard
                 label="Day Master 日主"
-                value={<span>{today.day_master.cn} <span style={{ fontSize: 14 }}>{today.day_master.pinyin}</span></span>}
+                value={<span>{today.day_master.cn} <span style={{ fontSize: 13 }}>{today.day_master.pinyin}</span></span>}
                 sub={today.day_master.en}
                 color={dmColor}
               />
             )}
             {forecast && (
-              <StatCard
-                label="Today's Pillar"
-                value={forecast.pillar.name}
-                sub={`${forecast.pillar.stem.en} · ${forecast.pillar.branch.en}`}
-                color="#8b5cf6"
-              />
+              <StatCard label="Today's Pillar" value={forecast.pillar.name} sub={`${forecast.pillar.stem.en} · ${forecast.pillar.branch.en}`} color="#7c3aed" />
             )}
             <StatCard
               label="Favorable Elements"
-              value={
-                <span style={{ fontSize: 16, display: 'flex', gap: 6, marginTop: 2 }}>
-                  {favElems.map((e: string) => <span key={e}>{ELEM_ICON[e]}</span>)}
-                </span>
-              }
+              value={<span style={{ fontSize: 15, display: 'flex', gap: 6, marginTop: 2 }}>{favElems.map((e: string) => <span key={e}>{ELEM_ICON[e]}</span>)}</span>}
               sub={favElems.join(' · ')}
-              color="#f59e0b"
+              color="#d97706"
             />
           </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
-            {/* Auspicious hours today */}
-            <div style={{ backgroundColor: '#16152e', borderRadius: 12, padding: 22, border: '1px solid rgba(139,92,246,0.2)' }}>
-              <div style={{ fontSize: 14, fontWeight: 600, color: '#c4b5fd', marginBottom: 14 }}>
-                ⏰ Best Hours Today
-              </div>
+            {/* Best Hours Today */}
+            <div style={{ backgroundColor: '#fff', borderRadius: 14, padding: 22, border: '1px solid #e8e3f8', boxShadow: '0 2px 8px rgba(124,58,237,0.06)' }}>
+              <div style={{ fontSize: 14, fontWeight: 700, color: '#2e1065', marginBottom: 14 }}>⏰ Best Hours Today</div>
               {topHours.length > 0 ? (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                   {topHours.map((h: HourForecast) => (
-                    <div key={h.branch_index} style={{
-                      display: 'flex', alignItems: 'center', gap: 12,
-                      backgroundColor: '#1a1830', borderRadius: 8, padding: '10px 14px',
-                    }}>
+                    <div key={h.branch_index} style={{ display: 'flex', alignItems: 'center', gap: 12, backgroundColor: '#f5f3ff', borderRadius: 8, padding: '10px 14px' }}>
                       <div style={{ minWidth: 52, textAlign: 'center' }}>
-                        <div style={{ fontSize: 22, fontWeight: 900, color: '#e5e7eb', lineHeight: 1.1 }}>{h.pillar_name}</div>
-                        <div style={{ fontSize: 9, color: '#9ca3af', marginTop: 2, lineHeight: 1.2 }}>
+                        <div style={{ fontSize: 20, fontWeight: 900, color: '#2e1065', lineHeight: 1.1 }}>{h.pillar_name}</div>
+                        <div style={{ fontSize: 9, color: '#6b7280', marginTop: 2 }}>
                           {BRANCH_ANIMAL[h.branch_index]?.en ?? h.branch?.en ?? ''}
                         </div>
-                        <div style={{ fontSize: 9, color: ELEM_COLOR[h.stem?.element] ?? '#8b5cf6' }}>
+                        <div style={{ fontSize: 9, color: ELEM_COLOR[h.stem?.element] ?? '#7c3aed' }}>
                           {h.stem?.element ?? ''}
                         </div>
                       </div>
                       <div style={{ flex: 1 }}>
-                        <div style={{ fontSize: 11, color: ELEM_COLOR[h.stem.element] }}>{h.time_label}</div>
-                        <div style={{ width: '100%', height: 3, backgroundColor: '#0f0e1a', borderRadius: 2, marginTop: 4 }}>
+                        <div style={{ fontSize: 11, color: ELEM_COLOR[h.stem.element], fontWeight: 600 }}>{h.time_label}</div>
+                        <div style={{ width: '100%', height: 4, backgroundColor: '#e8e3f8', borderRadius: 2, marginTop: 4 }}>
                           <div style={{ width: `${h.score}%`, height: '100%', backgroundColor: h.color, borderRadius: 2 }} />
                         </div>
                       </div>
-                      <span style={{ fontSize: 11, color: h.color, fontWeight: 600 }}>{Math.round(h.score)}</span>
+                      <span style={{ fontSize: 12, color: h.color, fontWeight: 700 }}>{Math.round(h.score)}</span>
                     </div>
                   ))}
                 </div>
               ) : (
-                <div style={{ color: '#4b5563', fontSize: 13 }}>No strong hours today — plan lighter activities.</div>
+                <div style={{ color: '#9ca3af', fontSize: 13 }}>No strong hours today — plan lighter activities.</div>
               )}
               <button onClick={() => navigate('/daily')} style={{
                 marginTop: 14, width: '100%', padding: '8px 0',
-                backgroundColor: 'rgba(124,58,237,0.15)', color: '#c4b5fd',
-                border: '1px solid rgba(124,58,237,0.3)', borderRadius: 8,
+                backgroundColor: '#ede9fe', color: '#6d28d9',
+                border: '1px solid #c4b5fd', borderRadius: 8,
                 cursor: 'pointer', fontSize: 12, fontWeight: 600,
               }}>
                 Full Hourly Breakdown →
               </button>
             </div>
 
-            {/* Quick links */}
+            {/* Quick links (Bazi Chart removed) */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
               {[
-                { to: '/chart',           icon: '🀄', title: 'View Bazi Chart',        desc: 'Your four pillars & element balance' },
-                { to: '/calendar',        icon: '📅', title: 'Auspicious Calendar',    desc: 'Monthly view of favorable days' },
-                { to: '/business-timing', icon: '💼', title: 'Business Timing',        desc: 'Find dates for meetings & launches' },
-                { to: '/luck-pillars',    icon: '🌀', title: 'Luck Pillars 大运',      desc: 'Your 10-year luck cycle timeline' },
+                { to: '/calendar',        icon: '📅', title: 'Auspicious Calendar',   desc: 'Monthly view of favorable days'          },
+                { to: '/business-timing', icon: '💼', title: 'Business Timing',       desc: 'Find dates for meetings & launches'       },
+                { to: '/luck-pillars',    icon: '🌀', title: 'Luck Pillars 大运',     desc: 'Your 10-year luck cycle timeline'         },
+                { to: '/analytics',       icon: '💎', title: 'Remedies & Charms',     desc: 'Daily remedies, gemstones & amulets'      },
               ].map(({ to, icon, title, desc }) => (
-                <div
-                  key={to}
-                  onClick={() => navigate(to)}
-                  style={{
-                    backgroundColor: '#16152e', borderRadius: 10, padding: '14px 18px',
-                    border: '1px solid rgba(255,255,255,0.06)', cursor: 'pointer',
-                    display: 'flex', alignItems: 'center', gap: 14,
-                    transition: 'border-color 0.15s',
-                  }}
-                >
+                <div key={to} onClick={() => navigate(to)} style={{
+                  backgroundColor: '#fff', borderRadius: 12, padding: '14px 18px',
+                  border: '1px solid #e8e3f8', cursor: 'pointer',
+                  display: 'flex', alignItems: 'center', gap: 14,
+                  boxShadow: '0 1px 4px rgba(124,58,237,0.06)',
+                }}>
                   <span style={{ fontSize: 24 }}>{icon}</span>
                   <div style={{ flex: 1 }}>
-                    <div style={{ fontSize: 13, fontWeight: 600, color: '#d1d5db' }}>{title}</div>
-                    <div style={{ fontSize: 11, color: '#6b7280' }}>{desc}</div>
+                    <div style={{ fontSize: 13, fontWeight: 600, color: '#2e1065' }}>{title}</div>
+                    <div style={{ fontSize: 11, color: '#9ca3af' }}>{desc}</div>
                   </div>
-                  <span style={{ color: '#4b5563', fontSize: 16 }}>›</span>
+                  <span style={{ color: '#c4b5fd', fontSize: 18 }}>›</span>
                 </div>
               ))}
             </div>
@@ -249,19 +240,14 @@ const Dashboard: React.FC = () => {
 
           {/* Day tips */}
           {(forecast?.tips ?? []).length > 0 && (
-            <div style={{
-              marginTop: 20, backgroundColor: '#16152e', borderRadius: 12, padding: '18px 22px',
-              border: '1px solid rgba(139,92,246,0.2)',
-            }}>
-              <div style={{ fontSize: 13, fontWeight: 600, color: '#c4b5fd', marginBottom: 12 }}>
-                💡 Today's Guidance
-              </div>
+            <div style={{ marginTop: 20, backgroundColor: '#fff', borderRadius: 14, padding: '18px 22px', border: '1px solid #e8e3f8', boxShadow: '0 2px 8px rgba(124,58,237,0.06)' }}>
+              <div style={{ fontSize: 13, fontWeight: 700, color: '#2e1065', marginBottom: 12 }}>💡 Today's Guidance</div>
               <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
                 {forecast!.tips.map((tip: string, i: number) => (
                   <div key={i} style={{
-                    flex: 1, minWidth: 200, backgroundColor: '#1a1830', borderRadius: 8,
-                    padding: '10px 14px', fontSize: 13, color: '#d1d5db', lineHeight: 1.6,
-                    border: '1px solid rgba(255,255,255,0.06)',
+                    flex: 1, minWidth: 200, backgroundColor: '#f5f3ff', borderRadius: 8,
+                    padding: '10px 14px', fontSize: 13, color: '#374151', lineHeight: 1.6,
+                    border: '1px solid #e8e3f8',
                   }}>{tip}</div>
                 ))}
               </div>
@@ -270,18 +256,13 @@ const Dashboard: React.FC = () => {
 
           {/* Daily Remedy */}
           {dmElem && DAILY_REMEDIES[dmElem] && (() => {
-            const r = DAILY_REMEDIES[dmElem];
+            const r   = DAILY_REMEDIES[dmElem];
             const col = dmColor;
             return (
-              <div style={{
-                marginTop: 20, backgroundColor: '#16152e', borderRadius: 12, padding: '18px 22px',
-                border: `1px solid ${col}33`,
-              }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
+              <div style={{ marginTop: 20, backgroundColor: '#fff', borderRadius: 14, padding: '18px 22px', border: `1px solid ${col}33`, boxShadow: '0 2px 8px rgba(124,58,237,0.06)' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 14 }}>
                   <span style={{ fontSize: 18 }}>💊</span>
-                  <span style={{ fontSize: 13, fontWeight: 600, color: col }}>
-                    Daily Remedy — {dmElem} {ELEM_ICON[dmElem]} Energy
-                  </span>
+                  <span style={{ fontSize: 13, fontWeight: 700, color: col }}>Daily Remedy — {dmElem} {ELEM_ICON[dmElem]} Energy</span>
                 </div>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 10 }}>
                   {[
@@ -290,19 +271,13 @@ const Dashboard: React.FC = () => {
                     { label: '🌙 Evening', text: r.evening },
                     { label: '👗 Wear Today', text: r.wear },
                   ].map(({ label, text }) => (
-                    <div key={label} style={{
-                      backgroundColor: '#1a1830', borderRadius: 8, padding: '10px 14px',
-                      border: '1px solid rgba(255,255,255,0.06)',
-                    }}>
+                    <div key={label} style={{ backgroundColor: '#f5f3ff', borderRadius: 8, padding: '10px 14px', border: '1px solid #e8e3f8' }}>
                       <div style={{ fontSize: 10, fontWeight: 700, color: col, marginBottom: 4, textTransform: 'uppercase', letterSpacing: 0.4 }}>{label}</div>
-                      <div style={{ fontSize: 12, color: '#d1d5db', lineHeight: 1.6 }}>{text}</div>
+                      <div style={{ fontSize: 12, color: '#374151', lineHeight: 1.6 }}>{text}</div>
                     </div>
                   ))}
                 </div>
-                <div style={{
-                  backgroundColor: 'rgba(239,68,68,0.07)', borderRadius: 8, padding: '8px 14px',
-                  border: '1px solid rgba(239,68,68,0.15)', fontSize: 12, color: '#fca5a5',
-                }}>
+                <div style={{ backgroundColor: '#fef2f2', borderRadius: 8, padding: '8px 14px', border: '1px solid #fecaca', fontSize: 12, color: '#dc2626' }}>
                   <span style={{ fontWeight: 700 }}>⚠️ Avoid: </span>{r.avoid}
                 </div>
               </div>
