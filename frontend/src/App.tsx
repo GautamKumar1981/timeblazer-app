@@ -15,6 +15,10 @@ import StoriesPage      from './pages/StoriesPage';
 import ArtifactsShop    from './pages/ArtifactsShop';
 import SubscriptionPage from './pages/SubscriptionPage';
 import Settings         from './pages/Settings';
+import Goals            from './pages/Goals';
+import Analytics        from './pages/Analytics';
+import WeeklyReview     from './pages/WeeklyReview';
+import FocusMode        from './pages/FocusMode';
 
 const App: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -42,6 +46,10 @@ const App: React.FC = () => {
         <Route path="/artifacts"       element={auth ? <ArtifactsShop />   : <Navigate to="/" replace />} />
         <Route path="/subscription"    element={auth ? <SubscriptionPage /> : <Navigate to="/" replace />} />
         <Route path="/settings"        element={auth ? <Settings />         : <Navigate to="/" replace />} />
+        <Route path="/goals"           element={auth ? <Goals />            : <Navigate to="/" replace />} />
+        <Route path="/analytics"       element={auth ? <Analytics />        : <Navigate to="/" replace />} />
+        <Route path="/weekly-review"   element={auth ? <WeeklyReview />     : <Navigate to="/" replace />} />
+        <Route path="/focus"           element={auth ? <FocusMode />        : <Navigate to="/" replace />} />
         <Route path="*"                element={<Navigate to="/" replace />} />
       </Routes>
     </div>
