@@ -97,7 +97,7 @@ const analyticsSlice = createSlice({
       .addCase(fetchReviews.pending, (state) => { state.loading = true; })
       .addCase(fetchReviews.fulfilled, (state, action: PayloadAction<WeeklyReview[]>) => {
         state.loading = false;
-        state.reviews = action.payload;
+        state.reviews = Array.isArray(action.payload) ? action.payload : [];
       })
       .addCase(fetchReviews.rejected, (state, action) => {
         state.loading = false;

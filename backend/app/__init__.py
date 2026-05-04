@@ -28,9 +28,10 @@ def create_app(config_name=None):
 
     db.init_app(app)
     cors_origins = app.config.get('CORS_ORIGINS', '*')
-    CORS(app, origins=cors_origins, supports_credentials=True,
+    CORS(app, origins=cors_origins,
          allow_headers=['Content-Type', 'Authorization'],
-         methods=['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'])
+         methods=['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+         automatic_options=True)
     socketio.init_app(app, cors_allowed_origins=cors_origins, async_mode='threading')
     limiter.init_app(app)
 
