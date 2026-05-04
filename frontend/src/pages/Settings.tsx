@@ -4,6 +4,19 @@ import { updateProfile } from '../store/slices/authSlice';
 import Header from '../components/Common/Header';
 import Sidebar from '../components/Common/Sidebar';
 
+const inp: React.CSSProperties = {
+  width: '100%', padding: '10px 12px', border: '1px solid #e2d9f3',
+  borderRadius: 8, fontSize: 14, color: '#1f2937', backgroundColor: '#fff',
+  boxSizing: 'border-box', marginBottom: 12, outline: 'none',
+};
+
+const SectionCard: React.FC<{ title: string; children: React.ReactNode }> = ({ title, children }) => (
+  <div style={{ backgroundColor: '#fff', borderRadius: 14, padding: 24, boxShadow: '0 2px 8px rgba(124,58,237,0.07)', marginBottom: 20, border: '1px solid #e8e3f8' }}>
+    <h3 style={{ margin: '0 0 18px', fontSize: 15, fontWeight: 700, color: '#2e1065' }}>{title}</h3>
+    {children}
+  </div>
+);
+
 const Settings: React.FC = () => {
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.auth);
@@ -17,25 +30,12 @@ const Settings: React.FC = () => {
     if (user) setProfile({ name: user.name || '', email: user.email || '' });
   }, [user]);
 
-  const inp: React.CSSProperties = {
-    width: '100%', padding: '10px 12px', border: '1px solid #e2d9f3',
-    borderRadius: 8, fontSize: 14, color: '#1f2937', backgroundColor: '#fff',
-    boxSizing: 'border-box', marginBottom: 12, outline: 'none',
-  };
-
   const handleSaveProfile = async (e: React.FormEvent) => {
     e.preventDefault();
     await dispatch(updateProfile(profile));
     setSaved(true);
     setTimeout(() => setSaved(false), 2500);
   };
-
-  const SectionCard: React.FC<{ title: string; children: React.ReactNode }> = ({ title, children }) => (
-    <div style={{ backgroundColor: '#fff', borderRadius: 14, padding: 24, boxShadow: '0 2px 8px rgba(124,58,237,0.07)', marginBottom: 20, border: '1px solid #e8e3f8' }}>
-      <h3 style={{ margin: '0 0 18px', fontSize: 15, fontWeight: 700, color: '#2e1065' }}>{title}</h3>
-      {children}
-    </div>
-  );
 
   return (
     <div style={{ display: 'flex', minHeight: '100vh', backgroundColor: '#f8f6ff' }}>
