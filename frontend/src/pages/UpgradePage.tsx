@@ -29,8 +29,11 @@ const UpgradePage: React.FC = () => {
     try {
       const res = await subscriptionAPI.createCheckout(plan);
       window.location.href = res.data.url;
-    } catch {
-      setCheckoutError('Could not start checkout. Please try again.');
+    } catch (e: unknown) {
+      const err = e as { response?: { status?: number; data?: { error?: string } }; message?: string };
+      const detail = err.response?.data?.error || err.message || 'Unknown error';
+      const status = err.response?.status ?? 0;
+      setCheckoutError(`Error ${status}: ${detail}`);
       setLoading(null);
     }
   };
