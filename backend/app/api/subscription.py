@@ -102,13 +102,55 @@ def create_checkout():
             payment_method_types=['card'],
             line_items=[{'price': price_id, 'quantity': 1}],
             mode='subscription',
-            success_url=frontend_url + '/settings?subscribed=true',
+            success_url=frontend_url + '/settings?session_id={CHECKOUT_SESSION_ID}',
             cancel_url=frontend_url + '/upgrade',
             metadata={'user_id': str(user.id), 'plan': plan},
         )
         return jsonify({'url': session.url}), 200
     except stripe.error.StripeError as e:
         return jsonify({'error': str(e.user_message)}), 500
+
+
+@api_bp.route('/subscription/verify-session', methods=['POST'])
+def verify_session():
+    """Called by frontend after Stripe redirects back — verifies payment and activates subscription."""
+    user, err = get_current_user()
+    if err:
+        return jsonify({'error': err}), 401
+
+    stripe.api_key = os.environ.get('STRIPE_SECRET_KEY', '')
+    data       = request.get_json() or {}
+    session_id = data.get('session_id', '')
+
+    if not session_id:
+        return jsonify({'error': 'Missing session_id'}), 400
+
+    try:
+        checkout_session = stripe.checkout.Session.retrieve(session_id)
+    except stripe.error.StripeError as e:
+        return jsonify({'error': str(e)}), 400
+
+    # Make sure this session was created for this user
+    if str(checkout_session.get('metadata', {}).get('user_id', '')) != str(user.id):
+        return jsonify({'error': 'Session does not belong to this account'}), 403
+
+    if checkout_session.get('payment_status') != 'paid':
+        return jsonify({'error': 'Payment not completed', 'payment_status': checkout_session.get('payment_status')}), 400
+
+    plan  = checkout_session.get('metadata', {}).get('plan', 'monthly')
+    days  = PLAN_DAYS.get(plan, 31)
+    until = datetime.utcnow() + timedelta(days=days)
+
+    db.session.execute(db.text(
+        "INSERT INTO user_subscriptions (user_id, subscribed_until, is_cancelled) "
+        "VALUES (:uid, :until, FALSE) "
+        "ON CONFLICT (user_id) DO UPDATE "
+        "SET subscribed_until = :until, is_cancelled = FALSE"
+    ), {'uid': user.id, 'until': until})
+    db.session.commit()
+
+    sub = UserSubscription.query.filter_by(user_id=user.id).first()
+    return jsonify({'subscription': sub.to_dict()}), 200
 
 
 @api_bp.route('/subscription/webhook', methods=['POST'])

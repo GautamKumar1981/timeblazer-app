@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../store/store';
 import { updateProfile } from '../store/slices/authSlice';
 import { fetchSubscriptionStatus } from '../store/slices/subscriptionSlice';
+import { subscriptionAPI } from '../services/api';
 import Header from '../components/Common/Header';
 import Sidebar from '../components/Common/Sidebar';
 
@@ -31,12 +32,15 @@ const Settings: React.FC = () => {
     if (user) setProfile({ name: user.name || '', email: user.email || '' });
   }, [user]);
 
-  // Re-fetch subscription if returning from Stripe checkout
+  // Verify payment and activate subscription when returning from Stripe checkout
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    if (params.get('subscribed') === 'true') {
-      dispatch(fetchSubscriptionStatus());
+    const params    = new URLSearchParams(window.location.search);
+    const sessionId = params.get('session_id');
+    if (sessionId) {
       window.history.replaceState({}, '', '/settings');
+      subscriptionAPI.verifySession(sessionId)
+        .then(() => dispatch(fetchSubscriptionStatus()))
+        .catch(() => dispatch(fetchSubscriptionStatus()));
     }
   }, [dispatch]);
 
