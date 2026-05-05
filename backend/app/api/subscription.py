@@ -15,25 +15,45 @@ PLAN_DAYS = {
 
 @api_bp.route('/subscription/migrate', methods=['POST'])
 def subscription_migrate():
-    """One-time migration: add Stripe columns and reset subscriptions for re-testing."""
+    """One-time migration: create/update subscription table with Stripe columns."""
+    results = []
+
+    # Step 1: create table with full schema if it doesn't exist
     try:
-        db.session.execute(db.text(
-            "ALTER TABLE user_subscriptions ADD COLUMN IF NOT EXISTS stripe_customer_id VARCHAR(255)"
-        ))
-        db.session.execute(db.text(
-            "ALTER TABLE user_subscriptions ADD COLUMN IF NOT EXISTS stripe_subscription_id VARCHAR(255)"
-        ))
-        db.session.execute(db.text(
-            "ALTER TABLE user_subscriptions ADD COLUMN IF NOT EXISTS plan VARCHAR(20)"
-        ))
+        db.create_all()
+        results.append('create_all: ok')
+    except Exception as e:
+        results.append(f'create_all: {e}')
+
+    # Step 2: add each column individually, ignore if already exists
+    columns = [
+        ("stripe_customer_id",     "VARCHAR(255)"),
+        ("stripe_subscription_id", "VARCHAR(255)"),
+        ("plan",                   "VARCHAR(20)"),
+    ]
+    for col, col_type in columns:
+        try:
+            db.session.execute(db.text(
+                f"ALTER TABLE user_subscriptions ADD COLUMN {col} {col_type}"
+            ))
+            db.session.commit()
+            results.append(f'added {col}')
+        except Exception:
+            db.session.rollback()
+            results.append(f'{col}: already exists or skipped')
+
+    # Step 3: reset subscribed_until so we can test a fresh payment
+    try:
         db.session.execute(db.text(
             "UPDATE user_subscriptions SET subscribed_until = NULL, is_cancelled = FALSE"
         ))
         db.session.commit()
-        return jsonify({'status': 'ok', 'message': 'Migration complete. Subscriptions reset.'}), 200
+        results.append('reset subscriptions: ok')
     except Exception as e:
         db.session.rollback()
-        return jsonify({'error': str(e)}), 500
+        results.append(f'reset: {e}')
+
+    return jsonify({'status': 'ok', 'steps': results}), 200
 
 
 @api_bp.route('/subscription/status', methods=['GET'])
