@@ -80,11 +80,9 @@ def subscription_webhook():
         return '', 400
 
     if event['type'] == 'checkout.session.completed':
-        session            = event['data']['object']
-        user_id            = session.get('metadata', {}).get('user_id')
-        plan               = session.get('metadata', {}).get('plan', 'monthly')
-        stripe_sub_id      = session.get('subscription')
-        stripe_customer_id = session.get('customer')
+        session = event['data']['object']
+        user_id = session.get('metadata', {}).get('user_id')
+        plan    = session.get('metadata', {}).get('plan', 'monthly')
 
         if user_id:
             sub = UserSubscription.query.filter_by(user_id=int(user_id)).first()
@@ -93,11 +91,20 @@ def subscription_webhook():
                 db.session.add(sub)
 
             days = PLAN_DAYS.get(plan, 31)
-            sub.subscribed_until       = datetime.utcnow() + timedelta(days=days)
-            sub.stripe_subscription_id = stripe_sub_id
-            sub.stripe_customer_id     = stripe_customer_id
-            sub.plan                   = plan
-            sub.is_cancelled           = False
+            sub.subscribed_until = datetime.utcnow() + timedelta(days=days)
+            sub.is_cancelled     = False
+
+            # Store Stripe IDs if the columns exist (added in later migration)
+            for col, val in [
+                ('stripe_subscription_id', session.get('subscription')),
+                ('stripe_customer_id',     session.get('customer')),
+                ('plan',                   plan),
+            ]:
+                try:
+                    setattr(sub, col, val)
+                except Exception:
+                    pass
+
             db.session.commit()
 
     elif event['type'] == 'customer.subscription.deleted':
