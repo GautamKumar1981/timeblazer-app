@@ -128,37 +128,46 @@ def subscription_webhook():
         plan    = session.get('metadata', {}).get('plan', 'monthly')
 
         if user_id:
-            sub = UserSubscription.query.filter_by(user_id=int(user_id)).first()
-            if not sub:
-                sub = UserSubscription(user_id=int(user_id))
-                db.session.add(sub)
+            uid   = int(user_id)
+            days  = PLAN_DAYS.get(plan, 31)
+            until = datetime.utcnow() + timedelta(days=days)
 
-            days = PLAN_DAYS.get(plan, 31)
-            sub.subscribed_until = datetime.utcnow() + timedelta(days=days)
-            sub.is_cancelled     = False
+            # Raw SQL UPSERT — only touches guaranteed columns, avoids issues
+            # with Stripe columns that may not exist in the DB yet
+            db.session.execute(db.text(
+                "INSERT INTO user_subscriptions (user_id, subscribed_until, is_cancelled) "
+                "VALUES (:uid, :until, FALSE) "
+                "ON CONFLICT (user_id) DO UPDATE "
+                "SET subscribed_until = :until, is_cancelled = FALSE"
+            ), {'uid': uid, 'until': until})
+            db.session.commit()
 
-            # Store Stripe IDs if the columns exist (added in later migration)
+            # Try each Stripe column via raw SQL — skips gracefully if column absent
             for col, val in [
                 ('stripe_subscription_id', session.get('subscription')),
                 ('stripe_customer_id',     session.get('customer')),
                 ('plan',                   plan),
             ]:
-                try:
-                    setattr(sub, col, val)
-                except Exception:
-                    pass
-
-            db.session.commit()
+                if val:
+                    try:
+                        db.session.execute(db.text(
+                            f"UPDATE user_subscriptions SET {col} = :val WHERE user_id = :uid"
+                        ), {'val': val, 'uid': uid})
+                        db.session.commit()
+                    except Exception:
+                        db.session.rollback()
 
     elif event['type'] == 'customer.subscription.deleted':
         sub_obj       = event['data']['object']
         stripe_sub_id = sub_obj.get('id')
-        sub = UserSubscription.query.filter_by(
-            stripe_subscription_id=stripe_sub_id
-        ).first()
-        if sub:
-            sub.subscribed_until = None
-            sub.is_cancelled     = True
+        try:
+            db.session.execute(db.text(
+                "UPDATE user_subscriptions "
+                "SET subscribed_until = NULL, is_cancelled = TRUE "
+                "WHERE stripe_subscription_id = :sid"
+            ), {'sid': stripe_sub_id})
             db.session.commit()
+        except Exception:
+            db.session.rollback()
 
     return '', 200
