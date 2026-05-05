@@ -13,6 +13,29 @@ PLAN_DAYS = {
 }
 
 
+@api_bp.route('/subscription/migrate', methods=['POST'])
+def subscription_migrate():
+    """One-time migration: add Stripe columns and reset subscriptions for re-testing."""
+    try:
+        db.session.execute(db.text(
+            "ALTER TABLE user_subscriptions ADD COLUMN IF NOT EXISTS stripe_customer_id VARCHAR(255)"
+        ))
+        db.session.execute(db.text(
+            "ALTER TABLE user_subscriptions ADD COLUMN IF NOT EXISTS stripe_subscription_id VARCHAR(255)"
+        ))
+        db.session.execute(db.text(
+            "ALTER TABLE user_subscriptions ADD COLUMN IF NOT EXISTS plan VARCHAR(20)"
+        ))
+        db.session.execute(db.text(
+            "UPDATE user_subscriptions SET subscribed_until = NULL, is_cancelled = FALSE"
+        ))
+        db.session.commit()
+        return jsonify({'status': 'ok', 'message': 'Migration complete. Subscriptions reset.'}), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': str(e)}), 500
+
+
 @api_bp.route('/subscription/status', methods=['GET'])
 def subscription_status():
     user, err = get_current_user()
