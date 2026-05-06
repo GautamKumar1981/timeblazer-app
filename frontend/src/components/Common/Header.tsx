@@ -31,7 +31,9 @@ const Header: React.FC = () => {
 
   const handleLogout = () => { dispatch(logout()); navigate('/'); };
 
-  const trialBadge = sub?.is_trial_active
+  const trialBadge = sub?.is_subscribed
+    ? null
+    : sub?.is_trial_active
     ? `Trial: ${sub.trial_days_remaining}d left`
     : sub && !sub.has_premium_access
     ? 'Trial Expired'
