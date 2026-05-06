@@ -167,12 +167,13 @@ def cancel_subscription():
 
     if sub.stripe_subscription_id:
         try:
-            stripe.Subscription.cancel(sub.stripe_subscription_id)
+            stripe.Subscription.modify(sub.stripe_subscription_id, cancel_at_period_end=True)
         except Exception:
             pass
 
+    # Keep subscribed_until intact so user retains access until period end
     db.session.execute(db.text(
-        "UPDATE user_subscriptions SET subscribed_until = NULL, is_cancelled = TRUE WHERE user_id = :uid"
+        "UPDATE user_subscriptions SET is_cancelled = TRUE WHERE user_id = :uid"
     ), {'uid': user.id})
     db.session.commit()
 

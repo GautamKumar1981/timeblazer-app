@@ -138,27 +138,46 @@ const Settings: React.FC = () => {
           <SectionCard title="💎 Subscription">
             {sub?.is_subscribed ? (
               <div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 10, backgroundColor: '#d1fae5', borderRadius: 10, padding: '12px 16px', marginBottom: 16, border: '1px solid #6ee7b7' }}>
-                  <span style={{ fontSize: 20 }}>✅</span>
-                  <div>
-                    <div style={{ fontSize: 14, fontWeight: 700, color: '#065f46' }}>Active Subscription</div>
-                    <div style={{ fontSize: 13, color: '#047857', marginTop: 2 }}>
-                      Access until {new Date(sub.subscribed_until!).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}
+                {sub.is_cancelled ? (
+                  <>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 10, backgroundColor: '#fffbeb', borderRadius: 10, padding: '12px 16px', marginBottom: 12, border: '1px solid #fcd34d' }}>
+                      <span style={{ fontSize: 20 }}>⚠️</span>
+                      <div>
+                        <div style={{ fontSize: 14, fontWeight: 700, color: '#92400e' }}>Subscription Cancelled</div>
+                        <div style={{ fontSize: 13, color: '#b45309', marginTop: 2 }}>
+                          You still have full access until {new Date(sub.subscribed_until!).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                </div>
-                {cancelError && (
-                  <div style={{ backgroundColor: '#fef2f2', color: '#dc2626', padding: '8px 12px', borderRadius: 8, marginBottom: 12, fontSize: 13, border: '1px solid #fecaca' }}>
-                    {cancelError}
-                  </div>
+                    <a href="/upgrade" style={{ display: 'inline-block', padding: '8px 18px', backgroundColor: '#ede9fe', color: '#6d28d9', border: '1px solid #c4b5fd', borderRadius: 8, textDecoration: 'none', fontWeight: 600, fontSize: 13 }}>
+                      Resubscribe →
+                    </a>
+                  </>
+                ) : (
+                  <>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 10, backgroundColor: '#d1fae5', borderRadius: 10, padding: '12px 16px', marginBottom: 16, border: '1px solid #6ee7b7' }}>
+                      <span style={{ fontSize: 20 }}>✅</span>
+                      <div>
+                        <div style={{ fontSize: 14, fontWeight: 700, color: '#065f46' }}>Active Subscription</div>
+                        <div style={{ fontSize: 13, color: '#047857', marginTop: 2 }}>
+                          Renews {new Date(sub.subscribed_until!).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}
+                        </div>
+                      </div>
+                    </div>
+                    {cancelError && (
+                      <div style={{ backgroundColor: '#fef2f2', color: '#dc2626', padding: '8px 12px', borderRadius: 8, marginBottom: 12, fontSize: 13, border: '1px solid #fecaca' }}>
+                        {cancelError}
+                      </div>
+                    )}
+                    <button
+                      onClick={handleCancelSubscription}
+                      disabled={cancelling}
+                      style={{ padding: '8px 18px', backgroundColor: '#fff', color: '#dc2626', border: '1px solid #fecaca', borderRadius: 8, cursor: cancelling ? 'not-allowed' : 'pointer', fontSize: 13, fontWeight: 600, opacity: cancelling ? 0.7 : 1 }}
+                    >
+                      {cancelling ? 'Cancelling…' : 'Cancel Subscription'}
+                    </button>
+                  </>
                 )}
-                <button
-                  onClick={handleCancelSubscription}
-                  disabled={cancelling}
-                  style={{ padding: '8px 18px', backgroundColor: '#fff', color: '#dc2626', border: '1px solid #fecaca', borderRadius: 8, cursor: cancelling ? 'not-allowed' : 'pointer', fontSize: 13, fontWeight: 600, opacity: cancelling ? 0.7 : 1 }}
-                >
-                  {cancelling ? 'Cancelling…' : 'Cancel Subscription'}
-                </button>
               </div>
             ) : sub?.is_trial_active ? (
               <div>
