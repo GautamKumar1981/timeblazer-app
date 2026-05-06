@@ -56,8 +56,9 @@ export const subscriptionAPI = {
   getStatus:      () => api.get('/subscription/status'),
   createCheckout: (plan: 'monthly' | 'annual') =>
     api.post('/subscription/create-checkout', { plan }),
-  verifySession:  (sessionId: string) =>
+  verifySession:      (sessionId: string) =>
     api.post('/subscription/verify-session', { session_id: sessionId }),
+  cancelSubscription: () => api.post('/subscription/cancel'),
 };
 
 // ── Artifacts ─────────────────────────────────────────────────────────────────

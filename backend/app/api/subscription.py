@@ -153,6 +153,33 @@ def verify_session():
     return jsonify({'subscription': sub.to_dict()}), 200
 
 
+@api_bp.route('/subscription/cancel', methods=['POST'])
+def cancel_subscription():
+    user, err = get_current_user()
+    if err:
+        return jsonify({'error': err}), 401
+
+    sub = UserSubscription.query.filter_by(user_id=user.id).first()
+    if not sub or not sub.is_subscribed:
+        return jsonify({'error': 'No active subscription found'}), 400
+
+    stripe.api_key = os.environ.get('STRIPE_SECRET_KEY', '')
+
+    if sub.stripe_subscription_id:
+        try:
+            stripe.Subscription.cancel(sub.stripe_subscription_id)
+        except Exception:
+            pass
+
+    db.session.execute(db.text(
+        "UPDATE user_subscriptions SET subscribed_until = NULL, is_cancelled = TRUE WHERE user_id = :uid"
+    ), {'uid': user.id})
+    db.session.commit()
+
+    sub = UserSubscription.query.filter_by(user_id=user.id).first()
+    return jsonify({'subscription': sub.to_dict()}), 200
+
+
 @api_bp.route('/subscription/webhook', methods=['POST'])
 def subscription_webhook():
     payload        = request.data

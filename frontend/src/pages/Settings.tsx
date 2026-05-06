@@ -22,10 +22,13 @@ const SectionCard: React.FC<{ title: string; children: React.ReactNode }> = ({ t
 const Settings: React.FC = () => {
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.auth);
+  const sub = useAppSelector((s) => s.subscription.data);
 
   const [profile, setProfile] = useState({ name: user?.name || '', email: user?.email || '' });
   const [notifications, setNotifications] = useState({ email: true, browser: true, reminderMinutes: 5 });
   const [saved, setSaved] = useState(false);
+  const [cancelling, setCancelling] = useState(false);
+  const [cancelError, setCancelError] = useState('');
 
   // Sync form when Redux user loads (e.g. after page refresh)
   useEffect(() => {
@@ -43,6 +46,21 @@ const Settings: React.FC = () => {
         .catch(() => dispatch(fetchSubscriptionStatus()));
     }
   }, [dispatch]);
+
+  const handleCancelSubscription = async () => {
+    if (!window.confirm('Cancel your subscription? You will lose access immediately.')) return;
+    setCancelling(true);
+    setCancelError('');
+    try {
+      await subscriptionAPI.cancelSubscription();
+      dispatch(fetchSubscriptionStatus());
+    } catch (e: unknown) {
+      const err = e as { response?: { data?: { error?: string } } };
+      setCancelError(err.response?.data?.error || 'Failed to cancel. Please try again.');
+    } finally {
+      setCancelling(false);
+    }
+  };
 
   const handleSaveProfile = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -118,12 +136,51 @@ const Settings: React.FC = () => {
           </SectionCard>
 
           <SectionCard title="💎 Subscription">
-            <p style={{ fontSize: 14, color: '#6b7280', margin: '0 0 14px' }}>
-              Manage your DragonHour subscription — 7-day free trial, then £0.99/month or £9.99/year.
-            </p>
-            <a href="/upgrade" style={{ display: 'inline-block', padding: '10px 22px', backgroundColor: '#ede9fe', color: '#6d28d9', border: '1px solid #c4b5fd', borderRadius: 8, textDecoration: 'none', fontWeight: 700, fontSize: 14 }}>
-              View Pricing Plans →
-            </a>
+            {sub?.is_subscribed ? (
+              <div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10, backgroundColor: '#d1fae5', borderRadius: 10, padding: '12px 16px', marginBottom: 16, border: '1px solid #6ee7b7' }}>
+                  <span style={{ fontSize: 20 }}>✅</span>
+                  <div>
+                    <div style={{ fontSize: 14, fontWeight: 700, color: '#065f46' }}>Active Subscription</div>
+                    <div style={{ fontSize: 13, color: '#047857', marginTop: 2 }}>
+                      Access until {new Date(sub.subscribed_until!).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}
+                    </div>
+                  </div>
+                </div>
+                {cancelError && (
+                  <div style={{ backgroundColor: '#fef2f2', color: '#dc2626', padding: '8px 12px', borderRadius: 8, marginBottom: 12, fontSize: 13, border: '1px solid #fecaca' }}>
+                    {cancelError}
+                  </div>
+                )}
+                <button
+                  onClick={handleCancelSubscription}
+                  disabled={cancelling}
+                  style={{ padding: '8px 18px', backgroundColor: '#fff', color: '#dc2626', border: '1px solid #fecaca', borderRadius: 8, cursor: cancelling ? 'not-allowed' : 'pointer', fontSize: 13, fontWeight: 600, opacity: cancelling ? 0.7 : 1 }}
+                >
+                  {cancelling ? 'Cancelling…' : 'Cancel Subscription'}
+                </button>
+              </div>
+            ) : sub?.is_trial_active ? (
+              <div>
+                <div style={{ backgroundColor: '#ede9fe', borderRadius: 10, padding: '12px 16px', marginBottom: 14, border: '1px solid #c4b5fd' }}>
+                  <div style={{ fontSize: 14, fontWeight: 700, color: '#4c1d95' }}>⏳ Free Trial — {sub.trial_days_remaining} day{sub.trial_days_remaining !== 1 ? 's' : ''} remaining</div>
+                  <div style={{ fontSize: 13, color: '#6d28d9', marginTop: 4 }}>Subscribe before your trial ends to keep full access.</div>
+                </div>
+                <a href="/upgrade" style={{ display: 'inline-block', padding: '10px 22px', backgroundColor: '#7c3aed', color: '#fff', borderRadius: 8, textDecoration: 'none', fontWeight: 700, fontSize: 14 }}>
+                  Subscribe Now →
+                </a>
+              </div>
+            ) : (
+              <div>
+                <div style={{ backgroundColor: '#fce7f3', borderRadius: 10, padding: '12px 16px', marginBottom: 14, border: '1px solid #fbcfe8' }}>
+                  <div style={{ fontSize: 14, fontWeight: 700, color: '#9d174d' }}>🔒 Trial Expired</div>
+                  <div style={{ fontSize: 13, color: '#be185d', marginTop: 4 }}>Subscribe to continue your Bazi journey.</div>
+                </div>
+                <a href="/upgrade" style={{ display: 'inline-block', padding: '10px 22px', backgroundColor: '#7c3aed', color: '#fff', borderRadius: 8, textDecoration: 'none', fontWeight: 700, fontSize: 14 }}>
+                  View Plans →
+                </a>
+              </div>
+            )}
           </SectionCard>
         </main>
       </div>

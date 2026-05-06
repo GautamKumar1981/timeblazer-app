@@ -132,7 +132,7 @@ const Dashboard: React.FC = () => {
               <button onClick={() => navigate('/upgrade')} style={{ padding: '6px 16px', backgroundColor: '#db2777', color: '#fff', border: 'none', borderRadius: 8, cursor: 'pointer', fontSize: 12, fontWeight: 700 }}>Upgrade</button>
             </div>
           )}
-          {sub?.is_trial_active && (
+          {sub?.is_trial_active && !sub?.is_subscribed && (
             <div style={{ backgroundColor: '#ede9fe', borderRadius: 12, padding: '12px 20px', marginBottom: 20, border: '1px solid #c4b5fd', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <span style={{ fontSize: 13, color: '#4c1d95', fontWeight: 600 }}>⏳ Free trial: {sub.trial_days_remaining} day{sub.trial_days_remaining !== 1 ? 's' : ''} remaining</span>
               <button onClick={() => navigate('/upgrade')} style={{ padding: '6px 16px', backgroundColor: '#7c3aed', color: '#fff', border: 'none', borderRadius: 8, cursor: 'pointer', fontSize: 12, fontWeight: 700 }}>View Plans</button>
