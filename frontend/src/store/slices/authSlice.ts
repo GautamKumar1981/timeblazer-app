@@ -4,9 +4,11 @@ import { authAPI } from '../../services/api';
 import { getToken } from '../../services/storage';
 
 export interface User {
-  _id: string;
+  id: number;
   name: string;
   email: string;
+  username: string;
+  is_admin: boolean;
 }
 
 interface AuthState {
@@ -37,8 +39,8 @@ export const loginUser = createAsyncThunk(
       const data = await authService.login(credentials.email, credentials.password);
       return data;
     } catch (err: unknown) {
-      const error = err as { response?: { data?: { message?: string } } };
-      return rejectWithValue(error.response?.data?.message || 'Login failed');
+      const error = err as { response?: { data?: { error?: string; message?: string } } };
+      return rejectWithValue(error.response?.data?.error || error.response?.data?.message || 'Login failed');
     }
   }
 );
@@ -50,8 +52,8 @@ export const registerUser = createAsyncThunk(
       const data = await authService.register(payload.name, payload.email, payload.password);
       return data;
     } catch (err: unknown) {
-      const error = err as { response?: { data?: { message?: string } } };
-      return rejectWithValue(error.response?.data?.message || 'Registration failed');
+      const error = err as { response?: { data?: { error?: string; message?: string } } };
+      return rejectWithValue(error.response?.data?.error || error.response?.data?.message || 'Registration failed');
     }
   }
 );
@@ -63,7 +65,7 @@ export const updateProfile = createAsyncThunk(
       const response = await authAPI.updateProfile(data);
       return response.data as User;
     } catch (err: unknown) {
-      const error = err as { response?: { data?: { message?: string } } };
+      const error = err as { response?: { data?: { error?: string; message?: string } } };
       return rejectWithValue(error.response?.data?.message || 'Update failed');
     }
   }
