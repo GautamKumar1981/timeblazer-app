@@ -3,7 +3,7 @@ import { setToken, clearAll, getToken } from './storage';
 
 export interface LoginResponse {
   token: string;
-  user: { _id: string; name: string; email: string };
+  user: { id: number; name: string; email: string; username: string; is_admin: boolean };
 }
 
 export const login = async (email: string, password: string): Promise<LoginResponse> => {
