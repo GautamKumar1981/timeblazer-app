@@ -36,6 +36,11 @@ const Settings: React.FC = () => {
     if (user) setProfile({ name: user.name || '', email: user.email || '' });
   }, [user]);
 
+  // Always fetch fresh subscription status when Settings page loads
+  useEffect(() => {
+    dispatch(fetchSubscriptionStatus());
+  }, [dispatch]);
+
   // Verify payment and activate subscription when returning from Stripe checkout
   useEffect(() => {
     const params    = new URLSearchParams(window.location.search);
