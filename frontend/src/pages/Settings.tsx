@@ -29,6 +29,7 @@ const Settings: React.FC = () => {
   const [saved, setSaved] = useState(false);
   const [cancelling, setCancelling] = useState(false);
   const [cancelError, setCancelError] = useState('');
+  const [portalLoading, setPortalLoading] = useState(false);
 
   // Sync form when Redux user loads (e.g. after page refresh)
   useEffect(() => {
@@ -46,6 +47,19 @@ const Settings: React.FC = () => {
         .catch(() => dispatch(fetchSubscriptionStatus()));
     }
   }, [dispatch]);
+
+  const handleBillingPortal = async () => {
+    setPortalLoading(true);
+    try {
+      const res = await subscriptionAPI.billingPortal();
+      window.location.href = res.data.url;
+    } catch (e: unknown) {
+      const err = e as { response?: { data?: { error?: string } } };
+      alert(err.response?.data?.error || 'Could not open billing portal.');
+    } finally {
+      setPortalLoading(false);
+    }
+  };
 
   const handleCancelSubscription = async () => {
     if (!window.confirm('Cancel your subscription? You will lose access immediately.')) return;
@@ -169,13 +183,22 @@ const Settings: React.FC = () => {
                         {cancelError}
                       </div>
                     )}
-                    <button
-                      onClick={handleCancelSubscription}
-                      disabled={cancelling}
-                      style={{ padding: '8px 18px', backgroundColor: '#fff', color: '#dc2626', border: '1px solid #fecaca', borderRadius: 8, cursor: cancelling ? 'not-allowed' : 'pointer', fontSize: 13, fontWeight: 600, opacity: cancelling ? 0.7 : 1 }}
-                    >
-                      {cancelling ? 'Cancelling…' : 'Cancel Subscription'}
-                    </button>
+                    <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+                      <button
+                        onClick={handleBillingPortal}
+                        disabled={portalLoading}
+                        style={{ padding: '8px 18px', backgroundColor: '#ede9fe', color: '#6d28d9', border: '1px solid #c4b5fd', borderRadius: 8, cursor: portalLoading ? 'not-allowed' : 'pointer', fontSize: 13, fontWeight: 600, opacity: portalLoading ? 0.7 : 1 }}
+                      >
+                        {portalLoading ? 'Opening…' : '💳 Manage Billing'}
+                      </button>
+                      <button
+                        onClick={handleCancelSubscription}
+                        disabled={cancelling}
+                        style={{ padding: '8px 18px', backgroundColor: '#fff', color: '#dc2626', border: '1px solid #fecaca', borderRadius: 8, cursor: cancelling ? 'not-allowed' : 'pointer', fontSize: 13, fontWeight: 600, opacity: cancelling ? 0.7 : 1 }}
+                      >
+                        {cancelling ? 'Cancelling…' : 'Cancel Subscription'}
+                      </button>
+                    </div>
                   </>
                 )}
               </div>

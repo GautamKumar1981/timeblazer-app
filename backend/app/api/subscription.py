@@ -57,7 +57,6 @@ def create_checkout():
     try:
         session = stripe.checkout.Session.create(
             customer_email=user.email,
-            payment_method_types=['card'],
             line_items=[{'price': price_id, 'quantity': 1}],
             mode='subscription',
             success_url=frontend_url + '/settings?session_id={CHECKOUT_SESSION_ID}',
@@ -109,6 +108,29 @@ def verify_session():
 
     sub = UserSubscription.query.filter_by(user_id=user.id).first()
     return jsonify({'subscription': sub.to_dict()}), 200
+
+
+@api_bp.route('/subscription/billing-portal', methods=['POST'])
+def billing_portal():
+    user, err = get_current_user()
+    if err:
+        return jsonify({'error': err}), 401
+
+    stripe.api_key = os.environ.get('STRIPE_SECRET_KEY', '')
+    frontend_url   = os.environ.get('FRONTEND_URL', 'http://localhost:3000')
+
+    sub = UserSubscription.query.filter_by(user_id=user.id).first()
+    if not sub or not sub.stripe_customer_id:
+        return jsonify({'error': 'No billing account found. Please contact support.'}), 400
+
+    try:
+        portal = stripe.billing_portal.Session.create(
+            customer=sub.stripe_customer_id,
+            return_url=frontend_url + '/settings',
+        )
+        return jsonify({'url': portal.url}), 200
+    except stripe.error.StripeError as e:
+        return jsonify({'error': str(e)}), 500
 
 
 @api_bp.route('/subscription/cancel', methods=['POST'])

@@ -59,6 +59,7 @@ export const subscriptionAPI = {
   verifySession:      (sessionId: string) =>
     api.post('/subscription/verify-session', { session_id: sessionId }),
   cancelSubscription: () => api.post('/subscription/cancel'),
+  billingPortal:      () => api.post('/subscription/billing-portal'),
 };
 
 // ── Artifacts ─────────────────────────────────────────────────────────────────
