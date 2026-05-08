@@ -91,8 +91,15 @@ def verify_session():
     if str(checkout_session.get('metadata', {}).get('user_id', '')) != str(user.id):
         return jsonify({'error': 'Session does not belong to this account'}), 403
 
-    if checkout_session.get('payment_status') != 'paid':
-        return jsonify({'error': 'Payment not completed', 'payment_status': checkout_session.get('payment_status')}), 400
+    # Accept 'paid' (card), 'no_payment_required' (trial/coupon),
+    # or any session in subscription mode that has a subscription object created
+    # (covers Klarna, BNPL, and other delayed-payment methods)
+    payment_status = checkout_session.get('payment_status')
+    has_subscription = bool(checkout_session.get('subscription'))
+    session_complete = checkout_session.get('status') == 'complete'
+
+    if payment_status not in ('paid', 'no_payment_required') and not (has_subscription and session_complete):
+        return jsonify({'error': 'Payment not completed', 'payment_status': payment_status}), 400
 
     plan  = checkout_session.get('metadata', {}).get('plan', 'monthly')
     days  = PLAN_DAYS.get(plan, 31)
