@@ -14,9 +14,6 @@ class AuthService:
         if User.query.filter_by(email=email).first():
             return {'error': 'Email already registered'}, 409
 
-        if User.query.filter_by(username=username).first():
-            return {'error': 'Username already taken'}, 409
-
         if len(password) < 8:
             return {'error': 'Password must be at least 8 characters'}, 400
 
