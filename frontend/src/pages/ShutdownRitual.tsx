@@ -196,7 +196,7 @@ const ShutdownRitual: React.FC = () => {
                 {[
                   { key: 'wins', label: '🏆 What went well today?', placeholder: 'Celebrate your wins, big and small…' },
                   { key: 'challenges', label: '🌊 What was challenging?', placeholder: 'What obstacles did you face?…' },
-                  { key: 'tomorrow', label: '🌅 What's your intention for tomorrow?', placeholder: 'One clear intention for tomorrow…' },
+                  { key: 'tomorrow', label: "🌅 What's your intention for tomorrow?", placeholder: 'One clear intention for tomorrow…' },
                 ].map(({ key, label, placeholder }) => (
                   <div key={key} style={{ marginBottom: 18 }}>
                     <label style={{ fontSize: 13, fontWeight: 600, color: '#374151', display: 'block', marginBottom: 6 }}>{label}</label>
