@@ -16,9 +16,6 @@ const CITIES: { name: string; lat: number; lon: number }[] = [
   { name: 'Other',     lat: 27.7172, lon: 85.3240 },
 ];
 
-const RASHIS_EN = ['Mesh (Aries)', 'Brish (Taurus)', 'Mithun (Gemini)', 'Karkat (Cancer)',
-  'Simha (Leo)', 'Kanya (Virgo)', 'Tula (Libra)', 'Brishchik (Scorpio)',
-  'Dhanu (Sagittarius)', 'Makar (Capricorn)', 'Kumbha (Aquarius)', 'Meen (Pisces)'];
 
 const VedicProfile: React.FC = () => {
   const navigate = useNavigate();
