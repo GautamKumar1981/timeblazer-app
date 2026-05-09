@@ -15,6 +15,8 @@ class Timebox(db.Model):
     color = db.Column(db.String(20), default='#3B82F6')
     completed = db.Column(db.Boolean, default=False, nullable=False)
     priority = db.Column(db.Integer, default=3)  # 1-5
+    element_type = db.Column(db.String(20), default='', server_default='')  # Wood/Fire/Earth/Metal/Water or ''
+    due_date = db.Column(db.Date, nullable=True)  # Hard deadline (separate from schedule/start_time)
     created_at = db.Column(db.DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
     updated_at = db.Column(
         db.DateTime(timezone=True),
@@ -40,6 +42,8 @@ class Timebox(db.Model):
             'color': self.color,
             'completed': self.completed,
             'priority': self.priority,
+            'element_type': self.element_type or '',
+            'due_date': self.due_date.isoformat() if self.due_date else None,
             'duration_minutes': self.duration_minutes(),
             'created_at': self.created_at.isoformat() if self.created_at else None,
             'updated_at': self.updated_at.isoformat() if self.updated_at else None,

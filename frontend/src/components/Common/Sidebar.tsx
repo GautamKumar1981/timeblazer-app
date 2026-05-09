@@ -4,13 +4,16 @@ import { NavLink } from 'react-router-dom';
 interface NavItem { to: string; icon: string; label: string }
 
 const NAV_ITEMS: NavItem[] = [
-  { to: '/dashboard',       icon: '🏠',  label: 'Dashboard'         },
-  { to: '/calendar',        icon: '📅',  label: 'Calendar'          },
-  { to: '/chart',           icon: '🀄',  label: 'Four Pillars'      },
-  { to: '/analytics',       icon: '💎',  label: 'Remedies'          },
-  { to: '/weekly-review',   icon: '📝',  label: 'Weekly Review'     },
-  { to: '/focus',           icon: '🧘',  label: 'Meditation'        },
-  { to: '/settings',        icon: '⚙️',  label: 'Settings'          },
+  { to: '/dashboard',        icon: '🏠',  label: 'Dashboard'         },
+  { to: '/morning-ritual',   icon: '☀️',  label: 'Morning Ritual'    },
+  { to: '/shutdown-ritual',  icon: '🌙',  label: 'End of Day'        },
+  { to: '/nepali-panchang',  icon: '🙏',  label: 'Nepali Panchang'   },
+  { to: '/calendar',         icon: '📅',  label: 'Bazi Calendar'     },
+  { to: '/chart',            icon: '🀄',  label: 'Four Pillars'      },
+  { to: '/analytics',        icon: '💎',  label: 'Remedies'          },
+  { to: '/weekly-review',    icon: '📝',  label: 'Weekly Review'     },
+  { to: '/focus',            icon: '🧘',  label: 'Meditation'        },
+  { to: '/settings',         icon: '⚙️',  label: 'Settings'          },
 ];
 
 const Sidebar: React.FC = () => {
@@ -36,7 +39,7 @@ const Sidebar: React.FC = () => {
               background: 'linear-gradient(90deg, #7c3aed, #db2777)',
               WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
             }}>DragonHour</div>
-            <div style={{ fontSize: 8, fontWeight: 700, color: '#a78bfa', letterSpacing: 2 }}>BAZI ASTROLOGY</div>
+            <div style={{ fontSize: 8, fontWeight: 700, color: '#a78bfa', letterSpacing: 2 }}>BAZI · JYOTISH · TIME</div>
           </div>
         </div>
       </div>

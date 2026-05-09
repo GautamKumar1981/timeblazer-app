@@ -21,6 +21,10 @@ import Analytics        from './pages/Analytics';
 import WeeklyReview     from './pages/WeeklyReview';
 import FocusMode        from './pages/FocusMode';
 import UpgradePage      from './pages/UpgradePage';
+import MorningRitual   from './pages/MorningRitual';
+import ShutdownRitual  from './pages/ShutdownRitual';
+import NepaliProfile   from './pages/NepaliProfile';
+import NepaliPanchang  from './pages/NepaliPanchang';
 
 const App: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -41,7 +45,11 @@ const App: React.FC = () => {
         <Route path="/upgrade"      element={auth ? <UpgradePage />      : <Navigate to="/" replace />} />
         <Route path="/subscription" element={auth ? <SubscriptionPage /> : <Navigate to="/" replace />} />
         <Route path="/settings"     element={auth ? <Settings />         : <Navigate to="/" replace />} />
-        <Route path="/profile"      element={auth ? <BaziProfile />      : <Navigate to="/" replace />} />
+        <Route path="/profile"         element={auth ? <BaziProfile />      : <Navigate to="/" replace />} />
+        <Route path="/morning-ritual"  element={auth ? <MorningRitual />    : <Navigate to="/" replace />} />
+        <Route path="/shutdown-ritual" element={auth ? <ShutdownRitual />   : <Navigate to="/" replace />} />
+        <Route path="/nepali-profile"  element={auth ? <NepaliProfile />    : <Navigate to="/" replace />} />
+        <Route path="/nepali-panchang" element={auth ? <NepaliPanchang />   : <Navigate to="/" replace />} />
 
         {/* Dashboard — always accessible (shows trial banner inline) */}
         <Route path="/dashboard"    element={auth ? <Dashboard />        : <Navigate to="/" replace />} />

@@ -106,4 +106,14 @@ export const analyticsAPI = {
   getSummary: (period: 'weekly' | 'monthly') => api.get('/analytics/summary', { params: { period } }),
 };
 
+// ── Nepali Jyotish ────────────────────────────────────────────────────────────
+export const nepaliAPI = {
+  getProfile:  ()             => api.get('/nepali/profile'),
+  saveProfile: (data: object) => api.post('/nepali/profile', data),
+  getToday:    ()             => api.get('/nepali/today'),
+  getPanchang: (date?: string) => api.get('/nepali/panchang', { params: date ? { date } : {} }),
+  getDasha:    ()             => api.get('/nepali/dasha'),
+  getCalendar: (year: number, month: number) => api.get('/nepali/calendar', { params: { year, month } }),
+};
+
 export default api;
