@@ -1,5 +1,5 @@
 """
-Vimshottari Dasha calculator for Nepali Jyotish.
+Vimshottari Dasha calculator for Vedic Jyotish.
 120-year cycle starting from the Moon's Nakshatra at birth.
 """
 

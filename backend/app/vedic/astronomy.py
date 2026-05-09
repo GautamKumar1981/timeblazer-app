@@ -1,5 +1,5 @@
 """
-Simplified astronomical calculations for Vedic/Nepali Jyotish.
+Simplified astronomical calculations for Vedic Jyotish.
 Computes sidereal Sun and Moon longitudes using Lahiri ayanamsha.
 Accurate to ~0.3° for dates 2000-2040 — sufficient for Panchang.
 Formulas from Jean Meeus "Astronomical Algorithms" (simplified).

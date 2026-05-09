@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../store/store';
 import { fetchToday, fetchBaziChart } from '../store/slices/baziSlice';
 import { HourForecast } from '../store/slices/baziSlice';
-import { nepaliAPI } from '../services/api';
+import { vedicAPI } from '../services/api';
 import Sidebar from '../components/Common/Sidebar';
 import Header  from '../components/Common/Header';
 
@@ -79,12 +79,12 @@ const Dashboard: React.FC = () => {
   const { user }   = useAppSelector((s) => s.auth);
   const sub        = useAppSelector((s) => s.subscription.data);
 
-  const [nepaliToday, setNepaliToday] = useState<any>(null);
+  const [vedicToday, setVedicToday] = useState<any>(null);
 
   useEffect(() => {
     dispatch(fetchToday());
     dispatch(fetchBaziChart());
-    nepaliAPI.getToday().then((r: any) => setNepaliToday(r.data)).catch(() => {});
+    vedicAPI.getToday().then((r: any) => setVedicToday(r.data)).catch(() => {});
   }, [dispatch]);
 
   const greeting = new Date().getHours() < 12 ? 'morning' : new Date().getHours() < 18 ? 'afternoon' : 'evening';
@@ -188,24 +188,24 @@ const Dashboard: React.FC = () => {
             </div>
           )}
 
-          {/* Nepali Panchang card */}
-          {nepaliToday?.panchang && (
+          {/* Vedic Panchang card */}
+          {vedicToday?.panchang && (
             <div style={{ backgroundColor: '#fff', borderRadius: 14, padding: '16px 22px', marginBottom: 20, border: '1px solid #e8e3f8', boxShadow: '0 2px 8px rgba(124,58,237,0.06)' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
-                <div style={{ fontSize: 14, fontWeight: 700, color: '#2e1065' }}>🙏 Today's Nepali Panchang</div>
+                <div style={{ fontSize: 14, fontWeight: 700, color: '#2e1065' }}>🙏 Today's Vedic Panchang</div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                  <div style={{ fontSize: 12, color: '#9ca3af' }}>{nepaliToday.panchang.bs_date_str} BS</div>
-                  <div style={{ padding: '3px 10px', borderRadius: 20, fontSize: 11, fontWeight: 700, backgroundColor: nepaliToday.panchang.overall_color, color: '#fff' }}>
-                    {nepaliToday.panchang.overall}
+                  <div style={{ fontSize: 12, color: '#9ca3af' }}>{vedicToday.panchang.bs_date_str} BS</div>
+                  <div style={{ padding: '3px 10px', borderRadius: 20, fontSize: 11, fontWeight: 700, backgroundColor: vedicToday.panchang.overall_color, color: '#fff' }}>
+                    {vedicToday.panchang.overall}
                   </div>
                 </div>
               </div>
               <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', marginBottom: 12 }}>
                 {[
-                  { label: 'Tithi', value: nepaliToday.panchang.tithi.name_en, sub: nepaliToday.panchang.tithi.paksha.split(' ')[0] },
-                  { label: 'Vara', value: nepaliToday.panchang.vara.en, sub: nepaliToday.panchang.vara.planet },
-                  { label: 'Nakshatra', value: nepaliToday.panchang.nakshatra.en, sub: nepaliToday.panchang.nakshatra.quality },
-                  { label: 'Yoga', value: nepaliToday.panchang.yoga.en, sub: nepaliToday.panchang.yoga.quality },
+                  { label: 'Tithi', value: vedicToday.panchang.tithi.name_en, sub: vedicToday.panchang.tithi.paksha.split(' ')[0] },
+                  { label: 'Vara', value: vedicToday.panchang.vara.en, sub: vedicToday.panchang.vara.planet },
+                  { label: 'Nakshatra', value: vedicToday.panchang.nakshatra.en, sub: vedicToday.panchang.nakshatra.quality },
+                  { label: 'Yoga', value: vedicToday.panchang.yoga.en, sub: vedicToday.panchang.yoga.quality },
                 ].map(({ label, value, sub }) => (
                   <div key={label} style={{ flex: 1, minWidth: 100, backgroundColor: '#f5f3ff', borderRadius: 8, padding: '8px 12px' }}>
                     <div style={{ fontSize: 10, fontWeight: 700, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 3 }}>{label}</div>
@@ -215,22 +215,22 @@ const Dashboard: React.FC = () => {
                 ))}
               </div>
               {/* Current Choghadiya */}
-              {nepaliToday.choghadiya?.current && (
+              {vedicToday.choghadiya?.current && (
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10, backgroundColor: '#f0fdf4', borderRadius: 8, padding: '8px 14px', border: '1px solid #bbf7d0', marginBottom: 10 }}>
-                  <span style={{ fontSize: 18 }}>{nepaliToday.choghadiya.current.icon}</span>
+                  <span style={{ fontSize: 18 }}>{vedicToday.choghadiya.current.icon}</span>
                   <div>
-                    <span style={{ fontSize: 13, fontWeight: 700, color: '#065f46' }}>Now: {nepaliToday.choghadiya.current.name_en} Choghadiya</span>
-                    <span style={{ fontSize: 12, color: '#6b7280', marginLeft: 8 }}>{nepaliToday.choghadiya.current.start}–{nepaliToday.choghadiya.current.end}</span>
+                    <span style={{ fontSize: 13, fontWeight: 700, color: '#065f46' }}>Now: {vedicToday.choghadiya.current.name_en} Choghadiya</span>
+                    <span style={{ fontSize: 12, color: '#6b7280', marginLeft: 8 }}>{vedicToday.choghadiya.current.start}–{vedicToday.choghadiya.current.end}</span>
                   </div>
                 </div>
               )}
               {/* Rashifal snippet */}
-              {nepaliToday.rashifal && (
+              {vedicToday.rashifal && (
                 <div style={{ backgroundColor: '#ede9fe', borderRadius: 8, padding: '8px 14px', border: '1px solid #c4b5fd', fontSize: 13, color: '#4c1d95' }}>
-                  <strong>{nepaliToday.rashifal.rashi} Rashifal:</strong> {nepaliToday.rashifal.reading.slice(0, 90)}…
+                  <strong>{vedicToday.rashifal.rashi} Rashifal:</strong> {vedicToday.rashifal.reading.slice(0, 90)}…
                 </div>
               )}
-              <button onClick={() => navigate('/nepali-panchang')} style={{ marginTop: 12, padding: '7px 16px', backgroundColor: '#ede9fe', color: '#6d28d9', border: '1px solid #c4b5fd', borderRadius: 8, cursor: 'pointer', fontSize: 12, fontWeight: 600 }}>
+              <button onClick={() => navigate('/vedic-panchang')} style={{ marginTop: 12, padding: '7px 16px', backgroundColor: '#ede9fe', color: '#6d28d9', border: '1px solid #c4b5fd', borderRadius: 8, cursor: 'pointer', fontSize: 12, fontWeight: 600 }}>
                 Full Panchang & Hora →
               </button>
             </div>

@@ -2,8 +2,8 @@ from datetime import datetime, timezone
 from app import db
 
 
-class NepaliProfile(db.Model):
-    __tablename__ = 'nepali_profiles'
+class VedicProfile(db.Model):
+    __tablename__ = 'vedic_profiles'
 
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False, unique=True, index=True)

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { nepaliAPI } from '../services/api';
+import { vedicAPI } from '../services/api';
 import Sidebar from '../components/Common/Sidebar';
 import Header from '../components/Common/Header';
 
@@ -20,7 +20,7 @@ const RASHIS_EN = ['Mesh (Aries)', 'Brish (Taurus)', 'Mithun (Gemini)', 'Karkat 
   'Simha (Leo)', 'Kanya (Virgo)', 'Tula (Libra)', 'Brishchik (Scorpio)',
   'Dhanu (Sagittarius)', 'Makar (Capricorn)', 'Kumbha (Aquarius)', 'Meen (Pisces)'];
 
-const NepaliProfile: React.FC = () => {
+const VedicProfile: React.FC = () => {
   const navigate = useNavigate();
   const [existing, setExisting] = useState<any>(null);
   const [form, setForm] = useState({
@@ -33,7 +33,7 @@ const NepaliProfile: React.FC = () => {
   const [error, setError] = useState('');
 
   useEffect(() => {
-    nepaliAPI.getProfile().then((res: any) => {
+    vedicAPI.getProfile().then((res: any) => {
       const p = res.data?.profile;
       if (p) {
         setExisting(p);
@@ -63,7 +63,7 @@ const NepaliProfile: React.FC = () => {
     e.preventDefault();
     setSaving(true); setError('');
     try {
-      const res = await nepaliAPI.saveProfile({
+      const res = await vedicAPI.saveProfile({
         birth_date: form.birth_date,
         birth_hour: parseInt(form.birth_hour),
         birth_minute: parseInt(form.birth_minute),
@@ -89,7 +89,7 @@ const NepaliProfile: React.FC = () => {
           <main style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: 32 }}>
             <div style={{ fontSize: 64, marginBottom: 16 }}>🙏</div>
             <h2 style={{ color: '#2e1065', fontSize: 24, fontWeight: 800, margin: '0 0 10px', textAlign: 'center' }}>
-              Your Jyotish Profile is Set!
+              Your Vedic Profile is Set!
             </h2>
             <div style={{ backgroundColor: '#fff', borderRadius: 14, padding: 24, maxWidth: 380, width: '100%', border: '1px solid #e8e3f8', marginBottom: 24 }}>
               <div style={{ display: 'flex', gap: 16, marginBottom: 16 }}>
@@ -109,7 +109,7 @@ const NepaliProfile: React.FC = () => {
               </p>
             </div>
             <div style={{ display: 'flex', gap: 14 }}>
-              <button onClick={() => navigate('/nepali-panchang')} style={{ padding: '12px 24px', backgroundColor: '#7c3aed', color: '#fff', border: 'none', borderRadius: 10, cursor: 'pointer', fontSize: 14, fontWeight: 700 }}>
+              <button onClick={() => navigate('/vedic-panchang')} style={{ padding: '12px 24px', backgroundColor: '#7c3aed', color: '#fff', border: 'none', borderRadius: 10, cursor: 'pointer', fontSize: 14, fontWeight: 700 }}>
                 View Today's Panchang →
               </button>
               <button onClick={() => navigate('/dashboard')} style={{ padding: '12px 24px', backgroundColor: '#ede9fe', color: '#6d28d9', border: '1px solid #c4b5fd', borderRadius: 10, cursor: 'pointer', fontSize: 14, fontWeight: 600 }}>
@@ -130,7 +130,7 @@ const NepaliProfile: React.FC = () => {
         <main style={{ flex: 1, padding: '32px 40px', overflowY: 'auto', maxWidth: 640, margin: '0 auto', width: '100%' }}>
 
           <div style={{ marginBottom: 28 }}>
-            <h2 style={{ margin: 0, fontSize: 24, fontWeight: 900, color: '#2e1065' }}>🙏 Nepali Jyotish Profile</h2>
+            <h2 style={{ margin: 0, fontSize: 24, fontWeight: 900, color: '#2e1065' }}>🙏 Vedic Vedic Profile</h2>
             <p style={{ color: '#6b7280', margin: '8px 0 0', fontSize: 14 }}>
               Enter your birth details to calculate your Kundali, Moon Rashi, Nakshatra, and personalised Rashifal.
             </p>
@@ -223,4 +223,4 @@ const NepaliProfile: React.FC = () => {
   );
 };
 
-export default NepaliProfile;
+export default VedicProfile;

@@ -3,12 +3,12 @@ from flask import request, jsonify
 from app.api import api_bp
 from app.api.utils import get_current_user
 from app import db
-from app.models.nepali_profile import NepaliProfile
-from app.nepali.panchang import get_panchang
-from app.nepali.choghadiya import get_choghadiya, get_current_hora, get_hora_schedule
-from app.nepali.dasha import calculate_dasha
-from app.nepali.astronomy import sidereal_moon
-from app.nepali.bikram_sambat import ad_to_bs, BS_MONTH_NAMES_EN, BS_MONTH_NAMES_NP
+from app.models.vedic_profile import VedicProfile
+from app.vedic.panchang import get_panchang
+from app.vedic.choghadiya import get_choghadiya, get_current_hora, get_hora_schedule
+from app.vedic.dasha import calculate_dasha
+from app.vedic.astronomy import sidereal_moon
+from app.vedic.bikram_sambat import ad_to_bs, BS_MONTH_NAMES_EN, BS_MONTH_NAMES_NP
 
 RASHIS = [
     'Mesh', 'Brish', 'Mithun', 'Karkat', 'Simha', 'Kanya',
@@ -34,21 +34,21 @@ RASHIFAL = {
 }
 
 
-@api_bp.route('/nepali/profile', methods=['GET'])
-def get_nepali_profile():
+@api_bp.route('/vedic/profile', methods=['GET'])
+def get_vedic_profile():
     user, err = get_current_user()
     if err:
         return jsonify({'error': err}), 401
 
-    profile = NepaliProfile.query.filter_by(user_id=user.id).first()
+    profile = VedicProfile.query.filter_by(user_id=user.id).first()
     if not profile:
         return jsonify({'profile': None, 'profile_required': True}), 200
 
     return jsonify({'profile': profile.to_dict()}), 200
 
 
-@api_bp.route('/nepali/profile', methods=['POST'])
-def save_nepali_profile():
+@api_bp.route('/vedic/profile', methods=['POST'])
+def save_vedic_profile():
     user, err = get_current_user()
     if err:
         return jsonify({'error': err}), 401
@@ -78,13 +78,13 @@ def save_nepali_profile():
     rashi_idx = int(moon_lon / 30) % 12
     moon_rashi = RASHIS[rashi_idx]
 
-    from app.nepali.panchang import NAKSHATRAS
+    from app.vedic.panchang import NAKSHATRAS
     nak_idx = int(moon_lon / (360 / 27)) % 27
     moon_nakshatra = NAKSHATRAS[nak_idx]['en']
 
-    profile = NepaliProfile.query.filter_by(user_id=user.id).first()
+    profile = VedicProfile.query.filter_by(user_id=user.id).first()
     if not profile:
-        profile = NepaliProfile(user_id=user.id)
+        profile = VedicProfile(user_id=user.id)
         db.session.add(profile)
 
     profile.birth_date = birth_date
@@ -102,8 +102,8 @@ def save_nepali_profile():
     return jsonify({'profile': profile.to_dict(), 'moon_rashi': moon_rashi, 'moon_nakshatra': moon_nakshatra}), 200
 
 
-@api_bp.route('/nepali/today', methods=['GET'])
-def nepali_today():
+@api_bp.route('/vedic/today', methods=['GET'])
+def vedic_today():
     user, err = get_current_user()
     if err:
         return jsonify({'error': err}), 401
@@ -115,7 +115,7 @@ def nepali_today():
     hora_schedule = get_hora_schedule(now)
 
     # Rashifal for user's Moon sign
-    profile = NepaliProfile.query.filter_by(user_id=user.id).first()
+    profile = VedicProfile.query.filter_by(user_id=user.id).first()
     rashifal = None
     if profile and profile.moon_rashi:
         rashifal = {
@@ -139,8 +139,8 @@ def nepali_today():
     }), 200
 
 
-@api_bp.route('/nepali/panchang', methods=['GET'])
-def nepali_panchang():
+@api_bp.route('/vedic/panchang', methods=['GET'])
+def vedic_panchang():
     user, err = get_current_user()
     if err:
         return jsonify({'error': err}), 401
@@ -162,22 +162,22 @@ def nepali_panchang():
     return jsonify({'panchang': panchang, 'choghadiya': choghadiya, 'hora': hora}), 200
 
 
-@api_bp.route('/nepali/dasha', methods=['GET'])
-def nepali_dasha():
+@api_bp.route('/vedic/dasha', methods=['GET'])
+def vedic_dasha():
     user, err = get_current_user()
     if err:
         return jsonify({'error': err}), 401
 
-    profile = NepaliProfile.query.filter_by(user_id=user.id).first()
+    profile = VedicProfile.query.filter_by(user_id=user.id).first()
     if not profile:
-        return jsonify({'error': 'Nepali profile not set up', 'profile_required': True}), 400
+        return jsonify({'error': 'Vedic profile not set up', 'profile_required': True}), 400
 
     dasha = calculate_dasha(profile.birth_date, profile.moon_longitude)
     return jsonify({'dasha': dasha, 'profile': profile.to_dict()}), 200
 
 
-@api_bp.route('/nepali/calendar', methods=['GET'])
-def nepali_calendar():
+@api_bp.route('/vedic/calendar', methods=['GET'])
+def vedic_calendar():
     user, err = get_current_user()
     if err:
         return jsonify({'error': err}), 401

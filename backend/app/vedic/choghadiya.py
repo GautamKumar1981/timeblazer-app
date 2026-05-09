@@ -1,5 +1,5 @@
 """
-Choghadiya and Hora calculator for Nepali Jyotish.
+Choghadiya and Hora calculator for Vedic Jyotish.
 Choghadiya: 8 auspicious/inauspicious segments per day and night.
 Hora: Planetary hour ruler for each clock hour.
 """

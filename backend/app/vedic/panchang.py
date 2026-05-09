@@ -1,5 +1,5 @@
 """
-Nepali Panchang calculator.
+Vedic Panchang calculator.
 Computes all five limbs: Tithi, Vara, Nakshatra, Yoga, Karana.
 """
 

@@ -7,7 +7,7 @@ const NAV_ITEMS: NavItem[] = [
   { to: '/dashboard',        icon: '🏠',  label: 'Dashboard'         },
   { to: '/morning-ritual',   icon: '☀️',  label: 'Morning Ritual'    },
   { to: '/shutdown-ritual',  icon: '🌙',  label: 'End of Day'        },
-  { to: '/nepali-panchang',  icon: '🙏',  label: 'Nepali Panchang'   },
+  { to: '/vedic-panchang',  icon: '🙏',  label: 'Vedic Panchang'   },
   { to: '/calendar',         icon: '📅',  label: 'Bazi Calendar'     },
   { to: '/chart',            icon: '🀄',  label: 'Four Pillars'      },
   { to: '/analytics',        icon: '💎',  label: 'Remedies'          },

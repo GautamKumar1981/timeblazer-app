@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { nepaliAPI } from '../services/api';
+import { vedicAPI } from '../services/api';
 import Sidebar from '../components/Common/Sidebar';
 import Header from '../components/Common/Header';
 
@@ -44,7 +44,7 @@ const PanchangLimb: React.FC<{ label: string; nameEn: string; nameNp: string; qu
   </div>
 );
 
-const NepaliPanchang: React.FC = () => {
+const VedicPanchang: React.FC = () => {
   const navigate = useNavigate();
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -52,14 +52,14 @@ const NepaliPanchang: React.FC = () => {
   const [dashaData, setDashaData] = useState<any>(null);
 
   useEffect(() => {
-    nepaliAPI.getToday().then((res: any) => {
+    vedicAPI.getToday().then((res: any) => {
       setData(res.data);
     }).catch(() => {}).finally(() => setLoading(false));
   }, []);
 
   useEffect(() => {
     if (activeTab === 'dasha') {
-      nepaliAPI.getDasha().then((res: any) => setDashaData(res.data)).catch(() => {});
+      vedicAPI.getDasha().then((res: any) => setDashaData(res.data)).catch(() => {});
     }
   }, [activeTab]);
 
@@ -77,11 +77,11 @@ const NepaliPanchang: React.FC = () => {
       <Sidebar />
       <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: 16, padding: 32 }}>
         <div style={{ fontSize: 64 }}>🙏</div>
-        <h2 style={{ color: '#2e1065', fontSize: 22, fontWeight: 800, textAlign: 'center', margin: 0 }}>Set Up Your Jyotish Profile</h2>
+        <h2 style={{ color: '#2e1065', fontSize: 22, fontWeight: 800, textAlign: 'center', margin: 0 }}>Set Up Your Vedic Profile</h2>
         <p style={{ color: '#6b7280', fontSize: 14, textAlign: 'center', maxWidth: 380, margin: 0 }}>
           Enter your birth details to get your personalised Rashifal, Nakshatra, and Dasha periods.
         </p>
-        <button onClick={() => navigate('/nepali-profile')} style={{ padding: '12px 28px', backgroundColor: '#7c3aed', color: '#fff', border: 'none', borderRadius: 10, cursor: 'pointer', fontSize: 15, fontWeight: 700 }}>
+        <button onClick={() => navigate('/vedic-profile')} style={{ padding: '12px 28px', backgroundColor: '#7c3aed', color: '#fff', border: 'none', borderRadius: 10, cursor: 'pointer', fontSize: 15, fontWeight: 700 }}>
           🙏 Set Up Profile →
         </button>
       </div>
@@ -111,7 +111,7 @@ const NepaliPanchang: React.FC = () => {
 
           {/* Header */}
           <div style={{ marginBottom: 20 }}>
-            <h2 style={{ margin: 0, fontSize: 24, fontWeight: 900, color: '#2e1065' }}>🙏 Nepali Panchang</h2>
+            <h2 style={{ margin: 0, fontSize: 24, fontWeight: 900, color: '#2e1065' }}>🙏 Vedic Panchang</h2>
             {pan && (
               <div style={{ display: 'flex', gap: 16, alignItems: 'center', marginTop: 8 }}>
                 <div style={{ fontSize: 14, color: '#374151', fontWeight: 600 }}>
@@ -171,8 +171,8 @@ const NepaliPanchang: React.FC = () => {
                 </div>
               )}
 
-              <button onClick={() => navigate('/nepali-profile')} style={{ padding: '10px 22px', backgroundColor: '#ede9fe', color: '#6d28d9', border: '1px solid #c4b5fd', borderRadius: 8, cursor: 'pointer', fontSize: 13, fontWeight: 600 }}>
-                Update Jyotish Profile
+              <button onClick={() => navigate('/vedic-profile')} style={{ padding: '10px 22px', backgroundColor: '#ede9fe', color: '#6d28d9', border: '1px solid #c4b5fd', borderRadius: 8, cursor: 'pointer', fontSize: 13, fontWeight: 600 }}>
+                Update Vedic Profile
               </button>
             </div>
           )}
@@ -284,14 +284,14 @@ const NepaliPanchang: React.FC = () => {
                     {rashifal.reading}
                   </div>
                   <div style={{ marginTop: 16, backgroundColor: '#ede9fe', borderRadius: 10, padding: '12px 16px', border: '1px solid #c4b5fd', fontSize: 13, color: '#4c1d95' }}>
-                    💡 Rashifal is based on your Moon sign ({rashifal.rashi}). Update your birth details in <button onClick={() => navigate('/nepali-profile')} style={{ background: 'none', border: 'none', color: '#7c3aed', cursor: 'pointer', fontWeight: 700, padding: 0, fontSize: 13 }}>Jyotish Profile</button> for personalised readings.
+                    💡 Rashifal is based on your Moon sign ({rashifal.rashi}). Update your birth details in <button onClick={() => navigate('/vedic-profile')} style={{ background: 'none', border: 'none', color: '#7c3aed', cursor: 'pointer', fontWeight: 700, padding: 0, fontSize: 13 }}>Vedic Profile</button> for personalised readings.
                   </div>
                 </Card>
               ) : (
                 <div style={{ textAlign: 'center', padding: 40 }}>
                   <div style={{ fontSize: 48, marginBottom: 14 }}>🙏</div>
                   <p style={{ color: '#6b7280', fontSize: 14, marginBottom: 20 }}>Set up your Jyotish profile to get personalised Rashifal.</p>
-                  <button onClick={() => navigate('/nepali-profile')} style={{ padding: '10px 24px', backgroundColor: '#7c3aed', color: '#fff', border: 'none', borderRadius: 8, cursor: 'pointer', fontSize: 14, fontWeight: 700 }}>Set Up Profile</button>
+                  <button onClick={() => navigate('/vedic-profile')} style={{ padding: '10px 24px', backgroundColor: '#7c3aed', color: '#fff', border: 'none', borderRadius: 8, cursor: 'pointer', fontSize: 14, fontWeight: 700 }}>Set Up Profile</button>
                 </div>
               )}
             </div>
@@ -348,7 +348,7 @@ const NepaliPanchang: React.FC = () => {
                 <div style={{ textAlign: 'center', padding: 40 }}>
                   <div style={{ fontSize: 48, marginBottom: 14 }}>🌀</div>
                   <p style={{ color: '#6b7280', fontSize: 14, marginBottom: 20 }}>Set up your Jyotish profile to calculate your Vimshottari Dasha periods.</p>
-                  <button onClick={() => navigate('/nepali-profile')} style={{ padding: '10px 24px', backgroundColor: '#7c3aed', color: '#fff', border: 'none', borderRadius: 8, cursor: 'pointer', fontSize: 14, fontWeight: 700 }}>Set Up Profile</button>
+                  <button onClick={() => navigate('/vedic-profile')} style={{ padding: '10px 24px', backgroundColor: '#7c3aed', color: '#fff', border: 'none', borderRadius: 8, cursor: 'pointer', fontSize: 14, fontWeight: 700 }}>Set Up Profile</button>
                 </div>
               )}
             </div>
@@ -360,4 +360,4 @@ const NepaliPanchang: React.FC = () => {
   );
 };
 
-export default NepaliPanchang;
+export default VedicPanchang;
