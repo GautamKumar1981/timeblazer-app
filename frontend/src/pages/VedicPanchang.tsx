@@ -51,6 +51,80 @@ const VedicPanchang: React.FC = () => {
   const [apiError, setApiError] = useState(false);
   const [activeTab, setActiveTab] = useState<'panchang' | 'choghadiya' | 'hora' | 'rashifal' | 'dasha'>('panchang');
   const [dashaData, setDashaData] = useState<any>(null);
+  const [guideOpen, setGuideOpen] = useState(true);
+
+  const TAB_GUIDES: Record<string, { icon: string; title: string; what: string; how: string[] }> = {
+    panchang: {
+      icon: '📅',
+      title: 'What is Panchang?',
+      what: 'Panchang is the Vedic almanac — a snapshot of five cosmic qualities (the "five limbs") active at any given moment. Ancient Jyotish practitioners used it to choose the most aligned time for any important action.',
+      how: [
+        'Tithi (Lunar Day): The Moon\'s phase relative to the Sun. Auspicious tithis favor new beginnings, ceremonies, and signing agreements. Inauspicious tithis are better for routine work.',
+        'Vara (Weekday): Each weekday is ruled by a planet. Check the ruling planet\'s strengths — Sunday (Sun) for authority, Monday (Moon) for nurturing, Thursday (Jupiter) for wisdom and finance.',
+        'Nakshatra (Moon Star): The constellation the Moon occupies today. It shapes the emotional and mental quality of the day. Auspicious nakshatras support new ventures; inauspicious ones call for caution.',
+        'Yoga (Sun + Moon): A combination of the Sun and Moon\'s positions. Each yoga carries a distinct character — some energize action, others invite rest.',
+        'Karana (Half Day): A half-tithi unit that fine-tunes timing within the day. Watch for Vishti (Bhadra) Karana — it is generally unfavorable for new starts.',
+      ],
+    },
+    choghadiya: {
+      icon: '⏰',
+      title: 'What is Choghadiya?',
+      what: 'Choghadiya divides the day and night into 8 equal segments, each ruled by a planetary energy. It is the most practical Vedic tool for choosing the right hour for a specific task.',
+      how: [
+        'Amrit (✨ Excellent): Best for any auspicious activity — signing contracts, starting business, travel, or launching projects.',
+        'Shubh (🌟 Auspicious): Good for all positive activities — meetings, education, creative work, and new relationships.',
+        'Char (🚀 Auspicious): Favors movement and change — ideal for travel, relocation, and dynamic activities.',
+        'Labh (💰 Auspicious): Excellent for business, finance, trade, and profit-seeking activities.',
+        'Udveg (😰 Inauspicious): Best for government-related work only. Avoid personal or financial decisions.',
+        'Rog (🚫 Inauspicious): Avoid starting important activities. Routine, maintenance, or medical treatment is acceptable.',
+        'Kaal (⚠️ Inauspicious): Avoid new beginnings entirely. Rest, reflect, or handle existing tasks only.',
+        'Rahu Kaal: A fixed inauspicious window each day based on the weekday. Never start something new during Rahu Kaal.',
+      ],
+    },
+    hora: {
+      icon: '🪐',
+      title: 'What is Hora?',
+      what: 'Hora is the system of planetary hours — every clock hour from midnight is ruled by one of 7 planets in a fixed sequence. Unlike Choghadiya, Hora gives you a planet-specific energy to align your task with, hour by hour.',
+      how: [
+        'Sun Hora ☀️: Authority, health, government. Use it for leadership decisions, dealing with officials, or boosting confidence.',
+        'Moon Hora 🌙: Emotions, public relations, travel. Best for nurturing conversations, creative intuition, and connecting with people.',
+        'Mars Hora 🔴: Courage, energy, property. Good for taking bold action, exercise, property dealings, and tackling tough tasks.',
+        'Mercury Hora 💚: Communication, business, writing. The best hora for negotiations, learning, writing, and trade.',
+        'Jupiter Hora 🟠: Wisdom, expansion, finance. Excellent for all auspicious activities, financial decisions, education, and spiritual practices.',
+        'Venus Hora 💗: Relationships, arts, beauty. Ideal for creative projects, social activities, and matters of love and harmony.',
+        'Saturn Hora ⚫: Discipline, hard work, karma. Best for long-term planning, focused deep work, and resolving karmic obligations.',
+      ],
+    },
+    rashifal: {
+      icon: '⭐',
+      title: 'What is Rashifal?',
+      what: 'Rashifal is your daily reading based on your Janma Rashi — the Moon sign you were born under. In Vedic astrology, the Moon governs the mind and emotions, making the Moon sign more personally significant than the Sun sign.',
+      how: [
+        'Your Janma Rashi is determined by the Moon\'s position at your birth. It is fixed for life.',
+        'The daily Rashifal reflects how today\'s planetary transits interact with your natal Moon — affecting your mental energy, focus, and opportunities.',
+        'Use it as a thematic lens: if the reading says "partnerships are favored today", prioritise collaborative work. If it says "avoid impulsive decisions", plan rather than act.',
+        'Rashifal is a general guide, not a prediction. It works best when combined with Panchang and Choghadiya for specific timing.',
+        'Requires your birth city in your profile — the Moon\'s exact position at birth is location-sensitive.',
+      ],
+    },
+    dasha: {
+      icon: '🌀',
+      title: 'What is Vimshottari Dasha?',
+      what: 'Dasha is a planetary period system unique to Vedic astrology. Life is divided into a 120-year cycle of major planetary periods (Mahadasha) and sub-periods (Antardasha). Each period amplifies the energy and lessons of its ruling planet.',
+      how: [
+        'Mahadasha (Major Period): The dominant planetary influence over a multi-year stretch of life. It sets the broad theme — your general fortunes, relationships, health, and career direction during that era.',
+        'Antardasha (Sub-Period): A planet within the Mahadasha that adds a secondary flavor. It shifts every few months to years, creating distinct phases inside the major period.',
+        'Sun Dasha: Authority, health, recognition. Career peaks and relationship with father.',
+        'Moon Dasha: Emotions, nurturing, public life. Travel, creative sensitivity, and family focus.',
+        'Mars Dasha: Ambition, property, energy. Disputes, boldness, and drive for achievement.',
+        'Mercury Dasha: Business, intellect, communication. Best for education, trade, and analytical work.',
+        'Jupiter Dasha: Wisdom, wealth, expansion. Often the most prosperous and spiritually fulfilling period.',
+        'Venus Dasha: Relationships, luxury, arts. Favors partnerships, creativity, and material comforts.',
+        'Saturn Dasha: Discipline, karma, hard work. Brings long delays but lasting rewards through perseverance.',
+        'Rahu/Ketu Dasha: Transformations, unconventional paths, and karmic turning points.',
+      ],
+    },
+  };
 
   useEffect(() => {
     vedicAPI.getToday()
@@ -152,7 +226,7 @@ const VedicPanchang: React.FC = () => {
           {/* Tabs */}
           <div style={{ display: 'flex', gap: 4, marginBottom: 24, backgroundColor: '#f5f3ff', borderRadius: 10, padding: 4, overflowX: 'auto' }}>
             {TABS.map(t => (
-              <button key={t.key} onClick={() => setActiveTab(t.key as any)} style={{
+              <button key={t.key} onClick={() => { setActiveTab(t.key as any); setGuideOpen(true); }} style={{
                 flex: 1, padding: '8px 12px', border: 'none', cursor: 'pointer', borderRadius: 8, whiteSpace: 'nowrap',
                 backgroundColor: activeTab === t.key ? '#7c3aed' : 'transparent',
                 color: activeTab === t.key ? '#fff' : '#7c3aed',
@@ -160,6 +234,33 @@ const VedicPanchang: React.FC = () => {
               }}>{t.label}</button>
             ))}
           </div>
+
+          {/* Per-tab guide */}
+          {guideOpen && TAB_GUIDES[activeTab] && (() => {
+            const g = TAB_GUIDES[activeTab];
+            return (
+              <div style={{ backgroundColor: '#f5f3ff', borderRadius: 12, padding: '16px 18px', marginBottom: 20, border: '1px solid #e8e3f8' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 10 }}>
+                  <div style={{ fontSize: 14, fontWeight: 800, color: '#4c1d95' }}>{g.icon} {g.title}</div>
+                  <button onClick={() => setGuideOpen(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#a78bfa', fontSize: 18, lineHeight: 1, padding: 0 }} title="Dismiss guide">✕</button>
+                </div>
+                <p style={{ fontSize: 13, color: '#374151', margin: '0 0 12px', lineHeight: 1.6 }}>{g.what}</p>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                  {g.how.map((tip, i) => {
+                    const colon = tip.indexOf(':');
+                    const label = colon > -1 ? tip.slice(0, colon) : null;
+                    const body = colon > -1 ? tip.slice(colon + 1).trim() : tip;
+                    return (
+                      <div key={i} style={{ display: 'flex', gap: 8, fontSize: 13, color: '#374151', lineHeight: 1.55 }}>
+                        <span style={{ color: '#7c3aed', fontWeight: 700, flexShrink: 0 }}>→</span>
+                        <span>{label ? <><strong style={{ color: '#2e1065' }}>{label}:</strong> {body}</> : body}</span>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            );
+          })()}
 
           {/* Profile setup banner — only if personalised data missing */}
           {data?.profile_required && (
