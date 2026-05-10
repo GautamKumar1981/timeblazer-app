@@ -7,26 +7,26 @@ import Sidebar from '../components/Common/Sidebar';
 import Header  from '../components/Common/Header';
 
 const ELEM_COLOR: Record<string, string> = {
-  Wood: '#22c55e', Fire: '#ef4444', Earth: '#f59e0b', Metal: '#94a3b8', Water: '#3b82f6',
+  Wood: '#16a34a', Fire: '#ef4444', Earth: '#f59e0b', Metal: '#6b7280', Water: '#2563eb',
 };
 
 const scoreBar = (score: number, color: string) => (
-  <div style={{ width: '100%', height: 4, backgroundColor: '#1f1f2e', borderRadius: 2, overflow: 'hidden' }}>
+  <div style={{ width: '100%', height: 4, backgroundColor: '#e8e3f8', borderRadius: 2, overflow: 'hidden' }}>
     <div style={{ width: `${score}%`, height: '100%', backgroundColor: color, borderRadius: 2 }} />
   </div>
 );
 
 const Card: React.FC<{ children: React.ReactNode; style?: React.CSSProperties }> = ({ children, style }) => (
   <div style={{
-    backgroundColor: '#16152e', borderRadius: 12, padding: '20px 22px',
-    border: '1px solid rgba(139,92,246,0.18)', marginBottom: 20, ...style,
+    backgroundColor: '#ffffff', borderRadius: 12, padding: '20px 22px',
+    border: '1px solid #e8e3f8', marginBottom: 20, ...style,
   }}>
     {children}
   </div>
 );
 
 const SectionTitle: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-  <div style={{ fontSize: 13, fontWeight: 700, color: '#c4b5fd', marginBottom: 14, letterSpacing: 0.3 }}>
+  <div style={{ fontSize: 13, fontWeight: 700, color: '#7c3aed', marginBottom: 14, letterSpacing: 0.3 }}>
     {children}
   </div>
 );
@@ -43,7 +43,7 @@ const DailyForecast: React.FC = () => {
   useEffect(() => { dispatch(fetchDailyForecast(date)); }, [dispatch, date]);
 
   const pageLayout = (content: React.ReactNode) => (
-    <div style={{ display: 'flex', minHeight: '100vh', backgroundColor: '#0f0e1a' }}>
+    <div style={{ display: 'flex', minHeight: '100vh', backgroundColor: '#f8f6ff' }}>
       <Sidebar />
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
         <Header />
@@ -70,7 +70,7 @@ const DailyForecast: React.FC = () => {
       {/* Header row */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24, flexWrap: 'wrap', gap: 12 }}>
         <div>
-          <h2 style={{ margin: 0, fontSize: 22, fontWeight: 700, color: '#e9d5ff' }}>⏰ Daily Forecast</h2>
+          <h2 style={{ margin: 0, fontSize: 22, fontWeight: 700, color: '#2e1065' }}>⏰ Daily Forecast</h2>
           <p style={{ color: '#6b7280', fontSize: 13, margin: '4px 0 0' }}>
             Auspicious hours · Strategic wisdom · Personalised remedies
           </p>
@@ -79,9 +79,9 @@ const DailyForecast: React.FC = () => {
           type="date" value={date}
           onChange={(e) => setDate(e.target.value)}
           style={{
-            padding: '8px 12px', backgroundColor: '#16152e',
-            border: '1px solid rgba(139,92,246,0.3)', borderRadius: 8,
-            color: '#e5e7eb', fontSize: 13,
+            padding: '8px 12px', backgroundColor: '#ffffff',
+            border: '1px solid #c4b5fd', borderRadius: 8,
+            color: '#1f2937', fontSize: 13,
           }}
         />
       </div>
@@ -90,17 +90,17 @@ const DailyForecast: React.FC = () => {
         <>
           {/* Day summary card */}
           <div style={{
-            backgroundColor: '#16152e', borderRadius: 12, padding: '20px 24px',
+            backgroundColor: '#ffffff', borderRadius: 12, padding: '20px 24px',
             border: `1px solid ${forecast.color}44`, marginBottom: 24,
             display: 'flex', alignItems: 'center', gap: 24, flexWrap: 'wrap',
           }}>
             <div style={{ textAlign: 'center', minWidth: 80 }}>
-              <div style={{ fontSize: 42, fontWeight: 900, color: '#e5e7eb', lineHeight: 1 }}>{forecast.pillar.name}</div>
+              <div style={{ fontSize: 42, fontWeight: 900, color: '#1f2937', lineHeight: 1 }}>{forecast.pillar.name}</div>
               <div style={{ fontSize: 11, color: '#6b7280', marginTop: 4 }}>
                 {forecast.pillar.stem.pinyin} · {forecast.pillar.branch.pinyin}
               </div>
               <div style={{ display: 'flex', gap: 4, justifyContent: 'center', marginTop: 6 }}>
-                <span style={{ fontSize: 10, padding: '1px 6px', borderRadius: 8, backgroundColor: (ELEM_COLOR[forecast.pillar.stem.element] || '#8b5cf6') + '22', color: ELEM_COLOR[forecast.pillar.stem.element] }}>
+                <span style={{ fontSize: 10, padding: '1px 6px', borderRadius: 8, backgroundColor: (ELEM_COLOR[forecast.pillar.stem.element] || '#7c3aed') + '22', color: ELEM_COLOR[forecast.pillar.stem.element] }}>
                   {forecast.pillar.stem.element}
                 </span>
               </div>
@@ -119,7 +119,7 @@ const DailyForecast: React.FC = () => {
                   <span style={{
                     padding: '3px 10px', borderRadius: 20, fontSize: 11, fontWeight: 600,
                     backgroundColor: wisdom.energy_level === 'high' ? 'rgba(34,197,94,0.15)' : wisdom.energy_level === 'medium' ? 'rgba(245,158,11,0.15)' : 'rgba(59,130,246,0.15)',
-                    color: wisdom.energy_level === 'high' ? '#22c55e' : wisdom.energy_level === 'medium' ? '#f59e0b' : '#3b82f6',
+                    color: wisdom.energy_level === 'high' ? '#16a34a' : wisdom.energy_level === 'medium' ? '#f59e0b' : '#2563eb',
                   }}>
                     {wisdom.energy_level === 'high' ? '⚡ High Energy' : wisdom.energy_level === 'medium' ? '〰 Moderate' : '🌊 Low Energy'}
                   </span>
@@ -129,8 +129,8 @@ const DailyForecast: React.FC = () => {
               <div style={{ marginTop: 12, display: 'flex', gap: 8, flexWrap: 'wrap' }}>
                 {forecast.tips.map((t: string, i: number) => (
                   <div key={i} style={{
-                    backgroundColor: '#1e1c3a', borderRadius: 8, padding: '7px 11px',
-                    fontSize: 12, color: '#d1d5db', border: '1px solid rgba(255,255,255,0.07)',
+                    backgroundColor: '#f5f3ff', borderRadius: 8, padding: '7px 11px',
+                    fontSize: 12, color: '#374151', border: '1px solid #f3f4f6',
                     maxWidth: 320,
                   }}>{t}</div>
                 ))}
@@ -146,9 +146,9 @@ const DailyForecast: React.FC = () => {
                 onClick={() => setActiveTab(key)}
                 style={{
                   padding: '8px 16px', borderRadius: 8, cursor: 'pointer', fontSize: 12, fontWeight: 600,
-                  border: `1px solid ${activeTab === key ? '#8b5cf6' : 'rgba(255,255,255,0.1)'}`,
-                  backgroundColor: activeTab === key ? 'rgba(139,92,246,0.2)' : '#16152e',
-                  color: activeTab === key ? '#e9d5ff' : '#6b7280',
+                  border: `1px solid ${activeTab === key ? '#7c3aed' : '#e8e3f8'}`,
+                  backgroundColor: activeTab === key ? '#ede9fe' : '#ffffff',
+                  color: activeTab === key ? '#2e1065' : '#6b7280',
                   transition: 'all 0.15s',
                 }}
               >{label}</button>
@@ -160,12 +160,12 @@ const DailyForecast: React.FC = () => {
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: 12 }}>
               {forecast.hours.map((h: HourForecast) => (
                 <div key={h.branch_index} style={{
-                  backgroundColor: '#16152e', borderRadius: 10, padding: '14px 16px',
+                  backgroundColor: '#ffffff', borderRadius: 10, padding: '14px 16px',
                   border: `1px solid ${h.color}33`,
                 }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 8 }}>
                     <div>
-                      <div style={{ fontSize: 20, fontWeight: 800, color: '#e5e7eb' }}>{h.pillar_name}</div>
+                      <div style={{ fontSize: 20, fontWeight: 800, color: '#1f2937' }}>{h.pillar_name}</div>
                       <div style={{ fontSize: 10, color: '#6b7280', marginTop: 1 }}>{h.stem.en} · {h.branch.en}</div>
                     </div>
                     <span style={{
@@ -196,33 +196,33 @@ const DailyForecast: React.FC = () => {
                 <SectionTitle>⚔️ Art of War — Sun Tzu</SectionTitle>
                 <div style={{
                   borderLeft: '3px solid #ef4444', paddingLeft: 16,
-                  fontStyle: 'italic', fontSize: 18, color: '#f3f4f6', lineHeight: 1.6, marginBottom: 12,
+                  fontStyle: 'italic', fontSize: 18, color: '#1f2937', lineHeight: 1.6, marginBottom: 12,
                 }}>
                   "{wisdom.art_of_war.quote}"
                 </div>
                 <div style={{ fontSize: 13, color: '#9ca3af', marginBottom: 8 }}>
                   {wisdom.art_of_war.context}
                 </div>
-                <div style={{ fontSize: 11, color: '#4b5563' }}>— {wisdom.art_of_war.source}</div>
+                <div style={{ fontSize: 11, color: '#9ca3af' }}>— {wisdom.art_of_war.source}</div>
               </Card>
 
               {/* Book of Five Rings */}
               <Card>
                 <SectionTitle>🗡️ Book of Five Rings — Miyamoto Musashi</SectionTitle>
                 <div style={{
-                  borderLeft: '3px solid #8b5cf6', paddingLeft: 16,
-                  fontStyle: 'italic', fontSize: 18, color: '#f3f4f6', lineHeight: 1.6, marginBottom: 12,
+                  borderLeft: '3px solid #7c3aed', paddingLeft: 16,
+                  fontStyle: 'italic', fontSize: 18, color: '#1f2937', lineHeight: 1.6, marginBottom: 12,
                 }}>
                   "{wisdom.five_rings.quote}"
                 </div>
                 <div style={{ fontSize: 13, color: '#9ca3af', marginBottom: 8 }}>
                   {wisdom.five_rings.context}
                 </div>
-                <div style={{ fontSize: 11, color: '#4b5563' }}>— {wisdom.five_rings.source}</div>
+                <div style={{ fontSize: 11, color: '#9ca3af' }}>— {wisdom.five_rings.source}</div>
               </Card>
 
               {/* Strategic connection */}
-              <Card style={{ backgroundColor: '#1a1830' }}>
+              <Card style={{ backgroundColor: '#f5f3ff' }}>
                 <SectionTitle>🎯 How Today's Energy Maps to Strategy</SectionTitle>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
                   {[
@@ -231,9 +231,9 @@ const DailyForecast: React.FC = () => {
                     { label: 'Best for', value: 'Decisions aligned with ' + forecast.pillar.stem.element + ' energy' },
                     { label: 'Avoid', value: wisdom.energy_level === 'low' ? 'Major launches, high-stakes decisions' : 'Excessive caution and hesitation' },
                   ].map(({ label, value }) => (
-                    <div key={label} style={{ backgroundColor: '#16152e', borderRadius: 8, padding: '10px 14px' }}>
+                    <div key={label} style={{ backgroundColor: '#ffffff', borderRadius: 8, padding: '10px 14px' }}>
                       <div style={{ fontSize: 10, color: '#6b7280', marginBottom: 4 }}>{label}</div>
-                      <div style={{ fontSize: 13, color: '#d1d5db', fontWeight: 600 }}>{value}</div>
+                      <div style={{ fontSize: 13, color: '#374151', fontWeight: 600 }}>{value}</div>
                     </div>
                   ))}
                 </div>
@@ -258,8 +258,8 @@ const DailyForecast: React.FC = () => {
                       { icon: '🍽️', label: 'Foods', items: remedy.day_element_remedy.foods },
                       { icon: '🧘', label: 'Activities', items: remedy.day_element_remedy.activities },
                     ].map(({ icon, label, items }) => (
-                      <div key={label} style={{ backgroundColor: '#1a1830', borderRadius: 10, padding: '12px 14px' }}>
-                        <div style={{ fontSize: 12, color: '#c4b5fd', fontWeight: 600, marginBottom: 8 }}>{icon} {label}</div>
+                      <div key={label} style={{ backgroundColor: '#f5f3ff', borderRadius: 10, padding: '12px 14px' }}>
+                        <div style={{ fontSize: 12, color: '#7c3aed', fontWeight: 600, marginBottom: 8 }}>{icon} {label}</div>
                         {items.map((item: string) => (
                           <div key={item} style={{ fontSize: 12, color: '#9ca3af', padding: '2px 0' }}>· {item}</div>
                         ))}
@@ -267,20 +267,20 @@ const DailyForecast: React.FC = () => {
                     ))}
                   </div>
 
-                  <div style={{ backgroundColor: '#1a1830', borderRadius: 10, padding: '14px 16px', marginBottom: 12 }}>
+                  <div style={{ backgroundColor: '#f5f3ff', borderRadius: 10, padding: '14px 16px', marginBottom: 12 }}>
                     <div style={{ fontSize: 11, color: '#6b7280', marginBottom: 6 }}>🧭 Feng Shui Direction</div>
-                    <div style={{ fontSize: 14, color: '#e5e7eb', fontWeight: 600 }}>
+                    <div style={{ fontSize: 14, color: '#1f2937', fontWeight: 600 }}>
                       {remedy.day_element_remedy.direction} — activate this direction today
                     </div>
                     <div style={{ fontSize: 12, color: '#9ca3af', marginTop: 6 }}>{remedy.day_element_remedy.feng_shui_tip}</div>
                   </div>
 
                   <div style={{
-                    backgroundColor: 'rgba(139,92,246,0.1)', border: '1px solid rgba(139,92,246,0.3)',
+                    backgroundColor: '#f5f3ff', border: '1px solid #c4b5fd',
                     borderRadius: 10, padding: '14px 16px',
                   }}>
-                    <div style={{ fontSize: 11, color: '#c4b5fd', marginBottom: 6 }}>🌸 Daily Affirmation</div>
-                    <div style={{ fontSize: 15, color: '#e9d5ff', fontStyle: 'italic', lineHeight: 1.6 }}>
+                    <div style={{ fontSize: 11, color: '#7c3aed', marginBottom: 6 }}>🌸 Daily Affirmation</div>
+                    <div style={{ fontSize: 15, color: '#2e1065', fontStyle: 'italic', lineHeight: 1.6 }}>
                       "{remedy.day_element_remedy.affirmation}"
                     </div>
                   </div>
@@ -294,7 +294,7 @@ const DailyForecast: React.FC = () => {
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: 14 }}>
                     {remedy.strengthen_elements.map((el: any) => (
                       <div key={el.element} style={{
-                        backgroundColor: '#1a1830', borderRadius: 10, padding: '14px 16px',
+                        backgroundColor: '#f5f3ff', borderRadius: 10, padding: '14px 16px',
                         border: `1px solid ${ELEM_COLOR[el.element]}33`,
                       }}>
                         <div style={{ fontSize: 15, fontWeight: 700, color: ELEM_COLOR[el.element], marginBottom: 8 }}>
@@ -322,7 +322,7 @@ const DailyForecast: React.FC = () => {
             <div>
               <Card>
                 <div style={{ fontSize: 13, color: '#6b7280', marginBottom: 16 }}>
-                  Today's day pillar is <strong style={{ color: '#c4b5fd' }}>{forecast.pillar.name}</strong> —
+                  Today's day pillar is <strong style={{ color: '#7c3aed' }}>{forecast.pillar.name}</strong> —
                   {' '}{forecast.pillar.stem.en} + {forecast.pillar.branch.en}.
                   Here are the celestial folk stories behind these two characters.
                 </div>
@@ -340,7 +340,7 @@ const DailyForecast: React.FC = () => {
                         </div>
                       </div>
                     </div>
-                    <div style={{ fontSize: 14, color: '#d1d5db', lineHeight: 1.8, whiteSpace: 'pre-line' }}>
+                    <div style={{ fontSize: 14, color: '#374151', lineHeight: 1.8, whiteSpace: 'pre-line' }}>
                       {pillarStory.stem.story}
                     </div>
                     {pillarStory.stem.traits && (
@@ -357,7 +357,7 @@ const DailyForecast: React.FC = () => {
                   </div>
                 )}
 
-                <div style={{ height: 1, backgroundColor: 'rgba(255,255,255,0.08)', margin: '20px 0' }} />
+                <div style={{ height: 1, backgroundColor: '#e8e3f8', margin: '20px 0' }} />
 
                 {pillarStory.branch && (
                   <div>
@@ -372,7 +372,7 @@ const DailyForecast: React.FC = () => {
                         </div>
                       </div>
                     </div>
-                    <div style={{ fontSize: 14, color: '#d1d5db', lineHeight: 1.8, whiteSpace: 'pre-line' }}>
+                    <div style={{ fontSize: 14, color: '#374151', lineHeight: 1.8, whiteSpace: 'pre-line' }}>
                       {pillarStory.branch.story}
                     </div>
                     {pillarStory.branch.traits && (

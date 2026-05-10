@@ -4,7 +4,7 @@ import Sidebar from '../components/Common/Sidebar';
 import Header  from '../components/Common/Header';
 
 const ELEM_COLOR: Record<string, string> = {
-  Wood: '#22c55e', Fire: '#ef4444', Earth: '#f59e0b', Metal: '#94a3b8', Water: '#3b82f6',
+  Wood: '#16a34a', Fire: '#ef4444', Earth: '#f59e0b', Metal: '#6b7280', Water: '#2563eb',
 };
 
 interface StemStory {
@@ -22,13 +22,13 @@ const StoryCard: React.FC<{
   element: string; story: string; traits: string[]; extra?: string;
   isOpen: boolean; onClick: () => void;
 }> = ({ title, subtitle, cn, emoji, element, story, traits, extra, isOpen, onClick }) => {
-  const color = ELEM_COLOR[element] || '#8b5cf6';
+  const color = ELEM_COLOR[element] || '#7c3aed';
   return (
     <div
       onClick={onClick}
       style={{
-        backgroundColor: '#16152e', borderRadius: 12, padding: '18px 20px',
-        border: `1px solid ${isOpen ? color + '66' : 'rgba(255,255,255,0.07)'}`,
+        backgroundColor: '#ffffff', borderRadius: 12, padding: '18px 20px',
+        border: `1px solid ${isOpen ? color + '66' : '#f3f4f6'}`,
         cursor: 'pointer', transition: 'all 0.2s',
         boxShadow: isOpen ? `0 0 20px ${color}22` : 'none',
         marginBottom: 12,
@@ -44,16 +44,16 @@ const StoryCard: React.FC<{
         <div style={{ flex: 1 }}>
           <div style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}>
             <span style={{ fontSize: 26, fontWeight: 900, color }}>{cn}</span>
-            <span style={{ fontSize: 15, fontWeight: 700, color: '#e5e7eb' }}>{title}</span>
+            <span style={{ fontSize: 15, fontWeight: 700, color: '#1f2937' }}>{title}</span>
           </div>
           <div style={{ fontSize: 12, color: '#6b7280' }}>{subtitle}</div>
         </div>
-        <div style={{ fontSize: 16, color: '#4b5563', transform: isOpen ? 'rotate(90deg)' : 'none', transition: 'transform 0.2s' }}>›</div>
+        <div style={{ fontSize: 16, color: '#9ca3af', transform: isOpen ? 'rotate(90deg)' : 'none', transition: 'transform 0.2s' }}>›</div>
       </div>
 
       {isOpen && (
-        <div style={{ marginTop: 18, paddingTop: 18, borderTop: '1px solid rgba(255,255,255,0.07)' }}>
-          <div style={{ fontSize: 14, color: '#d1d5db', lineHeight: 1.85, whiteSpace: 'pre-line', marginBottom: 16 }}>
+        <div style={{ marginTop: 18, paddingTop: 18, borderTop: '1px solid #f3f4f6' }}>
+          <div style={{ fontSize: 14, color: '#374151', lineHeight: 1.85, whiteSpace: 'pre-line', marginBottom: 16 }}>
             {story}
           </div>
           {extra && (
@@ -89,7 +89,7 @@ const StoriesPage: React.FC = () => {
   }, []);
 
   const pageLayout = (content: React.ReactNode) => (
-    <div style={{ display: 'flex', minHeight: '100vh', backgroundColor: '#0f0e1a' }}>
+    <div style={{ display: 'flex', minHeight: '100vh', backgroundColor: '#f8f6ff' }}>
       <Sidebar />
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
         <Header />
@@ -102,7 +102,7 @@ const StoriesPage: React.FC = () => {
 
   return pageLayout(
     <>
-      <h2 style={{ margin: '0 0 6px', fontSize: 22, fontWeight: 700, color: '#e9d5ff' }}>
+      <h2 style={{ margin: '0 0 6px', fontSize: 22, fontWeight: 700, color: '#2e1065' }}>
         📖 Celestial Folk Stories
       </h2>
       <p style={{ color: '#6b7280', fontSize: 13, margin: '0 0 24px', maxWidth: 640 }}>
@@ -121,9 +121,9 @@ const StoriesPage: React.FC = () => {
             onClick={() => { setTab(key as any); setOpenId(null); }}
             style={{
               padding: '9px 20px', borderRadius: 8, cursor: 'pointer', fontSize: 13, fontWeight: 600,
-              border: `1px solid ${tab === key ? '#8b5cf6' : 'rgba(255,255,255,0.1)'}`,
-              backgroundColor: tab === key ? 'rgba(139,92,246,0.2)' : '#16152e',
-              color: tab === key ? '#e9d5ff' : '#6b7280',
+              border: `1px solid ${tab === key ? '#7c3aed' : '#e8e3f8'}`,
+              backgroundColor: tab === key ? '#ede9fe' : '#ffffff',
+              color: tab === key ? '#2e1065' : '#6b7280',
             }}
           >{label}</button>
         ))}
@@ -132,20 +132,20 @@ const StoriesPage: React.FC = () => {
       {/* Introduction panel */}
       {tab === 'stems' && (
         <div style={{
-          backgroundColor: '#16152e', borderRadius: 10, padding: '14px 18px',
-          border: '1px solid rgba(139,92,246,0.2)', marginBottom: 20, fontSize: 13, color: '#9ca3af', lineHeight: 1.7,
+          backgroundColor: '#ffffff', borderRadius: 10, padding: '14px 18px',
+          border: '1px solid #ede9fe', marginBottom: 20, fontSize: 13, color: '#9ca3af', lineHeight: 1.7,
         }}>
-          The <strong style={{ color: '#c4b5fd' }}>10 Heavenly Stems (天干)</strong> are the foundational Yang forces of the cosmos —
+          The <strong style={{ color: '#7c3aed' }}>10 Heavenly Stems (天干)</strong> are the foundational Yang forces of the cosmos —
           the active, celestial principles that give each Bazi pillar its governing character. Each stem carries
           a divine origin story from China's mythological tradition, passed down over four thousand years.
         </div>
       )}
       {tab === 'branches' && (
         <div style={{
-          backgroundColor: '#16152e', borderRadius: 10, padding: '14px 18px',
-          border: '1px solid rgba(139,92,246,0.2)', marginBottom: 20, fontSize: 13, color: '#9ca3af', lineHeight: 1.7,
+          backgroundColor: '#ffffff', borderRadius: 10, padding: '14px 18px',
+          border: '1px solid #ede9fe', marginBottom: 20, fontSize: 13, color: '#9ca3af', lineHeight: 1.7,
         }}>
-          The <strong style={{ color: '#c4b5fd' }}>12 Earthly Branches (地支)</strong> are the Yin forces of time —
+          The <strong style={{ color: '#7c3aed' }}>12 Earthly Branches (地支)</strong> are the Yin forces of time —
           twelve two-hour windows that govern the daily energy cycle. Each branch corresponds to one of the
           Zodiac animals, and each carries a myth that reveals the nature of its energy and its hour.
         </div>

@@ -7,7 +7,7 @@ import Sidebar from '../components/Common/Sidebar';
 import Header  from '../components/Common/Header';
 
 const ELEM_COLOR: Record<string, string> = {
-  Wood: '#22c55e', Fire: '#ef4444', Earth: '#f59e0b', Metal: '#94a3b8', Water: '#3b82f6',
+  Wood: '#16a34a', Fire: '#ef4444', Earth: '#f59e0b', Metal: '#6b7280', Water: '#2563eb',
 };
 
 // ── Pillar predictions by stem element ────────────────────────────────────────
@@ -41,7 +41,7 @@ const getPillarEnergy = (p: LuckPillar, favElems: string[]): 'supportive' | 'neu
 };
 
 const ENERGY_STYLE: Record<string, { color: string; label: string; icon: string }> = {
-  supportive:  { color: '#22c55e', label: 'Supportive Decade',   icon: '✨' },
+  supportive:  { color: '#16a34a', label: 'Supportive Decade',   icon: '✨' },
   neutral:     { color: '#f59e0b', label: 'Mixed Energy Decade', icon: '⚖️' },
   challenging: { color: '#ef4444', label: 'Growth Decade',       icon: '🔥' },
 };
@@ -57,7 +57,7 @@ const LuckPillars: React.FC = () => {
   const favElems = chart?.favorable_elements ?? [];
 
   const pageLayout = (content: React.ReactNode) => (
-    <div style={{ display: 'flex', minHeight: '100vh', backgroundColor: '#0f0e1a' }}>
+    <div style={{ display: 'flex', minHeight: '100vh', backgroundColor: '#f8f6ff' }}>
       <Sidebar /><div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}><Header />
         <main style={{ flex: 1, padding: 32, overflowY: 'auto' }}>{content}</main>
       </div>
@@ -68,7 +68,7 @@ const LuckPillars: React.FC = () => {
   if (error || !luckPillars) return pageLayout(
     <div style={{ textAlign: 'center', paddingTop: 60 }}>
       <div style={{ fontSize: 48, marginBottom: 16 }}>🌀</div>
-      <div style={{ color: '#c4b5fd', fontSize: 18, fontWeight: 600, marginBottom: 8 }}>Profile Required</div>
+      <div style={{ color: '#7c3aed', fontSize: 18, fontWeight: 600, marginBottom: 8 }}>Profile Required</div>
       <div style={{ color: '#6b7280', fontSize: 14, marginBottom: 24 }}>Set up your birth data to calculate your luck pillars.</div>
       <button onClick={() => navigate('/profile')} style={{ padding: '10px 24px', backgroundColor: '#7c3aed', color: '#fff', border: 'none', borderRadius: 8, cursor: 'pointer', fontSize: 14, fontWeight: 600 }}>Set Up Profile →</button>
     </div>
@@ -76,17 +76,17 @@ const LuckPillars: React.FC = () => {
 
   return pageLayout(
     <>
-      <h2 style={{ margin: '0 0 6px', fontSize: 22, fontWeight: 700, color: '#e9d5ff' }}>🌀 Luck Pillars 大运</h2>
+      <h2 style={{ margin: '0 0 6px', fontSize: 22, fontWeight: 700, color: '#2e1065' }}>🌀 Luck Pillars 大运</h2>
       <p style={{ color: '#6b7280', fontSize: 13, margin: '0 0 24px' }}>Your 10-year luck cycles — click any pillar to reveal your decade prediction and remedies.</p>
 
       {/* Meta */}
-      <div style={{ backgroundColor: '#16152e', borderRadius: 10, padding: '14px 20px', border: '1px solid rgba(139,92,246,0.2)', marginBottom: 24, display: 'flex', gap: 28, flexWrap: 'wrap' }}>
+      <div style={{ backgroundColor: '#ffffff', borderRadius: 10, padding: '14px 20px', border: '1px solid #ede9fe', marginBottom: 24, display: 'flex', gap: 28, flexWrap: 'wrap' }}>
         <div><div style={{ fontSize: 11, color: '#6b7280', marginBottom: 4 }}>Direction</div>
-          <div style={{ fontSize: 14, fontWeight: 600, color: '#c4b5fd' }}>{luckPillars.direction === 'forward' ? '↗ Forward 顺行' : '↙ Backward 逆行'}</div></div>
+          <div style={{ fontSize: 14, fontWeight: 600, color: '#7c3aed' }}>{luckPillars.direction === 'forward' ? '↗ Forward 顺行' : '↙ Backward 逆行'}</div></div>
         <div><div style={{ fontSize: 11, color: '#6b7280', marginBottom: 4 }}>First Pillar Starts</div>
-          <div style={{ fontSize: 14, fontWeight: 600, color: '#c4b5fd' }}>Age {luckPillars.start_age}</div></div>
+          <div style={{ fontSize: 14, fontWeight: 600, color: '#7c3aed' }}>Age {luckPillars.start_age}</div></div>
         <div><div style={{ fontSize: 11, color: '#6b7280', marginBottom: 4 }}>Total Pillars</div>
-          <div style={{ fontSize: 14, fontWeight: 600, color: '#c4b5fd' }}>{luckPillars.pillars.length} × 10 years</div></div>
+          <div style={{ fontSize: 14, fontWeight: 600, color: '#7c3aed' }}>{luckPillars.pillars.length} × 10 years</div></div>
       </div>
 
       {/* Pillars */}
@@ -102,7 +102,7 @@ const LuckPillars: React.FC = () => {
           const isCurrent = p.age_start <= 35 && p.age_end >= 25; // rough "current" detection
 
           return (
-            <div key={i} style={{ backgroundColor: '#16152e', borderRadius: 12, border: `1px solid ${isOpen ? sColor + '66' : 'rgba(139,92,246,0.2)'}`, overflow: 'hidden', transition: 'border-color 0.2s' }}>
+            <div key={i} style={{ backgroundColor: '#ffffff', borderRadius: 12, border: `1px solid ${isOpen ? sColor + '66' : '#ede9fe'}`, overflow: 'hidden', transition: 'border-color 0.2s' }}>
               {/* Pillar header row — always visible */}
               <div
                 onClick={() => setExpanded(isOpen ? null : i)}
@@ -121,9 +121,9 @@ const LuckPillars: React.FC = () => {
                 {/* Info */}
                 <div style={{ flex: 1 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4, flexWrap: 'wrap' }}>
-                    <span style={{ fontSize: 14, fontWeight: 700, color: '#e5e7eb' }}>{p.name}</span>
+                    <span style={{ fontSize: 14, fontWeight: 700, color: '#1f2937' }}>{p.name}</span>
                     <span style={{ fontSize: 11, padding: '2px 8px', borderRadius: 10, backgroundColor: estyl.color + '22', color: estyl.color, border: `1px solid ${estyl.color}44` }}>{estyl.icon} {estyl.label}</span>
-                    {isCurrent && <span style={{ fontSize: 10, padding: '2px 6px', borderRadius: 8, backgroundColor: 'rgba(139,92,246,0.2)', color: '#c4b5fd', border: '1px solid rgba(139,92,246,0.4)' }}>● Active</span>}
+                    {isCurrent && <span style={{ fontSize: 10, padding: '2px 6px', borderRadius: 8, backgroundColor: '#ede9fe', color: '#7c3aed', border: '1px solid #c4b5fd' }}>● Active</span>}
                   </div>
                   <div style={{ fontSize: 12, color: '#9ca3af' }}>
                     Age {p.age_start}–{p.age_end} &nbsp;·&nbsp;
@@ -131,18 +131,18 @@ const LuckPillars: React.FC = () => {
                   </div>
                   <div style={{ fontSize: 11, color: '#6b7280', marginTop: 2, fontStyle: 'italic' }}>{decade.theme}</div>
                 </div>
-                <span style={{ color: isOpen ? '#c4b5fd' : '#4b5563', fontSize: 18, transition: 'color 0.15s' }}>{isOpen ? '▲' : '▼'}</span>
+                <span style={{ color: isOpen ? '#7c3aed' : '#9ca3af', fontSize: 18, transition: 'color 0.15s' }}>{isOpen ? '▲' : '▼'}</span>
               </div>
 
               {/* Expanded content */}
               {isOpen && (
-                <div style={{ borderTop: '1px solid rgba(139,92,246,0.15)', padding: '20px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
+                <div style={{ borderTop: '1px solid #e8e3f8', padding: '20px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
                   {/* Prediction */}
                   <div>
-                    <div style={{ fontSize: 13, fontWeight: 700, color: '#c4b5fd', marginBottom: 12 }}>📖 Decade Prediction (Age {p.age_start}–{p.age_end})</div>
+                    <div style={{ fontSize: 13, fontWeight: 700, color: '#7c3aed', marginBottom: 12 }}>📖 Decade Prediction (Age {p.age_start}–{p.age_end})</div>
                     <div style={{ backgroundColor: estyl.color + '10', border: `1px solid ${estyl.color}33`, borderRadius: 10, padding: '14px 16px', marginBottom: 12 }}>
                       <div style={{ fontSize: 13, fontWeight: 600, color: estyl.color, marginBottom: 6 }}>{estyl.icon} {decade.theme}</div>
-                      <div style={{ fontSize: 13, color: '#e5e7eb', lineHeight: 1.7, marginBottom: 8 }}><strong style={{ color: '#a78bfa' }}>Opportunity:</strong> {decade.opportunity}</div>
+                      <div style={{ fontSize: 13, color: '#1f2937', lineHeight: 1.7, marginBottom: 8 }}><strong style={{ color: '#a78bfa' }}>Opportunity:</strong> {decade.opportunity}</div>
                       <div style={{ fontSize: 13, color: '#9ca3af', lineHeight: 1.6 }}><strong style={{ color: '#6b7280' }}>Challenge:</strong> {decade.challenge}</div>
                     </div>
                     <div style={{ fontSize: 12, color: '#6b7280', lineHeight: 1.6 }}>
@@ -155,7 +155,7 @@ const LuckPillars: React.FC = () => {
                   {/* Remedies */}
                   {remedy && (
                     <div>
-                      <div style={{ fontSize: 13, fontWeight: 700, color: '#c4b5fd', marginBottom: 12 }}>💎 Decade Remedies ({p.branch.element} Energy)</div>
+                      <div style={{ fontSize: 13, fontWeight: 700, color: '#7c3aed', marginBottom: 12 }}>💎 Decade Remedies ({p.branch.element} Energy)</div>
                       <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                         {[
                           { icon: '💎', label: 'Crystal',       value: remedy.crystal },
@@ -163,14 +163,14 @@ const LuckPillars: React.FC = () => {
                           { icon: '🧭', label: 'Power Direction', value: remedy.direction },
                           { icon: '🧘', label: 'Daily Practice', value: remedy.practice },
                         ].map(r => (
-                          <div key={r.label} style={{ backgroundColor: '#1a1830', borderRadius: 8, padding: '10px 14px', border: '1px solid rgba(255,255,255,0.06)' }}>
+                          <div key={r.label} style={{ backgroundColor: '#f5f3ff', borderRadius: 8, padding: '10px 14px', border: '1px solid #f3f4f6' }}>
                             <span style={{ fontSize: 12, color: '#6b7280' }}>{r.icon} {r.label}: </span>
-                            <span style={{ fontSize: 12, color: '#e5e7eb', fontWeight: 500 }}>{r.value}</span>
+                            <span style={{ fontSize: 12, color: '#1f2937', fontWeight: 500 }}>{r.value}</span>
                           </div>
                         ))}
-                        <div style={{ backgroundColor: 'rgba(139,92,246,0.1)', borderRadius: 8, padding: '10px 14px', border: '1px solid rgba(139,92,246,0.25)', marginTop: 4 }}>
+                        <div style={{ backgroundColor: '#f5f3ff', borderRadius: 8, padding: '10px 14px', border: '1px solid #e2d9f3', marginTop: 4 }}>
                           <div style={{ fontSize: 11, color: '#9ca3af', marginBottom: 4 }}>Decade Affirmation</div>
-                          <div style={{ fontSize: 13, color: '#c4b5fd', fontStyle: 'italic' }}>"{remedy.affirmation}"</div>
+                          <div style={{ fontSize: 13, color: '#7c3aed', fontStyle: 'italic' }}>"{remedy.affirmation}"</div>
                         </div>
                       </div>
                     </div>
@@ -183,12 +183,12 @@ const LuckPillars: React.FC = () => {
       </div>
 
       {/* Guide */}
-      <div style={{ backgroundColor: '#16152e', borderRadius: 12, padding: 20, border: '1px solid rgba(255,255,255,0.06)', marginTop: 20 }}>
-        <div style={{ fontSize: 13, fontWeight: 600, color: '#c4b5fd', marginBottom: 10 }}>How to Read Your Luck Pillars</div>
+      <div style={{ backgroundColor: '#ffffff', borderRadius: 12, padding: 20, border: '1px solid #f3f4f6', marginTop: 20 }}>
+        <div style={{ fontSize: 13, fontWeight: 600, color: '#7c3aed', marginBottom: 10 }}>How to Read Your Luck Pillars</div>
         <div style={{ fontSize: 12, color: '#9ca3af', lineHeight: 1.7 }}>
-          Each luck pillar (大运) governs approximately 10 years. The <strong style={{ color: '#e5e7eb' }}>Heavenly Stem</strong> influences years 1–5,
-          and the <strong style={{ color: '#e5e7eb' }}>Earthly Branch</strong> governs years 6–10. Pillars whose elements match your
-          <strong style={{ color: '#e5e7eb' }}> favorable elements</strong> bring natural flow and amplified luck.
+          Each luck pillar (大运) governs approximately 10 years. The <strong style={{ color: '#1f2937' }}>Heavenly Stem</strong> influences years 1–5,
+          and the <strong style={{ color: '#1f2937' }}>Earthly Branch</strong> governs years 6–10. Pillars whose elements match your
+          <strong style={{ color: '#1f2937' }}> favorable elements</strong> bring natural flow and amplified luck.
           Click any pillar to reveal your personalised prediction and decade remedies.
         </div>
       </div>

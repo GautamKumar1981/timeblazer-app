@@ -28,21 +28,21 @@ const Login: React.FC = () => {
 
   const inp: React.CSSProperties = {
     width: '100%', padding: '11px 14px', marginBottom: 14,
-    backgroundColor: '#1a1830', border: '1px solid rgba(255,255,255,0.1)',
-    borderRadius: 8, fontSize: 14, color: '#e5e7eb', outline: 'none',
+    backgroundColor: '#ffffff', border: '1px solid #e8e3f8',
+    borderRadius: 8, fontSize: 14, color: '#1f2937', outline: 'none',
     boxSizing: 'border-box',
   };
 
   return (
     <div style={{
       minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center',
-      background: 'radial-gradient(ellipse at 50% 0%, rgba(124,58,237,0.18) 0%, #0f0e1a 60%)',
-      backgroundColor: '#0f0e1a',
+      background: 'radial-gradient(ellipse at 50% 0%, rgba(124,58,237,0.18) 0%, #f8f6ff 60%)',
+      backgroundColor: '#f8f6ff',
     }}>
       <div style={{
-        backgroundColor: '#16152e', padding: '44px 40px', borderRadius: 18,
-        boxShadow: '0 8px 40px rgba(0,0,0,0.5)', width: 400, maxWidth: '95vw',
-        border: '1px solid rgba(139,92,246,0.25)',
+        backgroundColor: '#ffffff', padding: '44px 40px', borderRadius: 18,
+        boxShadow: '0 8px 40px rgba(0,0,0,0.1)', width: 400, maxWidth: '95vw',
+        border: '1px solid #e2d9f3',
       }}>
         {/* Brand */}
         <div style={{ textAlign: 'center', marginBottom: 32 }}>
@@ -117,7 +117,7 @@ const Login: React.FC = () => {
         </div>
 
         {isRegister && (
-          <p style={{ textAlign: 'center', fontSize: 11, color: '#4b5563', marginTop: 14, lineHeight: 1.5 }}>
+          <p style={{ textAlign: 'center', fontSize: 11, color: '#9ca3af', marginTop: 14, lineHeight: 1.5 }}>
             7 days free · then £0.99/month or £9.99/year<br />
             No card required to start.
           </p>

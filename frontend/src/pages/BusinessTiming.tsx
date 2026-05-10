@@ -16,7 +16,7 @@ const ACTIVITIES = [
 ];
 
 const ELEM_COLOR: Record<string, string> = {
-  Wood: '#22c55e', Fire: '#ef4444', Earth: '#f59e0b', Metal: '#94a3b8', Water: '#3b82f6',
+  Wood: '#16a34a', Fire: '#ef4444', Earth: '#f59e0b', Metal: '#6b7280', Water: '#2563eb',
 };
 
 const BusinessTiming: React.FC = () => {
@@ -30,12 +30,12 @@ const BusinessTiming: React.FC = () => {
   const handleSearch = () => dispatch(fetchBusinessTiming({ activity: selected, days_ahead: days }));
 
   return (
-    <div style={{ display: 'flex', minHeight: '100vh', backgroundColor: '#0f0e1a' }}>
+    <div style={{ display: 'flex', minHeight: '100vh', backgroundColor: '#f8f6ff' }}>
       <Sidebar />
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
         <Header />
         <main style={{ flex: 1, padding: 32, overflowY: 'auto' }}>
-          <h2 style={{ margin: '0 0 6px', fontSize: 22, fontWeight: 700, color: '#e9d5ff' }}>
+          <h2 style={{ margin: '0 0 6px', fontSize: 22, fontWeight: 700, color: '#2e1065' }}>
             💼 Business Timing
           </h2>
           <p style={{ color: '#6b7280', fontSize: 13, margin: '0 0 28px' }}>
@@ -43,8 +43,8 @@ const BusinessTiming: React.FC = () => {
           </p>
 
           {/* Activity selector */}
-          <div style={{ backgroundColor: '#16152e', borderRadius: 12, padding: 22, border: '1px solid rgba(139,92,246,0.2)', marginBottom: 20 }}>
-            <div style={{ fontSize: 13, color: '#c4b5fd', fontWeight: 600, marginBottom: 14 }}>Select Activity</div>
+          <div style={{ backgroundColor: '#ffffff', borderRadius: 12, padding: 22, border: '1px solid #ede9fe', marginBottom: 20 }}>
+            <div style={{ fontSize: 13, color: '#7c3aed', fontWeight: 600, marginBottom: 14 }}>Select Activity</div>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: 10 }}>
               {ACTIVITIES.map(({ key, icon, name, desc }) => (
                 <div
@@ -52,13 +52,13 @@ const BusinessTiming: React.FC = () => {
                   onClick={() => setSelected(key)}
                   style={{
                     padding: '12px 14px', borderRadius: 10, cursor: 'pointer',
-                    border: `2px solid ${selected === key ? '#8b5cf6' : 'rgba(255,255,255,0.07)'}`,
-                    backgroundColor: selected === key ? 'rgba(139,92,246,0.15)' : '#1a1830',
+                    border: `2px solid ${selected === key ? '#7c3aed' : '#f3f4f6'}`,
+                    backgroundColor: selected === key ? '#ede9fe' : '#f5f3ff',
                     transition: 'all 0.15s',
                   }}
                 >
                   <div style={{ fontSize: 18, marginBottom: 6 }}>{icon}</div>
-                  <div style={{ fontSize: 13, fontWeight: 600, color: selected === key ? '#c4b5fd' : '#d1d5db', marginBottom: 3 }}>{name}</div>
+                  <div style={{ fontSize: 13, fontWeight: 600, color: selected === key ? '#7c3aed' : '#374151', marginBottom: 3 }}>{name}</div>
                   <div style={{ fontSize: 11, color: '#6b7280' }}>{desc}</div>
                 </div>
               ))}
@@ -70,7 +70,7 @@ const BusinessTiming: React.FC = () => {
                 <select
                   value={days}
                   onChange={(e) => setDays(parseInt(e.target.value))}
-                  style={{ padding: '7px 10px', backgroundColor: '#1e1c3a', border: '1px solid rgba(255,255,255,0.12)', borderRadius: 6, color: '#e5e7eb', fontSize: 13 }}
+                  style={{ padding: '7px 10px', backgroundColor: '#e8e3f8', border: '1px solid #e8e3f8', borderRadius: 6, color: '#1f2937', fontSize: 13 }}
                 >
                   {[15, 30, 60, 90].map(d => <option key={d} value={d}>{d} days</option>)}
                 </select>
@@ -95,7 +95,7 @@ const BusinessTiming: React.FC = () => {
               <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16 }}>
                 <span style={{ fontSize: 22 }}>{businessRecs.activity && (businessRecs.activity as any).icon}</span>
                 <div>
-                  <div style={{ fontSize: 15, fontWeight: 600, color: '#e5e7eb' }}>
+                  <div style={{ fontSize: 15, fontWeight: 600, color: '#1f2937' }}>
                     {(businessRecs.activity as any).name}
                   </div>
                   <div style={{ fontSize: 12, color: '#6b7280' }}>
@@ -112,8 +112,8 @@ const BusinessTiming: React.FC = () => {
                 <div style={{ display: 'grid', gap: 10 }}>
                   {businessRecs.recommendations.map((rec: BusinessRec, i: number) => (
                     <div key={rec.date} style={{
-                      backgroundColor: '#16152e', borderRadius: 10, padding: '16px 20px',
-                      border: `1px solid ${i < 3 ? '#8b5cf655' : 'rgba(255,255,255,0.06)'}`,
+                      backgroundColor: '#ffffff', borderRadius: 10, padding: '16px 20px',
+                      border: `1px solid ${i < 3 ? '#7c3aed55' : '#f3f4f6'}`,
                       display: 'flex', alignItems: 'center', gap: 16, flexWrap: 'wrap',
                     }}>
                       {i < 3 && (
@@ -122,8 +122,8 @@ const BusinessTiming: React.FC = () => {
                         </div>
                       )}
                       <div style={{ minWidth: 160 }}>
-                        <div style={{ fontSize: 14, fontWeight: 600, color: '#e5e7eb' }}>{rec.day_name}</div>
-                        <div style={{ fontSize: 20, fontWeight: 800, color: '#c4b5fd' }}>{rec.pillar.name}</div>
+                        <div style={{ fontSize: 14, fontWeight: 600, color: '#1f2937' }}>{rec.day_name}</div>
+                        <div style={{ fontSize: 20, fontWeight: 800, color: '#7c3aed' }}>{rec.pillar.name}</div>
                         <div style={{ fontSize: 11, color: '#9ca3af' }}>
                           {rec.pillar.stem.en} · {rec.pillar.branch.en}
                         </div>
@@ -144,7 +144,7 @@ const BusinessTiming: React.FC = () => {
                         </div>
                       </div>
                       <div style={{ textAlign: 'right' }}>
-                        <div style={{ fontSize: 22, fontWeight: 800, color: rec.score >= 80 ? '#22c55e' : rec.score >= 50 ? '#f59e0b' : '#ef4444' }}>
+                        <div style={{ fontSize: 22, fontWeight: 800, color: rec.score >= 80 ? '#16a34a' : rec.score >= 50 ? '#f59e0b' : '#ef4444' }}>
                           {rec.score}
                         </div>
                         <div style={{ fontSize: 10, color: '#6b7280' }}>score</div>
