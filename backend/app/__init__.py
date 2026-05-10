@@ -5,6 +5,7 @@ from flask_cors import CORS
 from flask_socketio import SocketIO
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
+from sqlalchemy import inspect, text
 
 from app.config import config
 
@@ -13,6 +14,34 @@ socketio = SocketIO()
 limiter = Limiter(key_func=get_remote_address)
 
 _db_initialized = False
+
+
+def _migrate_columns(engine):
+    """Add new columns to existing tables that were created before schema updates."""
+    try:
+        is_sqlite = 'sqlite' in str(engine.url)
+        float_type = 'REAL' if is_sqlite else 'DOUBLE PRECISION'
+        inspector = inspect(engine)
+        tables = inspector.get_table_names()
+
+        if 'bazi_profiles' in tables:
+            existing = {col['name'] for col in inspector.get_columns('bazi_profiles')}
+            new_cols = [
+                ('birth_country',  "VARCHAR(100) DEFAULT ''"),
+                ('birth_city',     "VARCHAR(100) DEFAULT ''"),
+                ('birth_lat',      float_type),
+                ('birth_lon',      float_type),
+                ('moon_rashi',     "VARCHAR(50) DEFAULT ''"),
+                ('moon_nakshatra', "VARCHAR(100) DEFAULT ''"),
+                ('moon_longitude', float_type),
+            ]
+            with engine.connect() as conn:
+                for col_name, col_def in new_cols:
+                    if col_name not in existing:
+                        conn.execute(text(f'ALTER TABLE bazi_profiles ADD COLUMN {col_name} {col_def}'))
+                conn.commit()
+    except Exception as e:
+        print(f"Migration warning: {e}")
 
 
 def create_app(config_name=None):
@@ -60,6 +89,7 @@ def create_app(config_name=None):
         if not _db_initialized:
             try:
                 db.create_all()
+                _migrate_columns(db.engine)
                 _db_initialized = True
             except Exception as e:
                 print(f"DB init warning: {e}")

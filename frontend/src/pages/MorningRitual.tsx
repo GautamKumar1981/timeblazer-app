@@ -64,7 +64,8 @@ const MorningRitual: React.FC = () => {
     try {
       const validPriorities = priorities.filter(p => p.text.trim());
       if (validPriorities.length > 0) {
-        await prioritiesAPI.set(todayStr, validPriorities.map(p => p.text));
+        try { await prioritiesAPI.set(todayStr, validPriorities.map(p => p.text)); }
+        catch (e) { console.error('Priority save failed:', e); }
       }
       for (const tb of timeboxes.filter(t => t.title.trim())) {
         const [startH, startM] = tb.start.split(':');
@@ -72,19 +73,19 @@ const MorningRitual: React.FC = () => {
         const base = new Date(); base.setHours(0, 0, 0, 0);
         const startTime = new Date(base.getTime() + parseInt(startH) * 3600000 + parseInt(startM) * 60000);
         const endTime = new Date(base.getTime() + parseInt(endH) * 3600000 + parseInt(endM) * 60000);
-        await timeboxAPI.create({
-          title: tb.title,
-          start_time: startTime.toISOString(),
-          end_time: endTime.toISOString(),
-          element_type: tb.element_type,
-          color: ELEM_COLOR[tb.element_type] ?? '#7c3aed',
-        });
+        try {
+          await timeboxAPI.create({
+            title: tb.title,
+            start_time: startTime.toISOString(),
+            end_time: endTime.toISOString(),
+            element_type: tb.element_type,
+            color: ELEM_COLOR[tb.element_type] ?? '#7c3aed',
+          });
+        } catch (e) { console.error('Timebox save failed:', e); }
       }
-      setDone(true);
-    } catch (e) {
-      console.error(e);
     } finally {
       setSaving(false);
+      setDone(true);
     }
   };
 
@@ -245,6 +246,21 @@ const MorningRitual: React.FC = () => {
           {/* Step 2: Timeboxes */}
           {step === 2 && (
             <div>
+              {/* Guideline card */}
+              <div style={{ backgroundColor: '#ede9fe', borderRadius: 12, padding: '14px 18px', marginBottom: 18, border: '1px solid #c4b5fd' }}>
+                <div style={{ fontSize: 13, fontWeight: 700, color: '#4c1d95', marginBottom: 8 }}>How to use Timeboxes</div>
+                <div style={{ fontSize: 13, color: '#5b21b6', lineHeight: 1.65 }}>
+                  <strong>Timeboxing</strong> means committing a fixed block of time to a specific task — no multitasking, no open-ended scrolling.
+                  Each box you create locks you into deep focus for that window.
+                </div>
+                <ul style={{ margin: '10px 0 0', paddingLeft: 18, fontSize: 13, color: '#5b21b6', lineHeight: 1.8 }}>
+                  <li>Match each task to one of your top 3 priorities from the previous step.</li>
+                  <li>Tag with an <strong>element</strong> that reflects the task type — e.g. Fire for presentations, Water for creative work.</li>
+                  <li>Keep each block between 25 and 90 minutes. Protect the time like a meeting.</li>
+                  <li>Timeboxes without a title are skipped — you can also skip this step and complete the ritual.</li>
+                </ul>
+              </div>
+
               <div style={{ backgroundColor: '#fff', borderRadius: 16, padding: 24, border: '1px solid #e8e3f8', marginBottom: 20 }}>
                 <div style={{ fontSize: 15, fontWeight: 700, color: '#2e1065', marginBottom: 6 }}>⏱ Schedule Your Timeboxes</div>
                 <p style={{ fontSize: 13, color: '#6b7280', margin: '0 0 18px' }}>

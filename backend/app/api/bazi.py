@@ -1,10 +1,32 @@
 from flask import request, jsonify
-from datetime import date
+from datetime import date, datetime, timezone, timedelta
 
 from app.api import api_bp
 from app.api.utils import get_current_user
 from app import db
 from app.models.bazi_profile import BaziProfile
+
+RASHIS = [
+    'Mesh', 'Brish', 'Mithun', 'Karkat', 'Simha', 'Kanya',
+    'Tula', 'Brishchik', 'Dhanu', 'Makar', 'Kumbha', 'Meen',
+]
+
+
+def _compute_moon(birth_date, birth_hour, birth_minute, timezone_offset, birth_lat, birth_lon):
+    try:
+        from app.vedic.astronomy import sidereal_moon
+        from app.vedic.panchang import NAKSHATRAS
+        birth_dt_local = datetime(birth_date.year, birth_date.month, birth_date.day,
+                                  birth_hour, birth_minute, 0)
+        birth_dt_utc = (birth_dt_local - timedelta(hours=timezone_offset)).replace(tzinfo=timezone.utc)
+        moon_lon = sidereal_moon(birth_dt_utc)
+        moon_rashi = RASHIS[int(moon_lon / 30) % 12]
+        moon_nakshatra = NAKSHATRAS[int(moon_lon / (360 / 27)) % 27]['en']
+        return moon_rashi, moon_nakshatra, round(moon_lon, 4)
+    except Exception:
+        return '', '', None
+
+
 from app.bazi.calculator import calculate_chart
 from app.bazi.luck_pillars import calculate_luck_pillars
 from app.bazi.forecast import (
@@ -51,23 +73,45 @@ def bazi_save_profile():
     if gender not in ('M', 'F'):
         return jsonify({'error': 'gender must be M or F'}), 400
 
+    birth_minute     = int(data.get('birth_minute', 0))
+    timezone_offset  = float(data.get('timezone_offset', 0.0))
+    birth_country    = str(data.get('birth_country', ''))
+    birth_city       = str(data.get('birth_city', ''))
+    birth_lat        = float(data['birth_lat']) if data.get('birth_lat') is not None else None
+    birth_lon        = float(data['birth_lon']) if data.get('birth_lon') is not None else None
+
     p = BaziProfile.query.filter_by(user_id=user.id).first()
     if p:
         p.birth_date      = birth_date
         p.birth_hour      = birth_hour
-        p.birth_minute    = int(data.get('birth_minute', 0))
+        p.birth_minute    = birth_minute
         p.gender          = gender
-        p.timezone_offset = float(data.get('timezone_offset', 0.0))
+        p.timezone_offset = timezone_offset
+        p.birth_country   = birth_country
+        p.birth_city      = birth_city
+        p.birth_lat       = birth_lat
+        p.birth_lon       = birth_lon
     else:
         p = BaziProfile(
             user_id=user.id,
             birth_date=birth_date,
             birth_hour=birth_hour,
-            birth_minute=int(data.get('birth_minute', 0)),
+            birth_minute=birth_minute,
             gender=gender,
-            timezone_offset=float(data.get('timezone_offset', 0.0)),
+            timezone_offset=timezone_offset,
+            birth_country=birth_country,
+            birth_city=birth_city,
+            birth_lat=birth_lat,
+            birth_lon=birth_lon,
         )
         db.session.add(p)
+
+    if birth_lat is not None and birth_lon is not None:
+        moon_rashi, moon_nakshatra, moon_longitude = _compute_moon(
+            birth_date, birth_hour, birth_minute, timezone_offset, birth_lat, birth_lon)
+        p.moon_rashi = moon_rashi
+        p.moon_nakshatra = moon_nakshatra
+        p.moon_longitude = moon_longitude
 
     db.session.commit()
     return jsonify({'profile': p.to_dict()}), 200

@@ -48,18 +48,22 @@ const VedicPanchang: React.FC = () => {
   const navigate = useNavigate();
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [apiError, setApiError] = useState(false);
   const [activeTab, setActiveTab] = useState<'panchang' | 'choghadiya' | 'hora' | 'rashifal' | 'dasha'>('panchang');
   const [dashaData, setDashaData] = useState<any>(null);
 
   useEffect(() => {
-    vedicAPI.getToday().then((res: any) => {
-      setData(res.data);
-    }).catch(() => {}).finally(() => setLoading(false));
+    vedicAPI.getToday()
+      .then((res: any) => { setData(res.data); })
+      .catch(() => { setApiError(true); })
+      .finally(() => setLoading(false));
   }, []);
 
   useEffect(() => {
     if (activeTab === 'dasha') {
-      vedicAPI.getDasha().then((res: any) => setDashaData(res.data)).catch(() => {});
+      vedicAPI.getDasha()
+        .then((res: any) => setDashaData(res.data))
+        .catch(() => {});
     }
   }, [activeTab]);
 
@@ -72,18 +76,21 @@ const VedicPanchang: React.FC = () => {
     </div>
   );
 
-  if (data?.profile_required) return (
+  if (apiError || !data) return (
     <div style={{ display: 'flex', minHeight: '100vh', backgroundColor: '#f8f6ff' }}>
       <Sidebar />
-      <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: 16, padding: 32 }}>
-        <div style={{ fontSize: 64 }}>🙏</div>
-        <h2 style={{ color: '#2e1065', fontSize: 22, fontWeight: 800, textAlign: 'center', margin: 0 }}>Set Up Your Vedic Profile</h2>
-        <p style={{ color: '#6b7280', fontSize: 14, textAlign: 'center', maxWidth: 380, margin: 0 }}>
-          Enter your birth details to get your personalised Rashifal, Nakshatra, and Dasha periods.
-        </p>
-        <button onClick={() => navigate('/vedic-profile')} style={{ padding: '12px 28px', backgroundColor: '#7c3aed', color: '#fff', border: 'none', borderRadius: 10, cursor: 'pointer', fontSize: 15, fontWeight: 700 }}>
-          🙏 Set Up Profile →
-        </button>
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+        <Header />
+        <main style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: 16, padding: 32 }}>
+          <div style={{ fontSize: 48 }}>🙏</div>
+          <h2 style={{ color: '#2e1065', fontSize: 20, fontWeight: 800, margin: 0 }}>Could not load Panchang</h2>
+          <p style={{ color: '#6b7280', fontSize: 14, maxWidth: 360, textAlign: 'center', margin: 0 }}>
+            Please check your connection and try again. If this persists, your birth profile may need to be updated.
+          </p>
+          <button onClick={() => window.location.reload()} style={{ padding: '10px 24px', backgroundColor: '#7c3aed', color: '#fff', border: 'none', borderRadius: 8, cursor: 'pointer', fontSize: 14, fontWeight: 700 }}>
+            Retry
+          </button>
+        </main>
       </div>
     </div>
   );
@@ -154,6 +161,18 @@ const VedicPanchang: React.FC = () => {
             ))}
           </div>
 
+          {/* Profile setup banner — only if personalised data missing */}
+          {data?.profile_required && (
+            <div style={{ backgroundColor: '#ede9fe', borderRadius: 10, padding: '12px 16px', marginBottom: 20, border: '1px solid #c4b5fd', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 10 }}>
+              <span style={{ fontSize: 13, color: '#4c1d95' }}>
+                Add your birth city in your profile to unlock personalised Rashifal and Dasha readings.
+              </span>
+              <button onClick={() => navigate('/profile')} style={{ padding: '7px 16px', backgroundColor: '#7c3aed', color: '#fff', border: 'none', borderRadius: 7, cursor: 'pointer', fontSize: 13, fontWeight: 700, flexShrink: 0 }}>
+                Update Profile
+              </button>
+            </div>
+          )}
+
           {/* Panchang tab */}
           {activeTab === 'panchang' && pan && (
             <div>
@@ -171,8 +190,8 @@ const VedicPanchang: React.FC = () => {
                 </div>
               )}
 
-              <button onClick={() => navigate('/vedic-profile')} style={{ padding: '10px 22px', backgroundColor: '#ede9fe', color: '#6d28d9', border: '1px solid #c4b5fd', borderRadius: 8, cursor: 'pointer', fontSize: 13, fontWeight: 600 }}>
-                Update Vedic Profile
+              <button onClick={() => navigate('/profile')} style={{ padding: '10px 22px', backgroundColor: '#ede9fe', color: '#6d28d9', border: '1px solid #c4b5fd', borderRadius: 8, cursor: 'pointer', fontSize: 13, fontWeight: 600 }}>
+                Update Birth Profile
               </button>
             </div>
           )}
@@ -284,14 +303,14 @@ const VedicPanchang: React.FC = () => {
                     {rashifal.reading}
                   </div>
                   <div style={{ marginTop: 16, backgroundColor: '#ede9fe', borderRadius: 10, padding: '12px 16px', border: '1px solid #c4b5fd', fontSize: 13, color: '#4c1d95' }}>
-                    💡 Rashifal is based on your Moon sign ({rashifal.rashi}). Update your birth details in <button onClick={() => navigate('/vedic-profile')} style={{ background: 'none', border: 'none', color: '#7c3aed', cursor: 'pointer', fontWeight: 700, padding: 0, fontSize: 13 }}>Vedic Profile</button> for personalised readings.
+                    💡 Rashifal is based on your Moon sign ({rashifal.rashi}). Update your birth details in <button onClick={() => navigate('/profile')} style={{ background: 'none', border: 'none', color: '#7c3aed', cursor: 'pointer', fontWeight: 700, padding: 0, fontSize: 13 }}>Birth Profile</button> for personalised readings.
                   </div>
                 </Card>
               ) : (
                 <div style={{ textAlign: 'center', padding: 40 }}>
                   <div style={{ fontSize: 48, marginBottom: 14 }}>🙏</div>
                   <p style={{ color: '#6b7280', fontSize: 14, marginBottom: 20 }}>Set up your Jyotish profile to get personalised Rashifal.</p>
-                  <button onClick={() => navigate('/vedic-profile')} style={{ padding: '10px 24px', backgroundColor: '#7c3aed', color: '#fff', border: 'none', borderRadius: 8, cursor: 'pointer', fontSize: 14, fontWeight: 700 }}>Set Up Profile</button>
+                  <button onClick={() => navigate('/profile')} style={{ padding: '10px 24px', backgroundColor: '#7c3aed', color: '#fff', border: 'none', borderRadius: 8, cursor: 'pointer', fontSize: 14, fontWeight: 700 }}>Set Up Profile</button>
                 </div>
               )}
             </div>
@@ -348,7 +367,7 @@ const VedicPanchang: React.FC = () => {
                 <div style={{ textAlign: 'center', padding: 40 }}>
                   <div style={{ fontSize: 48, marginBottom: 14 }}>🌀</div>
                   <p style={{ color: '#6b7280', fontSize: 14, marginBottom: 20 }}>Set up your Jyotish profile to calculate your Vimshottari Dasha periods.</p>
-                  <button onClick={() => navigate('/vedic-profile')} style={{ padding: '10px 24px', backgroundColor: '#7c3aed', color: '#fff', border: 'none', borderRadius: 8, cursor: 'pointer', fontSize: 14, fontWeight: 700 }}>Set Up Profile</button>
+                  <button onClick={() => navigate('/profile')} style={{ padding: '10px 24px', backgroundColor: '#7c3aed', color: '#fff', border: 'none', borderRadius: 8, cursor: 'pointer', fontSize: 14, fontWeight: 700 }}>Set Up Profile</button>
                 </div>
               )}
             </div>

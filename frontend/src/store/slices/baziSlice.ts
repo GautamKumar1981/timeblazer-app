@@ -45,6 +45,9 @@ export interface LuckPillars {
 export interface BaziProfileData {
   birth_date: string; birth_hour: number; birth_minute: number;
   gender: string; timezone_offset: number;
+  birth_country: string; birth_city: string;
+  birth_lat: number | null; birth_lon: number | null;
+  moon_rashi: string; moon_nakshatra: string; moon_longitude: number | null;
 }
 export interface BusinessRec {
   date: string; day_name: string; pillar: Pillar;

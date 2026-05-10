@@ -3,7 +3,7 @@ from flask import request, jsonify
 from app.api import api_bp
 from app.api.utils import get_current_user
 from app import db
-from app.models.vedic_profile import VedicProfile
+from app.models.bazi_profile import BaziProfile
 from app.vedic.panchang import get_panchang
 from app.vedic.choghadiya import get_choghadiya, get_current_hora, get_hora_schedule
 from app.vedic.dasha import calculate_dasha
@@ -34,74 +34,6 @@ RASHIFAL = {
 }
 
 
-@api_bp.route('/vedic/profile', methods=['GET'])
-def get_vedic_profile():
-    user, err = get_current_user()
-    if err:
-        return jsonify({'error': err}), 401
-
-    profile = VedicProfile.query.filter_by(user_id=user.id).first()
-    if not profile:
-        return jsonify({'profile': None, 'profile_required': True}), 200
-
-    return jsonify({'profile': profile.to_dict()}), 200
-
-
-@api_bp.route('/vedic/profile', methods=['POST'])
-def save_vedic_profile():
-    user, err = get_current_user()
-    if err:
-        return jsonify({'error': err}), 401
-
-    data = request.get_json() or {}
-    required = ['birth_date', 'birth_hour', 'birth_minute', 'gender']
-    for f in required:
-        if f not in data:
-            return jsonify({'error': f'Missing field: {f}'}), 400
-
-    try:
-        birth_date = date_type.fromisoformat(data['birth_date'])
-    except ValueError:
-        return jsonify({'error': 'Invalid birth_date format (use YYYY-MM-DD)'}), 400
-
-    # Calculate Moon longitude at birth noon (approximate — full accuracy needs birth time + location)
-    birth_dt = datetime(birth_date.year, birth_date.month, birth_date.day,
-                        int(data['birth_hour']), int(data['birth_minute']), 0, tzinfo=timezone.utc)
-    # Adjust for Kathmandu NPT (-5:45 to convert to UTC) if city is Kathmandu
-    from datetime import timedelta
-    city_offsets = {'Kathmandu': timedelta(hours=5, minutes=45), 'Pokhara': timedelta(hours=5, minutes=45)}
-    city = data.get('birth_city', 'Kathmandu')
-    offset = city_offsets.get(city, timedelta(hours=5, minutes=45))
-    birth_dt_utc = birth_dt - offset
-
-    moon_lon = sidereal_moon(birth_dt_utc)
-    rashi_idx = int(moon_lon / 30) % 12
-    moon_rashi = RASHIS[rashi_idx]
-
-    from app.vedic.panchang import NAKSHATRAS
-    nak_idx = int(moon_lon / (360 / 27)) % 27
-    moon_nakshatra = NAKSHATRAS[nak_idx]['en']
-
-    profile = VedicProfile.query.filter_by(user_id=user.id).first()
-    if not profile:
-        profile = VedicProfile(user_id=user.id)
-        db.session.add(profile)
-
-    profile.birth_date = birth_date
-    profile.birth_hour = int(data['birth_hour'])
-    profile.birth_minute = int(data['birth_minute'])
-    profile.birth_city = city
-    profile.birth_lat = float(data.get('birth_lat', 27.7172))
-    profile.birth_lon = float(data.get('birth_lon', 85.3240))
-    profile.gender = data.get('gender', 'M')
-    profile.moon_rashi = moon_rashi
-    profile.moon_nakshatra = moon_nakshatra
-    profile.moon_longitude = round(moon_lon, 4)
-
-    db.session.commit()
-    return jsonify({'profile': profile.to_dict(), 'moon_rashi': moon_rashi, 'moon_nakshatra': moon_nakshatra}), 200
-
-
 @api_bp.route('/vedic/today', methods=['GET'])
 def vedic_today():
     user, err = get_current_user()
@@ -114,18 +46,22 @@ def vedic_today():
     hora = get_current_hora(now)
     hora_schedule = get_hora_schedule(now)
 
-    # Rashifal for user's Moon sign
-    profile = VedicProfile.query.filter_by(user_id=user.id).first()
+    profile = None
     rashifal = None
-    if profile and profile.moon_rashi:
-        rashifal = {
-            'rashi': profile.moon_rashi,
-            'rashi_np': RASHIS_NP[RASHIS.index(profile.moon_rashi)] if profile.moon_rashi in RASHIS else '',
-            'reading': RASHIFAL.get(profile.moon_rashi, 'A balanced day ahead. Focus on your priorities.'),
-            'nakshatra': profile.moon_nakshatra,
-        }
+    profile_required = True
+    try:
+        profile = BaziProfile.query.filter_by(user_id=user.id).first()
+        if profile and profile.moon_rashi:
+            rashifal = {
+                'rashi': profile.moon_rashi,
+                'rashi_np': RASHIS_NP[RASHIS.index(profile.moon_rashi)] if profile.moon_rashi in RASHIS else '',
+                'reading': RASHIFAL.get(profile.moon_rashi, 'A balanced day ahead. Focus on your priorities.'),
+                'nakshatra': profile.moon_nakshatra,
+            }
+        profile_required = profile is None or not profile.moon_rashi
+    except Exception as e:
+        print(f"vedic_today profile lookup error: {e}")
 
-    # Best windows today (auspicious choghadiya during daytime)
     best_windows = [s for s in choghadiya['day_slots'] if s['quality'] in ('excellent', 'auspicious')]
 
     return jsonify({
@@ -135,7 +71,7 @@ def vedic_today():
         'hora_schedule': hora_schedule,
         'rashifal': rashifal,
         'best_windows': best_windows,
-        'profile_required': profile is None,
+        'profile_required': profile_required,
     }), 200
 
 
@@ -168,9 +104,14 @@ def vedic_dasha():
     if err:
         return jsonify({'error': err}), 401
 
-    profile = VedicProfile.query.filter_by(user_id=user.id).first()
-    if not profile:
-        return jsonify({'error': 'Vedic profile not set up', 'profile_required': True}), 400
+    try:
+        profile = BaziProfile.query.filter_by(user_id=user.id).first()
+    except Exception as e:
+        print(f"vedic_dasha profile lookup error: {e}")
+        return jsonify({'error': 'Birth profile with location not set up', 'profile_required': True}), 400
+
+    if not profile or not profile.moon_longitude:
+        return jsonify({'error': 'Birth profile with location not set up', 'profile_required': True}), 400
 
     dasha = calculate_dasha(profile.birth_date, profile.moon_longitude)
     return jsonify({'dasha': dasha, 'profile': profile.to_dict()}), 200
@@ -188,7 +129,6 @@ def vedic_calendar():
     year = int(request.args.get('year', datetime.now().year))
     month = int(request.args.get('month', datetime.now().month))
 
-    # Get first and last day of month
     first_day = date_type(year, month, 1)
     last_day = date_type(year, month, cal_mod.monthrange(year, month)[1])
 
