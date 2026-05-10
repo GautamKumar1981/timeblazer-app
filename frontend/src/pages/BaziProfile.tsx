@@ -301,7 +301,7 @@ const WORLD: Record<string, CityInfo[]> = {
   ],
 };
 
-const COUNTRIES = ['Nepal', ...Object.keys(WORLD).filter(c => c !== 'Nepal' && c !== 'Other').sort(), 'Other'];
+const COUNTRIES = [...Object.keys(WORLD).filter(c => c !== 'Other').sort(), 'Other'];
 
 const inp: React.CSSProperties = {
   width: '100%', padding: '10px 12px', backgroundColor: '#fff',

@@ -20,6 +20,34 @@ const ELEM_TASK_TYPES: Record<string, string[]> = {
   Water: ['Brainstorming', 'Creative Projects', 'Reflection & Journaling', 'Intuitive Work'],
 };
 
+const ELEM_PRIORITY_EXAMPLES: Record<string, { category: string; items: string[] }[]> = {
+  Wood: [
+    { category: 'Growth & Learning', items: ['Read 30 pages of the strategy book', 'Complete one online course module', 'Research three competitors and summarise findings', 'Identify one new skill to develop this quarter'] },
+    { category: 'Planning & Vision', items: ['Draft the 90-day roadmap for the project', 'Write the first outline of the proposal', 'Define the team goals for this month', 'Map out milestones for the upcoming launch'] },
+    { category: 'Creative Building', items: ['Start the new feature branch and first commit', 'Write the introduction section of the report', 'Sketch the initial wireframes for the new flow', 'Begin the first prototype of the idea'] },
+  ],
+  Fire: [
+    { category: 'Presentations & Pitches', items: ['Deliver the client presentation', 'Prepare and rehearse the investor pitch', 'Record the product demo video', 'Present the Q2 results to the team'] },
+    { category: 'Networking & Communication', items: ['Follow up with 5 key contacts from last week', 'Send the project update email to stakeholders', 'Schedule and lead the team stand-up', 'Reach out to a mentor or collaborator'] },
+    { category: 'Visibility & Leadership', items: ['Publish the blog post or LinkedIn update', 'Lead the all-hands meeting', 'Give feedback to two team members', 'Finalise the marketing campaign brief'] },
+  ],
+  Earth: [
+    { category: 'Organisation & Admin', items: ['Clean up and organise the project folders', 'Review and respond to all pending emails', 'Update the task board and close completed items', 'Set up the recurring weekly meeting schedule'] },
+    { category: 'Finance & Budgeting', items: ['Update the weekly budget tracker', 'Reconcile last month\'s expenses', 'Review the vendor invoices', 'Prepare the monthly financial summary'] },
+    { category: 'Process & Documentation', items: ['Document the new onboarding workflow', 'Write the standard operating procedure for the process', 'Create the FAQ for the support team', 'Archive and label the completed project files'] },
+  ],
+  Metal: [
+    { category: 'Analysis & Review', items: ['Analyse last week\'s sales data and note trends', 'Review the Q2 performance report', 'Audit the codebase for security gaps', 'Evaluate the top three vendor proposals'] },
+    { category: 'Quality & Precision', items: ['QA test the new feature before release', 'Proofread and finalise the client contract', 'Review the design specs against requirements', 'Check and fix all critical bugs in the backlog'] },
+    { category: 'Decision Making', items: ['Make the final call on the vendor selection', 'Decide and document the technical architecture', 'Prioritise the next sprint backlog', 'Resolve the pending team conflict or decision'] },
+  ],
+  Water: [
+    { category: 'Brainstorming & Ideas', items: ['Brainstorm 10 solutions to the UX problem', 'Create a mind map for the product vision', 'Explore three alternative approaches to the challenge', 'Write a "what if" scenario for the business strategy'] },
+    { category: 'Creative Projects', items: ['Sketch the new design concepts', 'Draft the creative brief for the campaign', 'Write the first chapter or section of the content', 'Develop the storyboard for the video'] },
+    { category: 'Reflection & Intuition', items: ['Journal for 20 minutes on what\'s working and what isn\'t', 'Review feedback received and find the patterns', 'Meditate on the core problem before acting', 'Write down the insights from the last project'] },
+  ],
+};
+
 const STEP_LABELS = ['Energy Check', 'Top 3 Priorities', 'Schedule Timeboxes', 'Ready'];
 
 interface Priority { text: string }
@@ -36,6 +64,7 @@ const MorningRitual: React.FC = () => {
   const [timeboxes, setTimeboxes] = useState<Timebox[]>([]);
   const [saving, setSaving] = useState(false);
   const [done, setDone] = useState(false);
+  const [suggestionIdx, setSuggestionIdx] = useState<number | null>(null);
 
   useEffect(() => { dispatch(fetchToday()); }, [dispatch]);
 
@@ -218,6 +247,47 @@ const MorningRitual: React.FC = () => {
           {/* Step 1: Priorities */}
           {step === 1 && (
             <div>
+              {/* Suggestion popup */}
+              {suggestionIdx !== null && (
+                <div style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.45)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 }}
+                  onClick={() => setSuggestionIdx(null)}>
+                  <div style={{ backgroundColor: '#fff', borderRadius: 18, padding: 28, maxWidth: 520, width: '100%', boxShadow: '0 20px 60px rgba(0,0,0,0.25)', maxHeight: '80vh', overflowY: 'auto' }}
+                    onClick={(e) => e.stopPropagation()}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
+                      <div>
+                        <div style={{ fontSize: 16, fontWeight: 800, color: '#2e1065' }}>
+                          {ELEM_ICON[dmElem]} Ideas for Priority {suggestionIdx + 1}
+                        </div>
+                        <div style={{ fontSize: 12, color: '#9ca3af', marginTop: 3 }}>
+                          Aligned with {dmElem} energy — tap any to use it
+                        </div>
+                      </div>
+                      <button onClick={() => setSuggestionIdx(null)} style={{ background: 'none', border: 'none', fontSize: 20, cursor: 'pointer', color: '#9ca3af', lineHeight: 1 }}>✕</button>
+                    </div>
+                    {(ELEM_PRIORITY_EXAMPLES[dmElem] ?? ELEM_PRIORITY_EXAMPLES['Water']).map((group) => (
+                      <div key={group.category} style={{ marginBottom: 18 }}>
+                        <div style={{ fontSize: 11, fontWeight: 700, color: dmColor, textTransform: 'uppercase', letterSpacing: 0.6, marginBottom: 8 }}>{group.category}</div>
+                        {group.items.map((item) => (
+                          <button key={item} onClick={() => {
+                            const np = [...priorities];
+                            np[suggestionIdx!] = { text: item };
+                            setPriorities(np);
+                            setSuggestionIdx(null);
+                          }} style={{
+                            display: 'block', width: '100%', textAlign: 'left', padding: '9px 14px', marginBottom: 6,
+                            backgroundColor: '#f5f3ff', border: `1px solid ${dmColor}33`, borderRadius: 8,
+                            cursor: 'pointer', fontSize: 13, color: '#1f2937', lineHeight: 1.45,
+                          }}
+                            onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.backgroundColor = `${dmColor}18`; (e.currentTarget as HTMLButtonElement).style.borderColor = dmColor; }}
+                            onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.backgroundColor = '#f5f3ff'; (e.currentTarget as HTMLButtonElement).style.borderColor = `${dmColor}33`; }}
+                          >{item}</button>
+                        ))}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               <div style={{ backgroundColor: '#fff', borderRadius: 16, padding: 24, border: '1px solid #e8e3f8', marginBottom: 20 }}>
                 <div style={{ fontSize: 15, fontWeight: 700, color: '#2e1065', marginBottom: 6 }}>🎯 Top 3 Priorities for Today</div>
                 <p style={{ fontSize: 13, color: '#6b7280', margin: '0 0 18px' }}>
@@ -233,6 +303,10 @@ const MorningRitual: React.FC = () => {
                       value={p.text}
                       onChange={(e) => { const np = [...priorities]; np[i] = { text: e.target.value }; setPriorities(np); }}
                     />
+                    <button onClick={() => setSuggestionIdx(i)} style={{
+                      padding: '8px 12px', backgroundColor: `${dmColor}12`, color: dmColor,
+                      border: `1px solid ${dmColor}44`, borderRadius: 8, cursor: 'pointer', fontSize: 12, fontWeight: 600, flexShrink: 0, whiteSpace: 'nowrap',
+                    }}>💡 Ideas</button>
                   </div>
                 ))}
               </div>

@@ -224,29 +224,42 @@ const VedicPanchang: React.FC = () => {
                 <div style={{ fontSize: 12, fontWeight: 700, color: '#6b7280', marginBottom: 10 }}>DAYTIME</div>
                 {chog.day_slots.map((s: any, i: number) => (
                   <div key={i} style={{
-                    display: 'flex', alignItems: 'center', gap: 10, padding: '8px 12px', borderRadius: 8, marginBottom: 6,
-                    backgroundColor: s.is_current ? QUALITY_BG[s.quality] : s.quality === 'inauspicious' ? '#fafafa' : '#fafafa',
+                    display: 'flex', alignItems: 'flex-start', gap: 10, padding: '10px 12px', borderRadius: 8, marginBottom: 6,
+                    backgroundColor: s.is_current ? QUALITY_BG[s.quality] : '#fafafa',
                     border: `1px solid ${s.is_current ? QUALITY_BORDER[s.quality] : '#f3f4f6'}`,
-                    fontWeight: s.is_current ? 700 : 400,
                   }}>
-                    <div style={{ fontSize: 16 }}>{s.icon}</div>
+                    <div style={{ fontSize: 18, marginTop: 2 }}>{s.icon}</div>
                     <div style={{ flex: 1 }}>
-                      <span style={{ fontSize: 13, color: s.is_current ? QUALITY_COLOR[s.quality] : '#374151' }}>{s.name_en}</span>
-                      <span style={{ fontSize: 12, color: '#9ca3af', marginLeft: 8 }}>{s.start}–{s.end}</span>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
+                        <span style={{ fontSize: 13, fontWeight: s.is_current ? 700 : 600, color: s.is_current ? QUALITY_COLOR[s.quality] : '#1f2937' }}>{s.name_en}</span>
+                        <span style={{ fontSize: 11, color: '#9ca3af' }}>{s.start}–{s.end}</span>
+                        <span style={{ fontSize: 10, fontWeight: 700, padding: '1px 7px', borderRadius: 10, backgroundColor: QUALITY_COLOR[s.quality] ?? '#7c3aed', color: '#fff' }}>
+                          {s.quality.charAt(0).toUpperCase() + s.quality.slice(1)}
+                        </span>
+                        {s.is_current && <span style={{ fontSize: 10, backgroundColor: '#7c3aed', color: '#fff', borderRadius: 10, padding: '1px 7px', fontWeight: 700 }}>NOW</span>}
+                      </div>
+                      <div style={{ fontSize: 12, color: '#6b7280', marginTop: 3, lineHeight: 1.4 }}>{s.meaning}</div>
                     </div>
-                    {s.is_current && <span style={{ fontSize: 11, backgroundColor: '#7c3aed', color: '#fff', borderRadius: 10, padding: '2px 8px', fontWeight: 700 }}>NOW</span>}
                   </div>
                 ))}
                 <div style={{ fontSize: 12, fontWeight: 700, color: '#6b7280', margin: '14px 0 10px' }}>NIGHTTIME</div>
                 {chog.night_slots.map((s: any, i: number) => (
                   <div key={i} style={{
-                    display: 'flex', alignItems: 'center', gap: 10, padding: '8px 12px', borderRadius: 8, marginBottom: 6,
-                    backgroundColor: '#fafafa', border: '1px solid #f3f4f6',
+                    display: 'flex', alignItems: 'flex-start', gap: 10, padding: '10px 12px', borderRadius: 8, marginBottom: 6,
+                    backgroundColor: s.is_current ? QUALITY_BG[s.quality] : '#fafafa',
+                    border: `1px solid ${s.is_current ? QUALITY_BORDER[s.quality] : '#f3f4f6'}`,
                   }}>
-                    <div style={{ fontSize: 16 }}>{s.icon}</div>
+                    <div style={{ fontSize: 18, marginTop: 2 }}>{s.icon}</div>
                     <div style={{ flex: 1 }}>
-                      <span style={{ fontSize: 13, color: '#374151' }}>{s.name_en}</span>
-                      <span style={{ fontSize: 12, color: '#9ca3af', marginLeft: 8 }}>{s.start}–{s.end}</span>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
+                        <span style={{ fontSize: 13, fontWeight: s.is_current ? 700 : 600, color: s.is_current ? QUALITY_COLOR[s.quality] : '#1f2937' }}>{s.name_en}</span>
+                        <span style={{ fontSize: 11, color: '#9ca3af' }}>{s.start}–{s.end}</span>
+                        <span style={{ fontSize: 10, fontWeight: 700, padding: '1px 7px', borderRadius: 10, backgroundColor: QUALITY_COLOR[s.quality] ?? '#7c3aed', color: '#fff' }}>
+                          {s.quality.charAt(0).toUpperCase() + s.quality.slice(1)}
+                        </span>
+                        {s.is_current && <span style={{ fontSize: 10, backgroundColor: '#7c3aed', color: '#fff', borderRadius: 10, padding: '1px 7px', fontWeight: 700 }}>NOW</span>}
+                      </div>
+                      <div style={{ fontSize: 12, color: '#6b7280', marginTop: 3, lineHeight: 1.4 }}>{s.meaning}</div>
                     </div>
                   </div>
                 ))}
