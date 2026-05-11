@@ -4,7 +4,7 @@ import Sidebar from '../components/Common/Sidebar';
 import Header  from '../components/Common/Header';
 
 const ELEM_COLOR: Record<string, string> = {
-  Wood: '#22c55e', Fire: '#ef4444', Earth: '#f59e0b', Metal: '#94a3b8', Water: '#3b82f6',
+  Wood: '#16a34a', Fire: '#ef4444', Earth: '#f59e0b', Metal: '#6b7280', Water: '#2563eb',
 };
 
 // ── Remedy data ───────────────────────────────────────────────────────────────

@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
+import { SidebarProvider } from './context/SidebarContext';
 import { useAppSelector, useAppDispatch } from './store/store';
 import { fetchSubscriptionStatus } from './store/slices/subscriptionSlice';
 import { useAndroidBack } from './hooks/useAndroidBack';
@@ -38,6 +39,7 @@ const App: React.FC = () => {
   }, [auth, dispatch]);
 
   return (
+    <SidebarProvider>
     <div style={{ fontFamily: 'Segoe UI, Roboto, Arial, sans-serif', minHeight: '100vh', backgroundColor: '#f8f6ff' }}>
       <Routes>
         {/* Public routes */}
@@ -70,6 +72,7 @@ const App: React.FC = () => {
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </div>
+    </SidebarProvider>
   );
 };
 
