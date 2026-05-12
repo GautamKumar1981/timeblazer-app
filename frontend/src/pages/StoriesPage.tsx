@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { storiesAPI } from '../services/api';
 import Sidebar from '../components/Common/Sidebar';
 import Header  from '../components/Common/Header';
+import { useIsMobile } from '../hooks/useIsMobile';
 
 const ELEM_COLOR: Record<string, string> = {
   Wood: '#16a34a', Fire: '#ef4444', Earth: '#f59e0b', Metal: '#6b7280', Water: '#2563eb',
@@ -74,6 +75,7 @@ const StoryCard: React.FC<{
 };
 
 const StoriesPage: React.FC = () => {
+  const isMobile = useIsMobile();
   const [stems, setStems]   = useState<StemStory[]>([]);
   const [branches, setBranches] = useState<BranchStory[]>([]);
   const [openId, setOpenId] = useState<string | null>(null);
@@ -91,9 +93,9 @@ const StoriesPage: React.FC = () => {
   const pageLayout = (content: React.ReactNode) => (
     <div style={{ display: 'flex', minHeight: '100vh', backgroundColor: '#f8f6ff' }}>
       <Sidebar />
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0 }}>
         <Header />
-        <main style={{ flex: 1, padding: 32, overflowY: 'auto' }}>{content}</main>
+        <main style={{ flex: 1, padding: isMobile ? 16 : 32, overflowY: 'auto' }}>{content}</main>
       </div>
     </div>
   );

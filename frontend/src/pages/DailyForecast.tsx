@@ -5,6 +5,7 @@ import { fetchDailyForecast } from '../store/slices/baziSlice';
 import { HourForecast } from '../store/slices/baziSlice';
 import Sidebar from '../components/Common/Sidebar';
 import Header  from '../components/Common/Header';
+import { useIsMobile } from '../hooks/useIsMobile';
 
 const ELEM_COLOR: Record<string, string> = {
   Wood: '#16a34a', Fire: '#ef4444', Earth: '#f59e0b', Metal: '#6b7280', Water: '#2563eb',
@@ -34,6 +35,7 @@ const SectionTitle: React.FC<{ children: React.ReactNode }> = ({ children }) => 
 const DailyForecast: React.FC = () => {
   const dispatch  = useAppDispatch();
   const location  = useLocation();
+  const isMobile  = useIsMobile();
   const { dailyForecast: forecast, loading } = useAppSelector((s) => s.bazi);
 
   const urlDate = new URLSearchParams(location.search).get('date');
@@ -45,9 +47,9 @@ const DailyForecast: React.FC = () => {
   const pageLayout = (content: React.ReactNode) => (
     <div style={{ display: 'flex', minHeight: '100vh', backgroundColor: '#f8f6ff' }}>
       <Sidebar />
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0 }}>
         <Header />
-        <main style={{ flex: 1, padding: 32, overflowY: 'auto' }}>{content}</main>
+        <main style={{ flex: 1, padding: isMobile ? 16 : 32, overflowY: 'auto' }}>{content}</main>
       </div>
     </div>
   );

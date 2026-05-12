@@ -26,6 +26,7 @@ import MorningRitual  from './pages/MorningRitual';
 import ShutdownRitual from './pages/ShutdownRitual';
 import VedicProfile   from './pages/VedicProfile';
 import VedicPanchang  from './pages/VedicPanchang';
+import AdminPanel     from './pages/AdminPanel';
 
 const App: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -68,6 +69,9 @@ const App: React.FC = () => {
         <Route path="/analytics"       element={auth ? <SubscriptionGate><Analytics /></SubscriptionGate>        : <Navigate to="/" replace />} />
         <Route path="/weekly-review"   element={auth ? <SubscriptionGate><WeeklyReview /></SubscriptionGate>     : <Navigate to="/" replace />} />
         <Route path="/focus"           element={auth ? <SubscriptionGate><FocusMode /></SubscriptionGate>        : <Navigate to="/" replace />} />
+
+        {/* Admin — only accessible to admin users (AdminPanel self-redirects if not admin) */}
+        <Route path="/admin" element={auth ? <AdminPanel /> : <Navigate to="/" replace />} />
 
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>

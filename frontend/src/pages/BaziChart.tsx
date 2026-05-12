@@ -5,9 +5,10 @@ import { fetchBaziChart } from '../store/slices/baziSlice';
 import { Pillar, Stem } from '../store/slices/baziSlice';
 import Sidebar from '../components/Common/Sidebar';
 import Header  from '../components/Common/Header';
+import { useIsMobile } from '../hooks/useIsMobile';
 
 const ELEM_COLOR: Record<string, string> = {
-  Wood: '#22c55e', Fire: '#ef4444', Earth: '#f59e0b', Metal: '#94a3b8', Water: '#3b82f6',
+  Wood: '#16a34a', Fire: '#ef4444', Earth: '#f59e0b', Metal: '#6b7280', Water: '#2563eb',
 };
 
 // ── Animal characterisations ──────────────────────────────────────────────────
@@ -178,6 +179,7 @@ const AnimalCard: React.FC<{ animal: string; pillarTitle: string }> = ({ animal,
 const BaziChart: React.FC = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const isMobile = useIsMobile();
   const { chart, loading, error } = useAppSelector((s) => s.bazi);
   const [showYear, setShowYear] = useState(true);
 
@@ -215,10 +217,10 @@ const BaziChart: React.FC = () => {
   return (
     <div style={{ display: 'flex', minHeight: '100vh', backgroundColor: '#f8f6ff' }}>
       <Sidebar />
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0 }}>
         <Header />
-        <main style={{ flex: 1, padding: 32, overflowY: 'auto' }}>
-          <h2 style={{ margin: '0 0 6px', fontSize: 22, fontWeight: 700, color: '#2e1065' }}>🀄 Four Pillars Chart 四柱八字</h2>
+        <main style={{ flex: 1, padding: isMobile ? 16 : 32, overflowY: 'auto' }}>
+          <h2 style={{ margin: '0 0 6px', fontSize: isMobile ? 18 : 22, fontWeight: 700, color: '#2e1065' }}>🀄 Four Pillars Chart 四柱八字</h2>
           <p style={{ color: '#9ca3af', fontSize: 13, margin: '0 0 28px' }}>Your Bazi (八字) — the eight characters that define your elemental blueprint.</p>
 
           {/* Day Master */}

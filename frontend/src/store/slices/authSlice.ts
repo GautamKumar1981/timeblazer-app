@@ -63,10 +63,10 @@ export const updateProfile = createAsyncThunk(
   async (data: { name?: string; email?: string }, { rejectWithValue }) => {
     try {
       const response = await authAPI.updateProfile(data);
-      return response.data as User;
+      return (response.data.user ?? response.data) as User;
     } catch (err: unknown) {
       const error = err as { response?: { data?: { error?: string; message?: string } } };
-      return rejectWithValue(error.response?.data?.message || 'Update failed');
+      return rejectWithValue(error.response?.data?.error || error.response?.data?.message || 'Update failed');
     }
   }
 );

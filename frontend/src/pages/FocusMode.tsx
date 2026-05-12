@@ -9,7 +9,7 @@ const DEITY: Record<string, {
 }> = {
   Wood: {
     name: 'Guan Yin', cn: '觀音菩薩', title: 'Bodhisattva of Compassion',
-    colour: '#22c55e', emoji: '🪷',
+    colour: '#16a34a', emoji: '🪷',
     image: 'https://upload.wikimedia.org/wikipedia/commons/9/9f/Kuan-yan_bodhisattva%2C_Northern_Sung_dynasty%2C_China%2C_c._1025%2C_wood%2C_Honolulu_Academy_of_Arts.jpg',
     desc: 'Guan Yin hears the cries of all beings and responds with infinite compassion. As a Wood Day Master you are guided by her energy of growth, empathy and healing. Call on her when you seek inner peace, forgiveness, or the wisdom to nurture without losing yourself.',
     lore: 'Guan Yin was once Princess Miao Shan, who refused to abandon her spiritual vows despite her father\'s fury. When he ordered her execution, flowers bloomed from the executioner\'s axe and he fell ill. She journeyed through the underworld and — instead of fleeing — transformed it into a paradise through sheer compassion. She returned to earth as a bodhisattva, vowing never to enter nirvana until every being was freed from suffering. Sailors call on her in storms; mothers pray to her for children; healers invoke her green light. Over ten thousand temples across Asia burn incense perpetually before her white stone image — the boundless mother of mercy who has never once turned away a sincere heart.',
@@ -36,7 +36,7 @@ const DEITY: Record<string, {
   },
   Metal: {
     name: 'Guan Yu', cn: '關聖帝君', title: 'God of Justice & Brotherhood',
-    colour: '#94a3b8', emoji: '⚔️',
+    colour: '#6b7280', emoji: '⚔️',
     image: 'https://upload.wikimedia.org/wikipedia/commons/e/ec/Guanyu-1.jpg',
     desc: 'Guan Yu is the righteous warrior deity revered for loyalty, justice and the protection of honour. As a Metal Day Master his incorruptible clarity resonates with your soul. Meditate with him for protection, cutting through deception and attracting loyal allies.',
     lore: 'Guan Yu swore a blood oath of brotherhood with Liu Bei and Zhang Fei beneath blooming peach trees during the chaos of the Three Kingdoms era. His Green Dragon Crescent Blade — said to weigh 82 jin — never wavered from righteousness. When captured by the warlord Cao Cao and lavished with gold, rank and the finest horses, he served honourably and returned every gift the moment he learned his brothers lived. He rode the Red Hare, swiftest horse under heaven, and each night studied the Spring and Autumn Annals by candlelight, seeking moral clarity. Today his red-faced image stands in police stations, triad halls, business offices and temple sanctuaries across Asia — because righteousness has no single allegiance. In his presence, deception dissolves and a person\'s true character is revealed for all to see.',
@@ -45,7 +45,7 @@ const DEITY: Record<string, {
   },
   Water: {
     name: 'Mazu', cn: '媽祖', title: 'Goddess of the Sea & Safe Passage',
-    colour: '#3b82f6', emoji: '🌊',
+    colour: '#2563eb', emoji: '🌊',
     image: 'https://upload.wikimedia.org/wikipedia/commons/c/c2/Wood_Statue_of_Mazu_Late_19th_century_CE_Qing_Dynasty_%281644-1911_CE%29_China.jpg',
     desc: 'Mazu is the celestial mother who guides navigators through storms and blesses all who travel life\'s waters. As a Water Day Master her depth of intuition and flowing grace align perfectly with your nature. Call on her for wisdom, safe passage and emotional healing.',
     lore: 'Mazu was born in 960 CE in Fujian province as Lin Mo — a girl so spiritually gifted that she did not cry at birth, so they named her "Mo" meaning the Silent One. By age eight she could recite scriptures by heart; by thirteen she received a gleaming bronze talisman from a white-bearded elder who dissolved into morning mist. One stormy night she fell into a deep trance at her loom, her spirit racing across the churning sea to rescue her drowning father and brothers. Her mother, seized by panic, shook her awake before she could save one brother — and overcome with grief, the young Lin Mo vowed to spend all eternity protecting those who sail. Today over ten thousand Mazu temples stand across China, Taiwan and Southeast Asia. Before every voyage, fishermen burn paper offerings at the water\'s edge, trusting that she flies ahead of typhoons to light the path home.',

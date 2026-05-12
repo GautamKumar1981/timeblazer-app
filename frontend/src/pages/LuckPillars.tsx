@@ -5,6 +5,7 @@ import { fetchLuckPillars } from '../store/slices/baziSlice';
 import { LuckPillar } from '../store/slices/baziSlice';
 import Sidebar from '../components/Common/Sidebar';
 import Header  from '../components/Common/Header';
+import { useIsMobile } from '../hooks/useIsMobile';
 
 const ELEM_COLOR: Record<string, string> = {
   Wood: '#16a34a', Fire: '#ef4444', Earth: '#f59e0b', Metal: '#6b7280', Water: '#2563eb',
@@ -49,6 +50,7 @@ const ENERGY_STYLE: Record<string, { color: string; label: string; icon: string 
 const LuckPillars: React.FC = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const isMobile = useIsMobile();
   const { luckPillars, chart, loading, error } = useAppSelector((s) => s.bazi);
   const [expanded, setExpanded] = useState<number | null>(null);
 
@@ -58,8 +60,8 @@ const LuckPillars: React.FC = () => {
 
   const pageLayout = (content: React.ReactNode) => (
     <div style={{ display: 'flex', minHeight: '100vh', backgroundColor: '#f8f6ff' }}>
-      <Sidebar /><div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}><Header />
-        <main style={{ flex: 1, padding: 32, overflowY: 'auto' }}>{content}</main>
+      <Sidebar /><div style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0 }}><Header />
+        <main style={{ flex: 1, padding: isMobile ? 16 : 32, overflowY: 'auto' }}>{content}</main>
       </div>
     </div>
   );
@@ -136,7 +138,7 @@ const LuckPillars: React.FC = () => {
 
               {/* Expanded content */}
               {isOpen && (
-                <div style={{ borderTop: '1px solid #e8e3f8', padding: '20px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
+                <div style={{ borderTop: '1px solid #e8e3f8', padding: isMobile ? '16px' : '20px', display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 20 }}>
                   {/* Prediction */}
                   <div>
                     <div style={{ fontSize: 13, fontWeight: 700, color: '#7c3aed', marginBottom: 12 }}>📖 Decade Prediction (Age {p.age_start}–{p.age_end})</div>

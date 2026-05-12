@@ -5,12 +5,13 @@ import { fetchCalendar } from '../store/slices/baziSlice';
 import { CalendarDay } from '../store/slices/baziSlice';
 import Sidebar from '../components/Common/Sidebar';
 import Header  from '../components/Common/Header';
+import { useIsMobile } from '../hooks/useIsMobile';
 
 const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 const DAYS   = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
 
 const ELEM_COLOR: Record<string, string> = {
-  Wood: '#22c55e', Fire: '#ef4444', Earth: '#f59e0b', Metal: '#94a3b8', Water: '#3b82f6',
+  Wood: '#16a34a', Fire: '#ef4444', Earth: '#f59e0b', Metal: '#6b7280', Water: '#2563eb',
 };
 
 // ── Tong Shu data tables ──────────────────────────────────────────────────────
@@ -82,6 +83,7 @@ const BRANCH_HOURS: Record<string, { hours: string; peak: string }> = {
 const CalendarView: React.FC = () => {
   const dispatch  = useAppDispatch();
   const navigate  = useNavigate();
+  const isMobile  = useIsMobile();
   const { calendar, loading } = useAppSelector((s) => s.bazi);
   const sub = useAppSelector((s) => s.subscription.data);
 
@@ -118,9 +120,9 @@ const CalendarView: React.FC = () => {
   return (
     <div style={{ display: 'flex', minHeight: '100vh', backgroundColor: '#f8f6ff' }}>
       <Sidebar />
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0 }}>
         <Header />
-        <main style={{ flex: 1, padding: 32, overflowY: 'auto' }}>
+        <main style={{ flex: 1, padding: isMobile ? 16 : 32, overflowY: 'auto' }}>
           <h2 style={{ margin: '0 0 4px', fontSize: 22, fontWeight: 700, color: '#2e1065' }}>📅 Tong Shu Power Planner</h2>
           <p style={{ color: '#9ca3af', fontSize: 13, margin: '0 0 20px' }}>
             Chinese almanac calendar — colour-coded by your Bazi element compatibility. Click any day for your personalised power guide.
@@ -141,7 +143,7 @@ const CalendarView: React.FC = () => {
 
           {/* Legend */}
           <div style={{ display: 'flex', gap: 16, marginBottom: 20, flexWrap: 'wrap', alignItems: 'center' }}>
-            {[['#22c55e','Auspicious'],['#f59e0b','Neutral'],['#ef4444','Challenging']].map(([c, l]) => (
+            {[['#16a34a','Auspicious'],['#f59e0b','Neutral'],['#ef4444','Challenging']].map(([c, l]) => (
               <div key={l} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                 <div style={{ width: 12, height: 12, borderRadius: 3, backgroundColor: c }} />
                 <span style={{ fontSize: 12, color: '#6b7280' }}>{l}</span>
@@ -150,7 +152,7 @@ const CalendarView: React.FC = () => {
             {!hasPremium && <div style={{ fontSize: 11, color: '#9ca3af', marginLeft: 'auto' }}>🔒 7-day preview — subscribe for full month</div>}
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: selected ? '1fr 380px' : '1fr', gap: 20, alignItems: 'start' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : (selected ? '1fr 380px' : '1fr'), gap: 20, alignItems: 'start' }}>
 
             {/* ── Calendar grid ── */}
             <div style={{ backgroundColor: '#fff', borderRadius: 12, padding: 20, border: '1px solid #e8e3f8', boxShadow: '0 2px 8px rgba(124,58,237,0.06)' }}>

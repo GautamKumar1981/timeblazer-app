@@ -2,6 +2,7 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { useSidebar } from '../../context/SidebarContext';
 import { useIsMobile } from '../../hooks/useIsMobile';
+import { useAppSelector } from '../../store/store';
 
 interface NavItem { to: string; icon: string; label: string }
 
@@ -21,6 +22,7 @@ const NAV_ITEMS: NavItem[] = [
 const Sidebar: React.FC = () => {
   const isMobile = useIsMobile();
   const { isOpen, close } = useSidebar();
+  const { user } = useAppSelector((s) => s.auth);
 
   const sidebarContent = (
     <aside style={{
@@ -70,6 +72,28 @@ const Sidebar: React.FC = () => {
             <span>{item.label}</span>
           </NavLink>
         ))}
+
+        {/* Admin link — only visible to admins */}
+        {user?.is_admin && (
+          <>
+            <div style={{ margin: '10px 16px 4px', borderTop: '1px solid #e2daff' }} />
+            <NavLink
+              to="/admin"
+              onClick={() => isMobile && close()}
+              style={({ isActive }) => ({
+                display: 'flex', alignItems: 'center', gap: 10,
+                padding: '11px 16px', textDecoration: 'none',
+                fontSize: 14, fontWeight: isActive ? 700 : 500,
+                color: isActive ? '#92400e' : '#b45309',
+                backgroundColor: isActive ? '#fef3c7' : 'transparent',
+                borderLeft: isActive ? '3px solid #d97706' : '3px solid transparent',
+              })}
+            >
+              <span style={{ fontSize: 16 }}>🔐</span>
+              <span>Admin Panel</span>
+            </NavLink>
+          </>
+        )}
       </nav>
     </aside>
   );

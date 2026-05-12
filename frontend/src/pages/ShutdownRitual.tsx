@@ -5,6 +5,7 @@ import { fetchToday } from '../store/slices/baziSlice';
 import { timeboxAPI } from '../services/api';
 import Sidebar from '../components/Common/Sidebar';
 import Header from '../components/Common/Header';
+import { useIsMobile } from '../hooks/useIsMobile';
 
 const ELEM_COLOR: Record<string, string> = {
   Wood: '#16a34a', Fire: '#dc2626', Earth: '#d97706', Metal: '#6b7280', Water: '#2563eb',
@@ -21,6 +22,7 @@ interface Timebox {
 const ShutdownRitual: React.FC = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const isMobile = useIsMobile();
   const { today } = useAppSelector((s) => s.bazi);
   const { user } = useAppSelector((s) => s.auth);
 
@@ -65,9 +67,9 @@ const ShutdownRitual: React.FC = () => {
     return (
       <div style={{ display: 'flex', minHeight: '100vh', backgroundColor: '#f8f6ff' }}>
         <Sidebar />
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0 }}>
           <Header />
-          <main style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: 32 }}>
+          <main style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: isMobile ? 16 : 32 }}>
             <div style={{ fontSize: 72, marginBottom: 20 }}>🌙</div>
             <h2 style={{ color: '#2e1065', fontSize: 26, fontWeight: 800, margin: '0 0 12px', textAlign: 'center' }}>
               Day complete, {user?.name}. Rest well.
@@ -97,7 +99,7 @@ const ShutdownRitual: React.FC = () => {
       <Sidebar />
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
         <Header />
-        <main style={{ flex: 1, padding: '32px 40px', overflowY: 'auto', maxWidth: 760, margin: '0 auto', width: '100%' }}>
+        <main style={{ flex: 1, padding: isMobile ? 16 : '32px 40px', overflowY: 'auto', maxWidth: 760, margin: '0 auto', width: '100%' }}>
 
           <div style={{ marginBottom: 28 }}>
             <div style={{ fontSize: 13, color: '#9ca3af', fontWeight: 600, marginBottom: 4 }}>

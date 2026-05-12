@@ -31,10 +31,12 @@ api.interceptors.response.use(
 
 // ── Auth ──────────────────────────────────────────────────────────────────────
 export const authAPI = {
-  login:         (email: string, password: string) => api.post('/auth/login', { email, password }),
-  register:      (name: string, email: string, password: string) => api.post('/auth/register', { username: name, email, password }),
-  me:            () => api.get('/auth/me'),
-  updateProfile: (data: { name?: string; email?: string }) => api.put('/auth/profile', data),
+  login:          (email: string, password: string) => api.post('/auth/login', { email, password }),
+  register:       (name: string, email: string, password: string) => api.post('/auth/register', { username: name, email, password }),
+  me:             () => api.get('/auth/me'),
+  updateProfile:  (data: { name?: string; email?: string }) => api.put('/auth/profile', data),
+  changePassword: (current_password: string, new_password: string) =>
+    api.post('/auth/change-password', { current_password, new_password }),
 };
 
 // ── Bazi ──────────────────────────────────────────────────────────────────────
@@ -114,6 +116,17 @@ export const vedicAPI = {
   getPanchang: (date?: string) => api.get('/vedic/panchang', { params: date ? { date } : {} }),
   getDasha:    ()             => api.get('/vedic/dasha'),
   getCalendar: (year: number, month: number) => api.get('/vedic/calendar', { params: { year, month } }),
+};
+
+// ── Admin ─────────────────────────────────────────────────────────────────────
+export const adminAPI = {
+  getStats:    ()                          => api.get('/admin/stats'),
+  listUsers:   (params?: { search?: string; page?: number; limit?: number }) =>
+                                              api.get('/admin/users', { params }),
+  getUser:     (id: number)               => api.get(`/admin/users/${id}`),
+  updateUser:  (id: number, data: object) => api.patch(`/admin/users/${id}`, data),
+  deleteUser:  (id: number)               => api.delete(`/admin/users/${id}`),
+  overrideSub: (id: number, data: object) => api.patch(`/admin/users/${id}/subscription`, data),
 };
 
 export default api;
