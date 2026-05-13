@@ -201,9 +201,10 @@ const AdminPanel: React.FC = () => {
                   showToast((r.data as any).message ?? 'Sent');
                 } catch (e: any) {
                   const d = e?.response?.data;
-                  showToast(d?.error
-                    ? `Email error: ${d.error}${d.SMTP_HOST ? ` (host=${d.SMTP_HOST}, user=${d.SMTP_USER})` : ''}`
-                    : 'Test failed');
+                  const msg = typeof d === 'object'
+                    ? (d?.error || JSON.stringify(d))
+                    : (typeof d === 'string' ? d.slice(0, 120) : e?.message || 'No response');
+                  showToast(`❌ ${msg}`);
                 }
               }}
               style={{ padding: '7px 14px', backgroundColor: '#f5f3ff', border: '1px solid #c4b5fd', borderRadius: 7, cursor: 'pointer', fontSize: 12, fontWeight: 600, color: '#7c3aed' }}
