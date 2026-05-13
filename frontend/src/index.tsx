@@ -20,6 +20,12 @@ const renderApp = () => {
   );
 };
 
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js').catch(() => {});
+  });
+}
+
 // On native (Capacitor) wait for the device to be ready before rendering,
 // then hide the splash screen. On web, render immediately.
 if (typeof window !== 'undefined' && (window as any).Capacitor?.isNativePlatform?.()) {

@@ -22,6 +22,12 @@ class AuthService:
         db.session.add(user)
         db.session.commit()
 
+        try:
+            from app.services.email_service import send_welcome_email
+            send_welcome_email(email, username)
+        except Exception:
+            pass
+
         token = AuthService._generate_token(user.id)
         return {'user': user.to_dict(), 'token': token}, 201
 

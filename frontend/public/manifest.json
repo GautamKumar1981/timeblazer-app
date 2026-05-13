@@ -1,0 +1,27 @@
+{
+  "short_name": "DragonHour",
+  "name": "DragonHour — Bazi Timing System",
+  "description": "Bazi timing system for auspicious hours, daily forecasts and personalised Chinese metaphysics",
+  "icons": [
+    {
+      "src": "icon-512.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ],
+  "start_url": "/dashboard",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "theme_color": "#7c3aed",
+  "background_color": "#f8f6ff",
+  "categories": ["lifestyle", "utilities"],
+  "lang": "en"
+}
