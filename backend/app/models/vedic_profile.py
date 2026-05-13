@@ -7,6 +7,7 @@ class VedicProfile(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False, unique=True, index=True)
+    user    = db.relationship('User', backref=db.backref('vedic_profile', uselist=False, cascade='all, delete-orphan'))
 
     # Birth data for Kundali/Jyotish
     birth_date = db.Column(db.Date, nullable=False)

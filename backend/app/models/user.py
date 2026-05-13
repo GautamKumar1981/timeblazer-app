@@ -24,8 +24,6 @@ class User(db.Model):
     analytics        = db.relationship('AnalyticsRecord',   backref='user', lazy=True, cascade='all, delete-orphan')
     reviews          = db.relationship('Review',            backref='user', lazy=True, cascade='all, delete-orphan')
     subscription     = db.relationship('UserSubscription',  lazy=True, cascade='all, delete-orphan', uselist=False)
-    bazi_profile     = db.relationship('BaziProfile',       lazy=True, cascade='all, delete-orphan', uselist=False)
-    vedic_profile    = db.relationship('VedicProfile',      lazy=True, cascade='all, delete-orphan', uselist=False)
 
     def set_password(self, password: str) -> None:
         self.password_hash = bcrypt.hashpw(
