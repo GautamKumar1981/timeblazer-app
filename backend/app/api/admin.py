@@ -240,32 +240,12 @@ def admin_override_subscription(current_admin, user_id):
 @api_bp.route('/admin/test-email', methods=['POST'])
 @admin_required
 def admin_test_email(current_admin):
-    import os, smtplib
-    host     = os.environ.get('SMTP_HOST', '')
-    port     = int(os.environ.get('SMTP_PORT', 587))
-    user     = os.environ.get('SMTP_USER', '')
-    password = os.environ.get('SMTP_PASS', '')
-    from_addr = os.environ.get('FROM_EMAIL') or user
-    to_addr   = request.get_json().get('to', current_admin.email)
-
-    if not host or not user:
-        return jsonify({
-            'error': 'SMTP not configured',
-            'SMTP_HOST': host or '(not set)',
-            'SMTP_USER': user or '(not set)',
-        }), 400
-
-    try:
-        from email.mime.text import MIMEText
-        msg = MIMEText('Test email from DragonHour admin panel.')
-        msg['Subject'] = 'DragonHour — test email'
-        msg['From']    = from_addr
-        msg['To']      = to_addr
-        with smtplib.SMTP(host, port) as smtp:
-            smtp.ehlo()
-            smtp.starttls()
-            smtp.login(user, password)
-            smtp.sendmail(from_addr, to_addr, msg.as_string())
+    import os
+    from app.services.email_service import send_test_email
+    to_addr = (request.get_json() or {}).get('to') or current_admin.email
+    if not os.environ.get('RESEND_API_KEY'):
+        return jsonify({'error': 'RESEND_API_KEY not set in Railway Variables'}), 400
+    ok, msg = send_test_email(to_addr)
+    if ok:
         return jsonify({'message': f'Email sent to {to_addr}'}), 200
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
+    return jsonify({'error': msg}), 500
