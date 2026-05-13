@@ -147,15 +147,15 @@ def admin_delete_user(current_admin, user_id):
 
     email = user.email
     try:
-        AnalyticsRecord.query.filter_by(user_id=user_id).delete()
-        Review.query.filter_by(user_id=user_id).delete()
-        DailyPriority.query.filter_by(user_id=user_id).delete()
-        Timebox.query.filter_by(user_id=user_id).delete()
-        Goal.query.filter_by(user_id=user_id).delete()
-        UserSubscription.query.filter_by(user_id=user_id).delete()
-        BaziProfile.query.filter_by(user_id=user_id).delete()
-        VedicProfile.query.filter_by(user_id=user_id).delete()
-        db.session.delete(user)
+        AnalyticsRecord.query.filter_by(user_id=user_id).delete(synchronize_session=False)
+        Review.query.filter_by(user_id=user_id).delete(synchronize_session=False)
+        DailyPriority.query.filter_by(user_id=user_id).delete(synchronize_session=False)
+        Timebox.query.filter_by(user_id=user_id).delete(synchronize_session=False)
+        Goal.query.filter_by(user_id=user_id).delete(synchronize_session=False)
+        UserSubscription.query.filter_by(user_id=user_id).delete(synchronize_session=False)
+        BaziProfile.query.filter_by(user_id=user_id).delete(synchronize_session=False)
+        VedicProfile.query.filter_by(user_id=user_id).delete(synchronize_session=False)
+        User.query.filter_by(id=user_id).delete(synchronize_session=False)
         db.session.commit()
     except Exception as e:
         db.session.rollback()
