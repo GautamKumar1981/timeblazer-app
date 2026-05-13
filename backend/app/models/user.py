@@ -18,11 +18,14 @@ class User(db.Model):
         onupdate=lambda: datetime.now(timezone.utc),
     )
 
-    timeboxes = db.relationship('Timebox', backref='user', lazy=True, cascade='all, delete-orphan')
-    goals = db.relationship('Goal', backref='user', lazy=True, cascade='all, delete-orphan')
-    daily_priorities = db.relationship('DailyPriority', backref='user', lazy=True, cascade='all, delete-orphan')
-    analytics = db.relationship('AnalyticsRecord', backref='user', lazy=True, cascade='all, delete-orphan')
-    reviews = db.relationship('Review', backref='user', lazy=True, cascade='all, delete-orphan')
+    timeboxes        = db.relationship('Timebox',           backref='user', lazy=True, cascade='all, delete-orphan')
+    goals            = db.relationship('Goal',              backref='user', lazy=True, cascade='all, delete-orphan')
+    daily_priorities = db.relationship('DailyPriority',     backref='user', lazy=True, cascade='all, delete-orphan')
+    analytics        = db.relationship('AnalyticsRecord',   backref='user', lazy=True, cascade='all, delete-orphan')
+    reviews          = db.relationship('Review',            backref='user', lazy=True, cascade='all, delete-orphan')
+    subscription     = db.relationship('UserSubscription',  backref='user', lazy=True, cascade='all, delete-orphan', uselist=False)
+    bazi_profile     = db.relationship('BaziProfile',       backref='user', lazy=True, cascade='all, delete-orphan', uselist=False)
+    vedic_profile    = db.relationship('VedicProfile',      backref='user', lazy=True, cascade='all, delete-orphan', uselist=False)
 
     def set_password(self, password: str) -> None:
         self.password_hash = bcrypt.hashpw(
