@@ -7,6 +7,11 @@ from app.models.user import User
 from app.models.subscription import UserSubscription
 from app.models.bazi_profile import BaziProfile
 from app.models.vedic_profile import VedicProfile
+from app.models.timebox import Timebox
+from app.models.goal import Goal
+from app.models.daily_priority import DailyPriority
+from app.models.analytics import AnalyticsRecord
+from app.models.review import Review
 
 
 def _sub_detail(sub):
@@ -142,6 +147,11 @@ def admin_delete_user(current_admin, user_id):
 
     email = user.email
     try:
+        AnalyticsRecord.query.filter_by(user_id=user_id).delete()
+        Review.query.filter_by(user_id=user_id).delete()
+        DailyPriority.query.filter_by(user_id=user_id).delete()
+        Timebox.query.filter_by(user_id=user_id).delete()
+        Goal.query.filter_by(user_id=user_id).delete()
         UserSubscription.query.filter_by(user_id=user_id).delete()
         BaziProfile.query.filter_by(user_id=user_id).delete()
         VedicProfile.query.filter_by(user_id=user_id).delete()
