@@ -192,7 +192,25 @@ const AdminPanel: React.FC = () => {
           )}
 
           {/* Title */}
-          <h2 style={{ margin: '0 0 4px', fontSize: isMobile ? 18 : 22, fontWeight: 800, color: '#2e1065' }}>🔐 Admin Panel</h2>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 10, marginBottom: 4 }}>
+            <h2 style={{ margin: 0, fontSize: isMobile ? 18 : 22, fontWeight: 800, color: '#2e1065' }}>🔐 Admin Panel</h2>
+            <button
+              onClick={async () => {
+                try {
+                  const r = await adminAPI.testEmail();
+                  showToast((r.data as any).message ?? 'Sent');
+                } catch (e: any) {
+                  const d = e?.response?.data;
+                  showToast(d?.error
+                    ? `Email error: ${d.error}${d.SMTP_HOST ? ` (host=${d.SMTP_HOST}, user=${d.SMTP_USER})` : ''}`
+                    : 'Test failed');
+                }
+              }}
+              style={{ padding: '7px 14px', backgroundColor: '#f5f3ff', border: '1px solid #c4b5fd', borderRadius: 7, cursor: 'pointer', fontSize: 12, fontWeight: 600, color: '#7c3aed' }}
+            >
+              📧 Test Email
+            </button>
+          </div>
           <p style={{ color: '#9ca3af', fontSize: 13, margin: '0 0 20px' }}>Manage users, subscriptions, and access rights.</p>
 
           {/* Stats row */}

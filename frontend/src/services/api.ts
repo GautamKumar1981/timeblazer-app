@@ -127,6 +127,7 @@ export const adminAPI = {
   updateUser:  (id: number, data: object) => api.patch(`/admin/users/${id}`, data),
   deleteUser:  (id: number)               => api.delete(`/admin/users/${id}`),
   overrideSub: (id: number, data: object) => api.patch(`/admin/users/${id}/subscription`, data),
+  testEmail:   (to?: string)             => api.post('/admin/test-email', { to }),
 };
 
 export default api;
