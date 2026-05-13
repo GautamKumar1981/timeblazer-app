@@ -5,6 +5,8 @@ from app.api.utils import admin_required
 from app import db
 from app.models.user import User
 from app.models.subscription import UserSubscription
+from app.models.bazi_profile import BaziProfile
+from app.models.vedic_profile import VedicProfile
 
 
 def _sub_detail(sub):
@@ -138,9 +140,19 @@ def admin_delete_user(current_admin, user_id):
     if not user:
         return jsonify({'error': 'User not found'}), 404
 
-    db.session.delete(user)
-    db.session.commit()
-    return jsonify({'message': f'User {user.email} deleted'}), 200
+    email = user.email
+    try:
+        UserSubscription.query.filter_by(user_id=user_id).delete()
+        BaziProfile.query.filter_by(user_id=user_id).delete()
+        VedicProfile.query.filter_by(user_id=user_id).delete()
+        db.session.delete(user)
+        db.session.commit()
+    except Exception as e:
+        db.session.rollback()
+        print(f'[admin/delete] error: {e}')
+        return jsonify({'error': str(e)}), 500
+
+    return jsonify({'message': f'User {email} deleted'}), 200
 
 
 # ── Subscription override ─────────────────────────────────────────────────────
