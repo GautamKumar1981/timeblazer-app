@@ -14,7 +14,7 @@ def _post_resend(payload: dict) -> tuple[bool, str]:
     req = Request(
         'https://api.resend.com/emails',
         data=data,
-        headers={'Authorization': f'Bearer {api_key}', 'Content-Type': 'application/json'},
+        headers={'Authorization': f'Bearer {api_key}', 'Content-Type': 'application/json', 'User-Agent': 'DragonHour/1.0'},
     )
     try:
         with urlopen(req, timeout=30) as resp:
