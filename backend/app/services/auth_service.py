@@ -45,7 +45,7 @@ class AuthService:
         try:
             secret = current_app.config.get('JWT_SECRET_KEY', os.environ.get('JWT_SECRET_KEY', 'dev-jwt-secret'))
             payload = jwt.decode(token, secret, algorithms=['HS256'])
-            user = User.query.get(payload['user_id'])
+            user = db.session.get(User, payload['user_id'])
             if not user:
                 return None, 'User not found'
             return user, None

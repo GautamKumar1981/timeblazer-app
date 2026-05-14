@@ -129,7 +129,7 @@ def reset_password():
         payload = pyjwt.decode(token, secret, algorithms=['HS256'])
         if payload.get('purpose') != 'password_reset':
             return jsonify({'error': 'Invalid reset token'}), 400
-        user = User.query.get(payload['user_id'])
+        user = db.session.get(User, payload['user_id'])
         if not user:
             return jsonify({'error': 'User not found'}), 404
         user.set_password(new_password)

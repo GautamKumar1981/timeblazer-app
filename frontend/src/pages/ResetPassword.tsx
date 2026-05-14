@@ -30,7 +30,12 @@ const ResetPassword: React.FC = () => {
       await authAPI.resetPassword(token, password);
       setSuccess(true);
     } catch (err: any) {
-      setError(err?.response?.data?.error || 'Something went wrong. Please try again.');
+      setError(
+        err?.response?.data?.error ||
+        err?.response?.data?.message ||
+        (err?.response ? `Server error ${err.response.status}` : err?.message) ||
+        'Something went wrong. Please try again.'
+      );
     } finally {
       setLoading(false);
     }

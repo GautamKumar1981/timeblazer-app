@@ -101,7 +101,7 @@ def admin_list_users(current_admin):
 @api_bp.route('/admin/users/<int:user_id>', methods=['GET'])
 @admin_required
 def admin_get_user(current_admin, user_id):
-    user = User.query.get(user_id)
+    user = db.session.get(User, user_id)
     if not user:
         return jsonify({'error': 'User not found'}), 404
     return jsonify({'user': _user_with_sub(user)}), 200
@@ -110,7 +110,7 @@ def admin_get_user(current_admin, user_id):
 @api_bp.route('/admin/users/<int:user_id>', methods=['PATCH'])
 @admin_required
 def admin_update_user(current_admin, user_id):
-    user = User.query.get(user_id)
+    user = db.session.get(User, user_id)
     if not user:
         return jsonify({'error': 'User not found'}), 404
 
@@ -141,7 +141,7 @@ def admin_delete_user(current_admin, user_id):
     if user_id == current_admin.id:
         return jsonify({'error': 'Cannot delete your own account'}), 400
 
-    user = User.query.get(user_id)
+    user = db.session.get(User, user_id)
     if not user:
         return jsonify({'error': 'User not found'}), 404
 
@@ -179,7 +179,7 @@ def admin_override_subscription(current_admin, user_id):
       set_plan     – change plan field only ('monthly' | 'annual')
       direct       – set raw ISO date fields (subscribed_until, trial_end)
     """
-    user = User.query.get(user_id)
+    user = db.session.get(User, user_id)
     if not user:
         return jsonify({'error': 'User not found'}), 404
 
@@ -243,8 +243,8 @@ def admin_test_email(current_admin):
     import os
     from app.services.email_service import send_test_email
     to_addr = (request.get_json() or {}).get('to') or current_admin.email
-    if not os.environ.get('RESEND_API_KEY'):
-        return jsonify({'error': 'RESEND_API_KEY not set in Railway Variables'}), 400
+    if not os.environ.get('BREVO_API_KEY'):
+        return jsonify({'error': 'BREVO_API_KEY not set in Railway Variables'}), 400
     ok, msg = send_test_email(to_addr)
     if ok:
         return jsonify({'message': f'Email sent to {to_addr}'}), 200
