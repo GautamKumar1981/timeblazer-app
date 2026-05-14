@@ -26,11 +26,15 @@ def _send_one(sub: PushSubscription, title: str, body: str, url: str) -> bool:
             data=json.dumps({'title': title, 'body': body, 'url': url}),
             vapid_private_key=private_key,
             vapid_claims=_vapid_claims(),
+            content_encoding='aes128gcm',
+            ttl=86400,
         )
         print(f'[push] sent to sub {sub.id}', flush=True)
         return True
     except WebPushException as e:
-        print(f'[push] WebPushException sub {sub.id}: {e} response={getattr(e, "response", None)}', flush=True)
+        resp = getattr(e, 'response', None)
+        resp_text = resp.text if resp else ''
+        print(f'[push] WebPushException sub {sub.id}: {e} body={resp_text}', flush=True)
         if hasattr(e, 'response') and e.response and e.response.status_code in (404, 410):
             db.session.delete(sub)
             db.session.commit()
