@@ -139,6 +139,11 @@ def reset_password():
         return jsonify({'error': 'Reset link has expired. Please request a new one.'}), 400
     except pyjwt.InvalidTokenError:
         return jsonify({'error': 'Invalid reset link'}), 400
+    except Exception as e:
+        from app import db as _db
+        _db.session.rollback()
+        print(f'[reset-password] unexpected error: {type(e).__name__}: {e}', flush=True)
+        return jsonify({'error': f'Unexpected error: {type(e).__name__}: {e}'}), 500
 
 
 @api_bp.route('/auth/change-password', methods=['POST'])
