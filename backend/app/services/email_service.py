@@ -70,7 +70,7 @@ def send_welcome_email(to_addr: str, username: str):
         'subject': 'Welcome to DragonHour 🐉',
         'html':    html,
     }
-    threading.Thread(target=_post_resend, args=(payload,), daemon=True).start()
+    threading.Thread(target=_post_resend, args=(payload,)).start()
 
 
 def send_test_email(to_addr: str) -> tuple[bool, str]:
