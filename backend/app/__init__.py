@@ -2,7 +2,6 @@ import os
 from flask import Flask, jsonify, request, Response
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
-from flask_socketio import SocketIO
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 from sqlalchemy import inspect, text
@@ -10,7 +9,6 @@ from sqlalchemy import inspect, text
 from app.config import config
 
 db = SQLAlchemy()
-socketio = SocketIO()
 limiter = Limiter(key_func=get_remote_address)
 
 _db_initialized = False
@@ -60,7 +58,6 @@ def create_app(config_name=None):
     CORS(app, origins=cors_origins,
          allow_headers=['Content-Type', 'Authorization'],
          methods=['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'])
-    socketio.init_app(app, cors_allowed_origins=cors_origins, async_mode='threading')
     limiter.init_app(app)
 
     from app.api import api_bp
