@@ -22,6 +22,7 @@ export const usePushNotifications = () => {
   );
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [loading,      setLoading]      = useState(false);
+  const [error,        setError]        = useState('');
 
   useEffect(() => {
     if (!isSupported) return;
@@ -31,7 +32,9 @@ export const usePushNotifications = () => {
   }, [isSupported]);
 
   const subscribe = async (): Promise<boolean> => {
-    if (!isSupported || !VAPID_PUBLIC_KEY) return false;
+    setError('');
+    if (!isSupported) { setError('Push notifications are not supported in this browser.'); return false; }
+    if (!VAPID_PUBLIC_KEY) { setError('Push not configured — add REACT_APP_VAPID_PUBLIC_KEY to Vercel and redeploy.'); return false; }
     setLoading(true);
     try {
       const perm = await Notification.requestPermission();
@@ -41,12 +44,13 @@ export const usePushNotifications = () => {
       const reg = await navigator.serviceWorker.ready;
       const sub = await reg.pushManager.subscribe({
         userVisibleOnly: true,
-        applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY),
+        applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY) as unknown as ArrayBuffer,
       });
       await pushAPI.subscribe(sub.toJSON());
       setIsSubscribed(true);
       return true;
-    } catch (e) {
+    } catch (e: any) {
+      setError(e?.message || 'Failed to subscribe to notifications.');
       console.error('[push] subscribe error:', e);
       return false;
     } finally {
@@ -74,5 +78,5 @@ export const usePushNotifications = () => {
 
   const toggle = () => (isSubscribed ? unsubscribe() : subscribe());
 
-  return { isSupported, permission, isSubscribed, loading, subscribe, unsubscribe, toggle };
+  return { isSupported, permission, isSubscribed, loading, error, subscribe, unsubscribe, toggle };
 };

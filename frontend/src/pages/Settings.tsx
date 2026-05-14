@@ -202,9 +202,11 @@ const Settings: React.FC = () => {
                 </div>
               ) : (
                 <>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: push.error ? 10 : 14 }}>
                     <div>
-                      <div style={{ fontSize: 14, color: '#374151', fontWeight: 500 }}>Push notifications</div>
+                      <div style={{ fontSize: 14, color: '#374151', fontWeight: 500 }}>
+                        Push notifications {push.loading && <span style={{ fontSize: 12, color: '#9ca3af' }}>…</span>}
+                      </div>
                       <div style={{ fontSize: 12, color: '#9ca3af', marginTop: 2 }}>
                         {push.isSubscribed ? 'Enabled — you will receive daily energy alerts' : 'Daily energy alerts, auspicious hour reminders'}
                       </div>
@@ -214,6 +216,11 @@ const Settings: React.FC = () => {
                       onChange={() => !push.loading && push.toggle()}
                     />
                   </div>
+                  {push.error && (
+                    <div style={{ fontSize: 12, color: '#dc2626', backgroundColor: '#fef2f2', padding: '8px 12px', borderRadius: 7, border: '1px solid #fecaca', marginBottom: 12 }}>
+                      {push.error}
+                    </div>
+                  )}
                   {push.isSubscribed && (
                     <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
                       <button
