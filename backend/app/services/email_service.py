@@ -1,8 +1,6 @@
 import os
-import json
 import threading
-from urllib.request import Request, urlopen
-from urllib.error import URLError, HTTPError
+import requests as _requests
 
 
 def _post_resend(payload: dict) -> tuple[bool, str]:
@@ -10,23 +8,21 @@ def _post_resend(payload: dict) -> tuple[bool, str]:
     if not api_key:
         return False, 'RESEND_API_KEY not set'
 
-    data = json.dumps(payload).encode('utf-8')
-    req = Request(
-        'https://api.resend.com/emails',
-        data=data,
-        headers={'Authorization': f'Bearer {api_key}', 'Content-Type': 'application/json', 'User-Agent': 'DragonHour/1.0'},
-    )
     try:
-        with urlopen(req, timeout=30) as resp:
-            print(f'[email] Sent to {payload["to"]}: {resp.read().decode()}')
+        resp = _requests.post(
+            'https://api.resend.com/emails',
+            json=payload,
+            headers={'Authorization': f'Bearer {api_key}'},
+            timeout=30,
+        )
+        if resp.ok:
+            print(f'[email] Sent to {payload["to"]}: {resp.text}')
             return True, 'ok'
-    except HTTPError as e:
-        body = e.read().decode()
-        print(f'[email] HTTP {e.code} sending to {payload["to"]}: {body}')
-        return False, f'HTTP {e.code}: {body}'
-    except URLError as e:
-        print(f'[email] URL error sending to {payload["to"]}: {e.reason}')
-        return False, str(e.reason)
+        print(f'[email] {resp.status_code} sending to {payload["to"]}: {resp.text}')
+        return False, f'HTTP {resp.status_code}: {resp.text}'
+    except Exception as e:
+        print(f'[email] Error sending to {payload["to"]}: {e}')
+        return False, str(e)
 
 
 def send_welcome_email(to_addr: str, username: str):
