@@ -2,27 +2,45 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../store/store';
 import { loginUser, registerUser } from '../store/slices/authSlice';
+import { authAPI } from '../services/api';
+
+type Mode = 'login' | 'register' | 'forgot';
 
 const Login: React.FC = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { loading, error } = useAppSelector((s) => s.auth);
 
-  const [isRegister, setIsRegister] = useState(false);
-  const [form, setForm] = useState({ name: '', email: '', password: '' });
+  const [mode, setMode]   = useState<Mode>('login');
+  const [form, setForm]   = useState({ name: '', email: '', password: '' });
+  const [forgotEmail, setForgotEmail] = useState('');
+  const [forgotMsg,   setForgotMsg]   = useState('');
+  const [forgotLoading, setForgotLoading] = useState(false);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     setForm({ ...form, [e.target.name]: e.target.value });
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (isRegister) {
+    if (mode === 'register') {
       const result = await dispatch(registerUser({ name: form.name, email: form.email, password: form.password }));
-      if (registerUser.fulfilled.match(result)) navigate('/dashboard');
+      if (registerUser.fulfilled.match(result)) navigate('/profile');
     } else {
       const result = await dispatch(loginUser({ email: form.email, password: form.password }));
       if (loginUser.fulfilled.match(result)) navigate('/dashboard');
+    }
+  };
+
+  const handleForgot = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setForgotLoading(true);
+    try {
+      await authAPI.forgotPassword(forgotEmail.trim().toLowerCase());
+      setForgotMsg('If that email is registered, a reset link has been sent. Check your inbox.');
+    } catch {
+      setForgotMsg('Something went wrong. Please try again.');
+    } finally {
+      setForgotLoading(false);
     }
   };
 
@@ -31,6 +49,10 @@ const Login: React.FC = () => {
     backgroundColor: '#ffffff', border: '1px solid #e8e3f8',
     borderRadius: 8, fontSize: 14, color: '#1f2937', outline: 'none',
     boxSizing: 'border-box',
+  };
+
+  const switchBtn: React.CSSProperties = {
+    background: 'none', border: 'none', color: '#a78bfa', cursor: 'pointer', fontSize: 13,
   };
 
   return (
@@ -54,73 +76,97 @@ const Login: React.FC = () => {
             </div>
           </div>
           <p style={{ color: '#6b7280', margin: 0, fontSize: 13 }}>
-            {isRegister ? 'Begin your Bazi journey — 7 days free' : 'Welcome back'}
+            {mode === 'register' ? 'Begin your Bazi journey — 7 days free' : mode === 'forgot' ? 'Reset your password' : 'Welcome back'}
           </p>
         </div>
 
-        <form onSubmit={handleSubmit}>
-          {isRegister && (
-            <input
-              style={inp}
-              type="text"
-              name="name"
-              placeholder="Your full name"
-              value={form.name}
-              onChange={handleChange}
-              required
-              autoComplete="name"
-            />
-          )}
-          <input
-            style={inp}
-            type="email"
-            name="email"
-            placeholder="Email address"
-            value={form.email}
-            onChange={handleChange}
-            required
-            autoComplete="email"
-          />
-          <input
-            style={{ ...inp, marginBottom: 6 }}
-            type="password"
-            name="password"
-            placeholder="Password"
-            value={form.password}
-            onChange={handleChange}
-            required
-            autoComplete={isRegister ? 'new-password' : 'current-password'}
-          />
-
-          {error && (
-            <div style={{ color: '#fca5a5', fontSize: 12, marginBottom: 10, marginTop: 4, backgroundColor: 'rgba(239,68,68,0.1)', padding: '8px 12px', borderRadius: 6, border: '1px solid rgba(239,68,68,0.25)' }}>
-              {error}
+        {/* ── Forgot password mode ── */}
+        {mode === 'forgot' && (
+          <>
+            {forgotMsg ? (
+              <div style={{ backgroundColor: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: 8, padding: '14px 16px', fontSize: 13, color: '#166534', lineHeight: 1.6, marginBottom: 20 }}>
+                {forgotMsg}
+              </div>
+            ) : (
+              <form onSubmit={handleForgot}>
+                <input
+                  style={inp}
+                  type="email"
+                  placeholder="Your email address"
+                  value={forgotEmail}
+                  onChange={e => setForgotEmail(e.target.value)}
+                  required
+                  autoComplete="email"
+                />
+                <button
+                  type="submit"
+                  disabled={forgotLoading}
+                  style={{ width: '100%', padding: '13px 0', background: 'linear-gradient(90deg, #7c3aed, #db2777)', color: '#fff', border: 'none', borderRadius: 9, cursor: 'pointer', fontSize: 15, fontWeight: 700, opacity: forgotLoading ? 0.7 : 1 }}
+                >
+                  {forgotLoading ? 'Sending…' : 'Send Reset Link'}
+                </button>
+              </form>
+            )}
+            <div style={{ textAlign: 'center', marginTop: 20 }}>
+              <button onClick={() => { setMode('login'); setForgotMsg(''); }} style={switchBtn}>
+                ← Back to sign in
+              </button>
             </div>
-          )}
+          </>
+        )}
 
-          <button
-            type="submit"
-            disabled={loading}
-            style={{ width: '100%', marginTop: 14, padding: '13px 0', background: 'linear-gradient(90deg, #7c3aed, #db2777)', color: '#fff', border: 'none', borderRadius: 9, cursor: loading ? 'not-allowed' : 'pointer', fontSize: 15, fontWeight: 700, letterSpacing: 0.3, opacity: loading ? 0.7 : 1 }}
-          >
-            {loading ? 'Please wait…' : isRegister ? '🐉 Create Account — Free Trial' : 'Sign In'}
-          </button>
-        </form>
+        {/* ── Login / Register mode ── */}
+        {mode !== 'forgot' && (
+          <>
+            <form onSubmit={handleSubmit}>
+              {mode === 'register' && (
+                <input style={inp} type="text" name="name" placeholder="Your full name"
+                  value={form.name} onChange={handleChange} required autoComplete="name" />
+              )}
+              <input style={inp} type="email" name="email" placeholder="Email address"
+                value={form.email} onChange={handleChange} required autoComplete="email" />
+              <input
+                style={{ ...inp, marginBottom: 6 }}
+                type="password" name="password" placeholder="Password"
+                value={form.password} onChange={handleChange} required
+                autoComplete={mode === 'register' ? 'new-password' : 'current-password'}
+              />
 
-        <div style={{ textAlign: 'center', marginTop: 20 }}>
-          <button
-            onClick={() => { setIsRegister(!isRegister); setForm({ name: '', email: '', password: '' }); }}
-            style={{ background: 'none', border: 'none', color: '#a78bfa', cursor: 'pointer', fontSize: 13 }}
-          >
-            {isRegister ? 'Already have an account? Sign in' : 'New here? Start your free 7-day trial'}
-          </button>
-        </div>
+              {mode === 'login' && (
+                <div style={{ textAlign: 'right', marginBottom: 10 }}>
+                  <button type="button" onClick={() => setMode('forgot')} style={{ ...switchBtn, fontSize: 12 }}>
+                    Forgot password?
+                  </button>
+                </div>
+              )}
 
-        {isRegister && (
-          <p style={{ textAlign: 'center', fontSize: 11, color: '#9ca3af', marginTop: 14, lineHeight: 1.5 }}>
-            7 days free · then £0.99/month or £9.99/year<br />
-            No card required to start.
-          </p>
+              {error && (
+                <div style={{ color: '#dc2626', fontSize: 12, marginBottom: 10, backgroundColor: 'rgba(239,68,68,0.08)', padding: '8px 12px', borderRadius: 6, border: '1px solid rgba(239,68,68,0.2)' }}>
+                  {error}
+                </div>
+              )}
+
+              <button
+                type="submit"
+                disabled={loading}
+                style={{ width: '100%', marginTop: 6, padding: '13px 0', background: 'linear-gradient(90deg, #7c3aed, #db2777)', color: '#fff', border: 'none', borderRadius: 9, cursor: loading ? 'not-allowed' : 'pointer', fontSize: 15, fontWeight: 700, letterSpacing: 0.3, opacity: loading ? 0.7 : 1 }}
+              >
+                {loading ? 'Please wait…' : mode === 'register' ? '🐉 Create Account — Free Trial' : 'Sign In'}
+              </button>
+            </form>
+
+            <div style={{ textAlign: 'center', marginTop: 20 }}>
+              <button onClick={() => { setMode(mode === 'login' ? 'register' : 'login'); setForm({ name: '', email: '', password: '' }); }} style={switchBtn}>
+                {mode === 'login' ? 'New here? Start your free 7-day trial' : 'Already have an account? Sign in'}
+              </button>
+            </div>
+
+            {mode === 'register' && (
+              <p style={{ textAlign: 'center', fontSize: 11, color: '#9ca3af', marginTop: 14, lineHeight: 1.5 }}>
+                7 days free · then £0.99/month or £9.99/year<br />No card required to start.
+              </p>
+            )}
+          </>
         )}
       </div>
     </div>

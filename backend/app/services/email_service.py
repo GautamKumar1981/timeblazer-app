@@ -73,6 +73,38 @@ def send_welcome_email(to_addr: str, username: str):
     _send_brevo(to_addr, 'Welcome to DragonHour 🐉', html)
 
 
+def send_reset_email(to_addr: str, username: str, reset_url: str):
+    html = f"""<!DOCTYPE html>
+<html lang="en">
+<body style="margin:0;padding:20px;background:#f8f6ff;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;">
+  <div style="max-width:520px;margin:0 auto;background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 2px 16px rgba(124,58,237,.10);">
+    <div style="background:linear-gradient(135deg,#7c3aed,#5b21b6);padding:32px;text-align:center;">
+      <div style="font-size:40px;margin-bottom:8px;">🔑</div>
+      <h1 style="margin:0;color:#fff;font-size:22px;font-weight:700;">Password Reset</h1>
+    </div>
+    <div style="padding:32px;">
+      <p style="margin-top:0;color:#3b0764;font-size:15px;">Hi <strong>{username}</strong>,</p>
+      <p style="color:#4b5563;line-height:1.7;font-size:14px;">
+        We received a request to reset your DragonHour password. Click the button below — this link expires in <strong>1 hour</strong>.
+      </p>
+      <div style="text-align:center;margin:28px 0;">
+        <a href="{reset_url}"
+           style="background:#7c3aed;color:#fff;text-decoration:none;padding:14px 36px;
+                  border-radius:8px;font-weight:600;font-size:15px;display:inline-block;">
+          Reset My Password &rarr;
+        </a>
+      </div>
+      <p style="color:#9ca3af;font-size:12px;line-height:1.6;">
+        If you didn't request this, you can safely ignore this email — your password won't change.<br><br>
+        Or copy this link: <span style="color:#7c3aed;word-break:break-all;">{reset_url}</span>
+      </p>
+    </div>
+  </div>
+</body>
+</html>"""
+    _send_brevo(to_addr, 'Reset your DragonHour password', html)
+
+
 def send_test_email(to_addr: str) -> tuple[bool, str]:
     return _send_brevo(
         to_addr,

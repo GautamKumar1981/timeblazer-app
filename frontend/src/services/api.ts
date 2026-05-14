@@ -35,8 +35,12 @@ export const authAPI = {
   register:       (name: string, email: string, password: string) => api.post('/auth/register', { username: name, email, password }),
   me:             () => api.get('/auth/me'),
   updateProfile:  (data: { name?: string; email?: string }) => api.put('/auth/profile', data),
-  changePassword: (current_password: string, new_password: string) =>
+  changePassword:  (current_password: string, new_password: string) =>
     api.post('/auth/change-password', { current_password, new_password }),
+  forgotPassword:  (email: string) =>
+    api.post('/auth/forgot-password', { email }),
+  resetPassword:   (token: string, new_password: string) =>
+    api.post('/auth/reset-password', { token, new_password }),
 };
 
 // ── Bazi ──────────────────────────────────────────────────────────────────────

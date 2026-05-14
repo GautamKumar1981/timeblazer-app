@@ -27,6 +27,7 @@ import ShutdownRitual from './pages/ShutdownRitual';
 import VedicProfile   from './pages/VedicProfile';
 import VedicPanchang  from './pages/VedicPanchang';
 import AdminPanel     from './pages/AdminPanel';
+import ResetPassword  from './pages/ResetPassword';
 
 const App: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -44,7 +45,8 @@ const App: React.FC = () => {
     <div style={{ fontFamily: 'Segoe UI, Roboto, Arial, sans-serif', minHeight: '100vh', backgroundColor: '#f8f6ff' }}>
       <Routes>
         {/* Public routes */}
-        <Route path="/"             element={auth ? <Navigate to="/dashboard" replace /> : <Login />} />
+        <Route path="/"               element={auth ? <Navigate to="/dashboard" replace /> : <Login />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/upgrade"      element={auth ? <UpgradePage />      : <Navigate to="/" replace />} />
         <Route path="/subscription" element={auth ? <SubscriptionPage /> : <Navigate to="/" replace />} />
         <Route path="/settings"     element={auth ? <Settings />         : <Navigate to="/" replace />} />
