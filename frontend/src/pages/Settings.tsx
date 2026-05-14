@@ -229,8 +229,9 @@ const Settings: React.FC = () => {
                           try {
                             await pushAPI.sendTest();
                             setPushTestMsg('Test notification sent!');
-                          } catch {
-                            setPushTestMsg('Failed — check VAPID keys in Railway.');
+                          } catch (e: any) {
+                            const detail = e?.response?.data?.error || e?.message || 'Unknown error';
+                            setPushTestMsg(`Failed: ${detail}`);
                           }
                           setTimeout(() => setPushTestMsg(''), 4000);
                         }}

@@ -62,15 +62,24 @@ def push_status():
 
 @api_bp.route('/push/send-test', methods=['POST'])
 def push_send_test():
+    import os
     user, err = get_current_user()
     if err:
         return jsonify({'error': err}), 401
 
+    if not os.environ.get('VAPID_PRIVATE_KEY'):
+        return jsonify({'error': 'VAPID_PRIVATE_KEY not set in Railway Variables'}), 400
+
+    from app.models.push_subscription import PushSubscription
+    subs = PushSubscription.query.filter_by(user_id=user.id).all()
+    if not subs:
+        return jsonify({'error': 'No push subscription found — toggle notifications on first'}), 400
+
     from app.services.push_service import send_push_to_user
-    sent = send_push_to_user(user.id, 'DragonHour', 'Push notifications are working! 🐉', '/dashboard')
+    sent = send_push_to_user(user.id, 'DragonHour 🐉', 'Push notifications are working!', '/dashboard')
     if sent:
         return jsonify({'message': f'Test notification sent to {sent} device(s)'}), 200
-    return jsonify({'error': 'No active subscriptions or VAPID not configured'}), 400
+    return jsonify({'error': 'Send failed — check Railway logs for details'}), 500
 
 
 @api_bp.route('/push/send-all', methods=['POST'])

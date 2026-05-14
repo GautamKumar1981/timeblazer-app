@@ -15,7 +15,7 @@ def _vapid_claims():
 def _send_one(sub: PushSubscription, title: str, body: str, url: str) -> bool:
     private_key = os.environ.get('VAPID_PRIVATE_KEY', '')
     if not private_key:
-        print('[push] VAPID_PRIVATE_KEY not set', flush=True)
+        print('[push] VAPID_PRIVATE_KEY not set in Railway Variables', flush=True)
         return False
     try:
         webpush(
@@ -27,15 +27,16 @@ def _send_one(sub: PushSubscription, title: str, body: str, url: str) -> bool:
             vapid_private_key=private_key,
             vapid_claims=_vapid_claims(),
         )
+        print(f'[push] sent to sub {sub.id}', flush=True)
         return True
     except WebPushException as e:
-        print(f'[push] WebPushException for sub {sub.id}: {e}', flush=True)
-        if e.response and e.response.status_code in (404, 410):
+        print(f'[push] WebPushException sub {sub.id}: {e} response={getattr(e, "response", None)}', flush=True)
+        if hasattr(e, 'response') and e.response and e.response.status_code in (404, 410):
             db.session.delete(sub)
             db.session.commit()
         return False
     except Exception as e:
-        print(f'[push] error for sub {sub.id}: {e}', flush=True)
+        print(f'[push] unexpected error sub {sub.id}: {type(e).__name__}: {e}', flush=True)
         return False
 
 
