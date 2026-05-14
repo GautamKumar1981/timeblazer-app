@@ -122,6 +122,16 @@ export const vedicAPI = {
   getCalendar: (year: number, month: number) => api.get('/vedic/calendar', { params: { year, month } }),
 };
 
+// ── Push notifications ────────────────────────────────────────────────────────
+export const pushAPI = {
+  subscribe:   (sub: object) => api.post('/push/subscribe', sub),
+  unsubscribe: (endpoint: string) => api.post('/push/unsubscribe', { endpoint }),
+  status:      () => api.get('/push/status'),
+  sendTest:    () => api.post('/push/send-test'),
+  sendAll:     (title: string, body: string, url?: string) =>
+    api.post('/push/send-all', { title, body, url: url ?? '/dashboard' }),
+};
+
 // ── Admin ─────────────────────────────────────────────────────────────────────
 export const adminAPI = {
   getStats:    ()                          => api.get('/admin/stats'),

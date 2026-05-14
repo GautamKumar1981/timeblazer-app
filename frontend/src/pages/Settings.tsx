@@ -7,6 +7,8 @@ import { subscriptionAPI, authAPI } from '../services/api';
 import Header from '../components/Common/Header';
 import Sidebar from '../components/Common/Sidebar';
 import { useIsMobile } from '../hooks/useIsMobile';
+import { usePushNotifications } from '../hooks/usePushNotifications';
+import { pushAPI } from '../services/api';
 
 const inp: React.CSSProperties = {
   width: '100%', padding: '10px 12px', border: '1px solid #e2d9f3',
@@ -30,10 +32,6 @@ const Toggle: React.FC<{ checked: boolean; onChange: () => void }> = ({ checked,
   </div>
 );
 
-const NOTIF_KEY = 'dragonhour_notifications';
-const loadNotifPrefs = () => {
-  try { return JSON.parse(localStorage.getItem(NOTIF_KEY) || '{}'); } catch { return {}; }
-};
 
 const Settings: React.FC = () => {
   const dispatch  = useAppDispatch();
@@ -51,11 +49,8 @@ const Settings: React.FC = () => {
   const [pwMsg,     setPwMsg]     = useState<{ ok: boolean; text: string } | null>(null);
   const [showPw,    setShowPw]    = useState(false);
 
-  const savedNotifs = loadNotifPrefs();
-  const [notifs, setNotifs] = useState({
-    browser: savedNotifs.browser ?? true,
-    reminderMinutes: savedNotifs.reminderMinutes ?? 5,
-  });
+  const push = usePushNotifications();
+  const [pushTestMsg, setPushTestMsg] = useState('');
 
   const [cancelling,    setCancelling]    = useState(false);
   const [cancelError,   setCancelError]   = useState('');
@@ -79,17 +74,6 @@ const Settings: React.FC = () => {
     }
   }, [dispatch]);
 
-  const saveNotifs = (next: typeof notifs) => {
-    setNotifs(next);
-    localStorage.setItem(NOTIF_KEY, JSON.stringify(next));
-  };
-
-  const requestBrowserPermission = async (enabled: boolean) => {
-    if (enabled && 'Notification' in window && Notification.permission === 'default') {
-      await Notification.requestPermission();
-    }
-    saveNotifs({ ...notifs, browser: enabled });
-  };
 
   const handleSaveProfile = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -210,25 +194,52 @@ const Settings: React.FC = () => {
 
             {/* ── Notifications ─────────────────────────────────────── */}
             <SectionCard title="🔔 Notifications">
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
-                <div>
-                  <div style={{ fontSize: 14, color: '#374151', fontWeight: 500 }}>Browser notifications</div>
-                  <div style={{ fontSize: 12, color: '#9ca3af', marginTop: 2 }}>Timebox reminders and daily energy alerts</div>
+              {!push.isSupported ? (
+                <div style={{ fontSize: 13, color: '#9ca3af' }}>Push notifications are not supported in this browser.</div>
+              ) : push.permission === 'denied' ? (
+                <div style={{ fontSize: 13, color: '#dc2626', backgroundColor: '#fef2f2', padding: '10px 14px', borderRadius: 8, border: '1px solid #fecaca' }}>
+                  Notifications are blocked in your browser. Open browser settings and allow notifications for this site, then reload.
                 </div>
-                <Toggle checked={notifs.browser} onChange={() => requestBrowserPermission(!notifs.browser)} />
-              </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                <label style={{ fontSize: 14, color: '#374151', flex: 1 }}>Reminder before timebox</label>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                  <input
-                    type="number" min={1} max={60}
-                    value={notifs.reminderMinutes}
-                    onChange={e => saveNotifs({ ...notifs, reminderMinutes: Number(e.target.value) })}
-                    style={{ width: 60, padding: '6px 10px', border: '1px solid #e2d9f3', borderRadius: 7, fontSize: 14, color: '#1f2937', backgroundColor: '#fff', textAlign: 'center' }}
-                  />
-                  <span style={{ fontSize: 13, color: '#6b7280' }}>min</span>
-                </div>
-              </div>
+              ) : (
+                <>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
+                    <div>
+                      <div style={{ fontSize: 14, color: '#374151', fontWeight: 500 }}>Push notifications</div>
+                      <div style={{ fontSize: 12, color: '#9ca3af', marginTop: 2 }}>
+                        {push.isSubscribed ? 'Enabled — you will receive daily energy alerts' : 'Daily energy alerts, auspicious hour reminders'}
+                      </div>
+                    </div>
+                    <Toggle
+                      checked={push.isSubscribed}
+                      onChange={() => !push.loading && push.toggle()}
+                    />
+                  </div>
+                  {push.isSubscribed && (
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
+                      <button
+                        onClick={async () => {
+                          setPushTestMsg('');
+                          try {
+                            await pushAPI.sendTest();
+                            setPushTestMsg('Test notification sent!');
+                          } catch {
+                            setPushTestMsg('Failed — check VAPID keys in Railway.');
+                          }
+                          setTimeout(() => setPushTestMsg(''), 4000);
+                        }}
+                        style={{ padding: '7px 16px', backgroundColor: '#ede9fe', color: '#6d28d9', border: '1px solid #c4b5fd', borderRadius: 8, cursor: 'pointer', fontSize: 13, fontWeight: 600 }}
+                      >
+                        Send Test Notification
+                      </button>
+                      {pushTestMsg && (
+                        <span style={{ fontSize: 13, color: pushTestMsg.includes('sent') ? '#065f46' : '#dc2626', fontWeight: 600 }}>
+                          {pushTestMsg}
+                        </span>
+                      )}
+                    </div>
+                  )}
+                </>
+              )}
             </SectionCard>
 
             {/* ── Subscription ──────────────────────────────────────── */}

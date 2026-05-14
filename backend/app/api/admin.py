@@ -12,6 +12,7 @@ from app.models.goal import Goal
 from app.models.daily_priority import DailyPriority
 from app.models.analytics import AnalyticsRecord
 from app.models.review import Review
+from app.models.push_subscription import PushSubscription as PushSub
 
 
 def _sub_detail(sub):
@@ -155,6 +156,7 @@ def admin_delete_user(current_admin, user_id):
         UserSubscription.query.filter_by(user_id=user_id).delete(synchronize_session=False)
         BaziProfile.query.filter_by(user_id=user_id).delete(synchronize_session=False)
         VedicProfile.query.filter_by(user_id=user_id).delete(synchronize_session=False)
+        PushSub.query.filter_by(user_id=user_id).delete(synchronize_session=False)
         User.query.filter_by(id=user_id).delete(synchronize_session=False)
         db.session.commit()
     except Exception as e:
