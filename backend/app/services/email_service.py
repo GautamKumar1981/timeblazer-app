@@ -2,31 +2,39 @@ import os
 import requests as _requests
 
 
-def _post_resend(payload: dict) -> tuple[bool, str]:
-    api_key = os.environ.get('RESEND_API_KEY', '')
+def _send_brevo(to_addr: str, subject: str, html: str) -> tuple[bool, str]:
+    api_key   = os.environ.get('BREVO_API_KEY', '')
+    from_email = os.environ.get('FROM_EMAIL', 'gautammunna1981@gmail.com')
+    from_name  = os.environ.get('FROM_NAME', 'DragonHour')
+
     if not api_key:
-        return False, 'RESEND_API_KEY not set'
+        print('[email] BREVO_API_KEY not set — skipping')
+        return False, 'BREVO_API_KEY not set'
 
     try:
         resp = _requests.post(
-            'https://api.resend.com/emails',
-            json=payload,
-            headers={'Authorization': f'Bearer {api_key}'},
+            'https://api.brevo.com/v3/smtp/email',
+            headers={'api-key': api_key, 'Content-Type': 'application/json'},
+            json={
+                'sender':      {'name': from_name, 'email': from_email},
+                'to':          [{'email': to_addr}],
+                'subject':     subject,
+                'htmlContent': html,
+            },
             timeout=30,
         )
         if resp.ok:
-            print(f'[email] Sent to {payload["to"]}: {resp.text}')
+            print(f'[email] Sent "{subject}" to {to_addr}')
             return True, 'ok'
-        print(f'[email] {resp.status_code} sending to {payload["to"]}: {resp.text}')
+        print(f'[email] {resp.status_code} sending to {to_addr}: {resp.text}')
         return False, f'HTTP {resp.status_code}: {resp.text}'
     except Exception as e:
-        print(f'[email] Error sending to {payload["to"]}: {e}')
+        print(f'[email] Error sending to {to_addr}: {e}')
         return False, str(e)
 
 
 def send_welcome_email(to_addr: str, username: str):
-    app_url   = os.environ.get('APP_URL', 'https://dragonhour.app')
-    from_addr = os.environ.get('FROM_EMAIL', 'DragonHour <onboarding@resend.dev>')
+    app_url = os.environ.get('APP_URL', 'https://dragonhour.app')
 
     html = f"""<!DOCTYPE html>
 <html lang="en">
@@ -55,29 +63,19 @@ def send_welcome_email(to_addr: str, username: str):
         <li>10-year Luck Pillar cycle</li>
       </ul>
       <p style="color:#9ca3af;font-size:13px;margin-bottom:0;">
-        See you inside,<br>
-        <strong style="color:#7c3aed;">The DragonHour Team</strong>
+        See you inside,<br><strong style="color:#7c3aed;">The DragonHour Team</strong>
       </p>
     </div>
   </div>
 </body>
 </html>"""
 
-    payload = {
-        'from':    from_addr,
-        'to':      [to_addr],
-        'subject': 'Welcome to DragonHour 🐉',
-        'html':    html,
-    }
-    _post_resend(payload)
+    _send_brevo(to_addr, 'Welcome to DragonHour 🐉', html)
 
 
 def send_test_email(to_addr: str) -> tuple[bool, str]:
-    from_addr = os.environ.get('FROM_EMAIL', 'DragonHour <onboarding@resend.dev>')
-    payload = {
-        'from':    from_addr,
-        'to':      [to_addr],
-        'subject': 'DragonHour — test email',
-        'html':    '<p>Test email from DragonHour admin panel. SMTP is working ✓</p>',
-    }
-    return _post_resend(payload)
+    return _send_brevo(
+        to_addr,
+        'DragonHour — test email',
+        '<p>Test email from DragonHour admin panel ✓</p>',
+    )
