@@ -30,6 +30,7 @@ const ResetPassword: React.FC = () => {
       await authAPI.resetPassword(token, password);
       setSuccess(true);
     } catch (err: any) {
+      console.error('[reset-password] error:', err?.response?.status, err?.response?.data, err?.message, err?.config?.url);
       setError(
         err?.response?.data?.error ||
         err?.response?.data?.message ||
