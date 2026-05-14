@@ -25,8 +25,8 @@ class AuthService:
         try:
             from app.services.email_service import send_welcome_email
             send_welcome_email(email, username)
-        except Exception:
-            pass
+        except Exception as e:
+            print(f'[email] Welcome email failed for {email}: {e}')
 
         token = AuthService._generate_token(user.id)
         return {'user': user.to_dict(), 'token': token}, 201
