@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
 import { pushAPI } from '../services/api';
 
-const VAPID_PUBLIC_KEY = process.env.REACT_APP_VAPID_PUBLIC_KEY || '';
+const VAPID_PUBLIC_KEY =
+  process.env.REACT_APP_VAPID_PUBLIC_KEY ||
+  'BDiOxEUWJnvf9N7XWXabzaCnUWkoHfVEvXqMRRr_NPhdIYH6M3euv1gEvIIfh4CzZR5HYN7zdbGO1kFJYGeIDAY';
 
 function urlBase64ToUint8Array(base64: string): Uint8Array {
   const padding = '='.repeat((4 - (base64.length % 4)) % 4);
