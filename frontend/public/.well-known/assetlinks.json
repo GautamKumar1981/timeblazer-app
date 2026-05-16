@@ -1,0 +1,10 @@
+[{
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target": {
+    "namespace": "android_app",
+    "package_name": "com.dragonhour.app",
+    "sha256_cert_fingerprints": [
+      "F4:F2:94:40:D6:0C:67:EF:C2:3F:56:F1:18:DA:14:31:CF:95:CD:07:2F:50:93:31:18:1F:DD:69:A1:38:90:B5"
+    ]
+  }
+}]
