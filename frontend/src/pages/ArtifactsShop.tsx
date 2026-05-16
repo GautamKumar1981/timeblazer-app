@@ -123,7 +123,7 @@ const ArtifactsShop: React.FC = () => {
                   borderBottom: `1px solid ${elemColor}22`,
                 }}>
                   <span style={{ fontSize: isMobile ? 44 : 60 }}>{a.emoji}</span>
-                  {recommended && (
+                  {recommended && !isMobile && (
                     <div style={{
                       position: 'absolute', top: 8, right: 8, fontSize: 10, fontWeight: 700,
                       backgroundColor: 'rgba(34,197,94,0.2)', color: '#16a34a',
@@ -140,15 +140,15 @@ const ArtifactsShop: React.FC = () => {
                   )}
                 </div>
 
-                <div style={{ padding: '14px 16px' }}>
-                  <div style={{ fontSize: 13, fontWeight: 700, color: '#1f2937', marginBottom: 2 }}>{a.name}</div>
-                  <div style={{ fontSize: 12, color: '#6b7280', marginBottom: 8 }}>{a.cn_name}</div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <span style={{
+                <div style={{ padding: isMobile ? '8px 10px' : '14px 16px' }}>
+                  <div style={{ fontSize: isMobile ? 11 : 13, fontWeight: 700, color: '#1f2937', marginBottom: 2, lineHeight: 1.3 }}>{a.name}</div>
+                  {!isMobile && <div style={{ fontSize: 12, color: '#6b7280', marginBottom: 8 }}>{a.cn_name}</div>}
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: isMobile ? 4 : 0 }}>
+                    {!isMobile && <span style={{
                       fontSize: 10, padding: '2px 8px', borderRadius: 12, fontWeight: 600,
                       backgroundColor: catColor + '20', color: catColor,
-                    }}>{a.category}</span>
-                    <span style={{ fontSize: 15, fontWeight: 800, color: '#7c3aed' }}>£{a.price_gbp.toFixed(2)}</span>
+                    }}>{a.category}</span>}
+                    <span style={{ fontSize: isMobile ? 12 : 15, fontWeight: 800, color: '#7c3aed' }}>£{a.price_gbp.toFixed(2)}</span>
                   </div>
                 </div>
               </div>
