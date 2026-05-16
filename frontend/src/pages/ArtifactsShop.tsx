@@ -28,7 +28,7 @@ const ArtifactsShop: React.FC = () => {
   const [loading, setLoading]     = useState(true);
   const [selected, setSelected]   = useState<Artifact | null>(null);
   const [filter, setFilter]       = useState<string>('All');
-  const chart = useAppSelector((s) => s.bazi.chart);
+  const chart    = useAppSelector((s) => s.bazi.chart);
   const isMobile = useIsMobile();
 
   useEffect(() => {
@@ -38,190 +38,144 @@ const ArtifactsShop: React.FC = () => {
     }).catch(() => setLoading(false));
   }, []);
 
-  const categories = ['All', ...Array.from(new Set(artifacts.map((a) => a.category)))];
-  const filtered = filter === 'All' ? artifacts : artifacts.filter((a) => a.category === filter);
-
+  const categories  = ['All', ...Array.from(new Set(artifacts.map((a) => a.category)))];
+  const filtered    = filter === 'All' ? artifacts : artifacts.filter((a) => a.category === filter);
   const isRecommended = (a: Artifact) => {
     if (!chart?.favorable_elements) return false;
     return a.bazi_recommendation.includes('All') ||
       chart.favorable_elements.some((e: string) => a.bazi_recommendation.includes(e));
   };
 
-  const pageLayout = (content: React.ReactNode) => (
+  const shell = (content: React.ReactNode) => (
     <div style={{ display: 'flex', minHeight: '100vh', backgroundColor: '#f8f6ff' }}>
       <Sidebar />
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+      <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column' }}>
         <Header />
-        <main style={{ flex: 1, padding: isMobile ? 16 : 32, overflowY: 'auto' }}>{content}</main>
+        <main style={{ flex: 1, minWidth: 0, padding: isMobile ? '14px' : '32px', overflowY: 'auto', boxSizing: 'border-box' }}>
+          {content}
+        </main>
       </div>
     </div>
   );
 
-  if (loading) return pageLayout(<div style={{ color: '#9ca3af' }}>Loading artifacts…</div>);
+  if (loading) return shell(<div style={{ color: '#9ca3af' }}>Loading artifacts…</div>);
 
-  return pageLayout(
-    <div style={{ display: 'grid', gridTemplateColumns: (!isMobile && selected) ? '1fr 380px' : '1fr', gap: 24 }}>
-      {/* Left: grid */}
-      <div>
-        <h2 style={{ margin: '0 0 6px', fontSize: isMobile ? 18 : 22, fontWeight: 700, color: '#2e1065' }}>🏺 Sacred Artifacts</h2>
-        <p style={{ color: '#6b7280', fontSize: 13, margin: '0 0 20px' }}>
-          Authentic feng shui instruments and Bazi remedies to harmonise your elemental energies.
-          Purchase links will be added soon — click any artifact to explore.
-        </p>
+  return shell(
+    <div style={{ width: '100%', boxSizing: 'border-box' }}>
 
-        {chart?.favorable_elements && (
-          <div style={{
-            backgroundColor: 'rgba(34,197,94,0.08)', borderRadius: 10, padding: '10px 16px',
-            border: '1px solid rgba(34,197,94,0.25)', marginBottom: 20, fontSize: 12,
-          }}>
-            <span style={{ color: '#16a34a', fontWeight: 600 }}>✦ Your favourable elements: </span>
-            <span style={{ color: '#9ca3af' }}>{chart.favorable_elements.join(' & ')}</span>
-            <span style={{ color: '#6b7280' }}> — items marked ✦ are personally recommended for your chart.</span>
-          </div>
-        )}
-
-        {/* Filter row */}
-        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 20 }}>
-          {categories.map((cat) => (
-            <button
-              key={cat}
-              onClick={() => setFilter(cat)}
-              style={{
-                padding: '6px 14px', borderRadius: 20, cursor: 'pointer', fontSize: 11, fontWeight: 600,
-                border: `1px solid ${filter === cat ? '#7c3aed' : '#e8e3f8'}`,
-                backgroundColor: filter === cat ? '#ede9fe' : '#ffffff',
-                color: filter === cat ? '#2e1065' : '#6b7280',
-              }}
-            >{cat}</button>
-          ))}
-        </div>
-
-        {/* Artifact cards grid */}
-        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(auto-fill, minmax(260px, 1fr))', gap: isMobile ? 10 : 14 }}>
-          {filtered.map((a) => {
-            const elemColor = ELEM_COLOR[a.element] || '#7c3aed';
-            const catColor  = CATEGORY_COLORS[a.category] || '#7c3aed';
-            const recommended = isRecommended(a);
-            const isActive = selected?.id === a.id;
-
-            return (
-              <div
-                key={a.id}
-                onClick={() => setSelected(isActive ? null : a)}
-                style={{
-                  backgroundColor: '#ffffff', borderRadius: 12,
-                  border: `1px solid ${isActive ? '#7c3aed' : recommended ? 'rgba(34,197,94,0.3)' : '#f3f4f6'}`,
-                  cursor: 'pointer', transition: 'all 0.2s', overflow: 'hidden',
-                  boxShadow: isActive ? '0 0 16px #c4b5fd' : 'none',
-                }}
-              >
-                {/* Artifact image area */}
-                <div style={{
-                  height: isMobile ? 100 : 140, backgroundColor: elemColor + '12',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  position: 'relative',
-                  borderBottom: `1px solid ${elemColor}22`,
-                }}>
-                  <span style={{ fontSize: isMobile ? 44 : 60 }}>{a.emoji}</span>
-                  {recommended && !isMobile && (
-                    <div style={{
-                      position: 'absolute', top: 8, right: 8, fontSize: 10, fontWeight: 700,
-                      backgroundColor: 'rgba(34,197,94,0.2)', color: '#16a34a',
-                      padding: '2px 8px', borderRadius: 20,
-                      border: '1px solid rgba(34,197,94,0.4)',
-                    }}>✦ Recommended</div>
-                  )}
-                  {!a.in_stock && (
-                    <div style={{
-                      position: 'absolute', bottom: 8, left: 8, fontSize: 10, fontWeight: 700,
-                      backgroundColor: 'rgba(239,68,68,0.2)', color: '#ef4444',
-                      padding: '2px 8px', borderRadius: 20,
-                    }}>Out of Stock</div>
-                  )}
-                </div>
-
-                <div style={{ padding: isMobile ? '8px 10px' : '14px 16px' }}>
-                  <div style={{ fontSize: isMobile ? 11 : 13, fontWeight: 700, color: '#1f2937', marginBottom: 2, lineHeight: 1.3 }}>{a.name}</div>
-                  {!isMobile && <div style={{ fontSize: 12, color: '#6b7280', marginBottom: 8 }}>{a.cn_name}</div>}
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: isMobile ? 4 : 0 }}>
-                    {!isMobile && <span style={{
-                      fontSize: 10, padding: '2px 8px', borderRadius: 12, fontWeight: 600,
-                      backgroundColor: catColor + '20', color: catColor,
-                    }}>{a.category}</span>}
-                    <span style={{ fontSize: isMobile ? 12 : 15, fontWeight: 800, color: '#7c3aed' }}>£{a.price_gbp.toFixed(2)}</span>
-                  </div>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* Right: detail panel */}
-      {selected && (
-        <div style={{
-          backgroundColor: '#ffffff', borderRadius: 12,
-          border: '1px solid #c4b5fd',
-          padding: 0, alignSelf: 'start', position: isMobile ? 'static' : 'sticky', top: 0,
-          overflow: 'hidden',
-        }}>
-          {/* Hero area */}
-          <div style={{
-            height: 180, backgroundColor: (ELEM_COLOR[selected.element] || '#7c3aed') + '15',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            position: 'relative',
-          }}>
-            <span style={{ fontSize: 80 }}>{selected.emoji}</span>
-            <button
-              onClick={() => setSelected(null)}
-              style={{
-                position: 'absolute', top: 12, right: 12,
-                background: 'rgba(0,0,0,0.4)', border: 'none', color: '#9ca3af',
-                borderRadius: '50%', width: 28, height: 28, cursor: 'pointer', fontSize: 16, lineHeight: '28px',
-              }}
-            >×</button>
-          </div>
-
-          <div style={{ padding: '20px 22px' }}>
-            <div style={{ fontSize: 18, fontWeight: 800, color: '#2e1065', marginBottom: 2 }}>{selected.name}</div>
-            <div style={{ fontSize: 13, color: '#6b7280', marginBottom: 4 }}>{selected.cn_name}</div>
-            <div style={{ fontSize: 20, fontWeight: 900, color: '#7c3aed', marginBottom: 14 }}>
-              £{selected.price_gbp.toFixed(2)} <span style={{ fontSize: 12, color: '#6b7280', fontWeight: 400 }}>per item</span>
+      {/* Mobile detail modal */}
+      {isMobile && selected && (
+        <div style={{ position: 'fixed', inset: 0, zIndex: 50, backgroundColor: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'flex-end' }}
+          onClick={() => setSelected(null)}>
+          <div style={{ backgroundColor: '#fff', borderRadius: '16px 16px 0 0', width: '100%', maxHeight: '85vh', overflowY: 'auto', padding: '20px 18px' }}
+            onClick={(e) => e.stopPropagation()}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
+              <span style={{ fontSize: 40 }}>{selected.emoji}</span>
+              <button onClick={() => setSelected(null)} style={{ background: 'none', border: 'none', fontSize: 24, color: '#9ca3af', cursor: 'pointer' }}>×</button>
             </div>
-
-            <div style={{ fontSize: 13, color: '#374151', lineHeight: 1.7, marginBottom: 18 }}>{selected.description}</div>
-
-            <div style={{ fontSize: 12, fontWeight: 700, color: '#7c3aed', marginBottom: 8 }}>✦ Benefits</div>
+            <div style={{ fontSize: 17, fontWeight: 800, color: '#2e1065', marginBottom: 2 }}>{selected.name}</div>
+            <div style={{ fontSize: 13, color: '#6b7280', marginBottom: 8 }}>{selected.cn_name}</div>
+            <div style={{ fontSize: 20, fontWeight: 900, color: '#7c3aed', marginBottom: 12 }}>£{selected.price_gbp.toFixed(2)}</div>
+            <div style={{ fontSize: 13, color: '#374151', lineHeight: 1.7, marginBottom: 14 }}>{selected.description}</div>
+            <div style={{ fontSize: 12, fontWeight: 700, color: '#7c3aed', marginBottom: 6 }}>✦ Benefits</div>
             {selected.benefits.map((b) => (
-              <div key={b} style={{ fontSize: 12, color: '#9ca3af', padding: '3px 0', display: 'flex', gap: 8 }}>
-                <span style={{ color: '#16a34a' }}>·</span> {b}
+              <div key={b} style={{ fontSize: 12, color: '#6b7280', padding: '2px 0', display: 'flex', gap: 8 }}>
+                <span style={{ color: '#16a34a' }}>·</span>{b}
               </div>
             ))}
-
-            <div style={{ height: 1, backgroundColor: '#f3f4f6', margin: '16px 0' }} />
-
-            <div style={{ fontSize: 12, fontWeight: 700, color: '#7c3aed', marginBottom: 8 }}>🧭 How to Use</div>
-            <div style={{ fontSize: 12, color: '#9ca3af', lineHeight: 1.7 }}>{selected.how_to_use}</div>
-
-            <div style={{ height: 1, backgroundColor: '#f3f4f6', margin: '16px 0' }} />
-
-            <button
-              style={{
-                width: '100%', padding: '12px 0',
-                backgroundColor: selected.in_stock ? '#7c3aed' : '#374151',
-                color: selected.in_stock ? '#fff' : '#6b7280',
-                border: 'none', borderRadius: 10, cursor: selected.in_stock ? 'pointer' : 'not-allowed',
-                fontSize: 14, fontWeight: 700, marginBottom: 8,
-              }}
-            >
+            <div style={{ height: 1, backgroundColor: '#f3f4f6', margin: '14px 0' }} />
+            <div style={{ fontSize: 12, fontWeight: 700, color: '#7c3aed', marginBottom: 6 }}>🧭 How to Use</div>
+            <div style={{ fontSize: 12, color: '#6b7280', lineHeight: 1.7, marginBottom: 16 }}>{selected.how_to_use}</div>
+            <button style={{ width: '100%', padding: '13px 0', backgroundColor: selected.in_stock ? '#7c3aed' : '#d1d5db', color: '#fff', border: 'none', borderRadius: 10, fontSize: 15, fontWeight: 700 }}>
               {selected.in_stock ? '🛒 Purchase Link Coming Soon' : 'Out of Stock'}
             </button>
-            <div style={{ fontSize: 11, color: '#9ca3af', textAlign: 'center' }}>
-              Secure checkout · Worldwide shipping · Authentic items
-            </div>
           </div>
         </div>
       )}
+
+      {/* Main layout: side panel on desktop, single col on mobile */}
+      <div style={{ display: 'grid', gridTemplateColumns: (!isMobile && selected) ? '1fr 360px' : '1fr', gap: 24, minWidth: 0 }}>
+
+        {/* Left: list */}
+        <div style={{ minWidth: 0 }}>
+          <h2 style={{ margin: '0 0 4px', fontSize: isMobile ? 18 : 22, fontWeight: 700, color: '#2e1065' }}>🏺 Sacred Artifacts</h2>
+          <p style={{ color: '#6b7280', fontSize: 13, margin: '0 0 16px', lineHeight: 1.5 }}>
+            Authentic feng shui instruments and Bazi remedies to harmonise your elemental energies.
+          </p>
+
+          {chart?.favorable_elements && (
+            <div style={{ backgroundColor: 'rgba(34,197,94,0.08)', borderRadius: 10, padding: '10px 14px', border: '1px solid rgba(34,197,94,0.25)', marginBottom: 16, fontSize: 12 }}>
+              <span style={{ color: '#16a34a', fontWeight: 600 }}>✦ Favourable elements: </span>
+              <span style={{ color: '#6b7280' }}>{chart.favorable_elements.join(' & ')}</span>
+            </div>
+          )}
+
+          {/* Filter chips */}
+          <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: 16 }}>
+            {categories.map((cat) => (
+              <button key={cat} onClick={() => setFilter(cat)} style={{
+                padding: '5px 12px', borderRadius: 20, cursor: 'pointer', fontSize: 11, fontWeight: 600,
+                border: `1px solid ${filter === cat ? '#7c3aed' : '#e8e3f8'}`,
+                backgroundColor: filter === cat ? '#ede9fe' : '#fff',
+                color: filter === cat ? '#2e1065' : '#6b7280',
+              }}>{cat}</button>
+            ))}
+          </div>
+
+          {/* Cards grid */}
+          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(auto-fill, minmax(240px, 1fr))', gap: isMobile ? 8 : 14 }}>
+            {filtered.map((a) => {
+              const elemColor   = ELEM_COLOR[a.element] || '#7c3aed';
+              const recommended = isRecommended(a);
+              const isActive    = selected?.id === a.id;
+
+              return (
+                <div key={a.id} onClick={() => setSelected(isActive ? null : a)} style={{
+                  backgroundColor: '#fff', borderRadius: 10, overflow: 'hidden', cursor: 'pointer',
+                  border: `1px solid ${isActive ? '#7c3aed' : recommended ? 'rgba(34,197,94,0.3)' : '#f0edf8'}`,
+                  boxShadow: isActive ? '0 0 0 2px #c4b5fd' : 'none',
+                  minWidth: 0,
+                }}>
+                  <div style={{ height: isMobile ? 90 : 130, backgroundColor: elemColor + '12', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <span style={{ fontSize: isMobile ? 40 : 56 }}>{a.emoji}</span>
+                  </div>
+                  <div style={{ padding: isMobile ? '8px' : '12px 14px' }}>
+                    <div style={{ fontSize: isMobile ? 11 : 13, fontWeight: 700, color: '#1f2937', lineHeight: 1.3, marginBottom: 4, wordBreak: 'break-word' }}>{a.name}</div>
+                    <div style={{ fontSize: isMobile ? 12 : 14, fontWeight: 800, color: '#7c3aed' }}>£{a.price_gbp.toFixed(2)}</div>
+                    {!a.in_stock && <div style={{ fontSize: 10, color: '#ef4444', marginTop: 3, fontWeight: 600 }}>Out of stock</div>}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Desktop detail panel */}
+        {!isMobile && selected && (
+          <div style={{ backgroundColor: '#fff', borderRadius: 12, border: '1px solid #c4b5fd', alignSelf: 'start', position: 'sticky', top: 0, overflow: 'hidden' }}>
+            <div style={{ height: 180, backgroundColor: (ELEM_COLOR[selected.element] || '#7c3aed') + '15', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
+              <span style={{ fontSize: 80 }}>{selected.emoji}</span>
+              <button onClick={() => setSelected(null)} style={{ position: 'absolute', top: 12, right: 12, background: 'rgba(0,0,0,0.4)', border: 'none', color: '#fff', borderRadius: '50%', width: 28, height: 28, cursor: 'pointer', fontSize: 16 }}>×</button>
+            </div>
+            <div style={{ padding: '20px 22px' }}>
+              <div style={{ fontSize: 18, fontWeight: 800, color: '#2e1065', marginBottom: 2 }}>{selected.name}</div>
+              <div style={{ fontSize: 13, color: '#6b7280', marginBottom: 4 }}>{selected.cn_name}</div>
+              <div style={{ fontSize: 20, fontWeight: 900, color: '#7c3aed', marginBottom: 14 }}>£{selected.price_gbp.toFixed(2)} <span style={{ fontSize: 12, color: '#6b7280', fontWeight: 400 }}>per item</span></div>
+              <div style={{ fontSize: 13, color: '#374151', lineHeight: 1.7, marginBottom: 16 }}>{selected.description}</div>
+              <div style={{ fontSize: 12, fontWeight: 700, color: '#7c3aed', marginBottom: 8 }}>✦ Benefits</div>
+              {selected.benefits.map((b) => (
+                <div key={b} style={{ fontSize: 12, color: '#9ca3af', padding: '3px 0', display: 'flex', gap: 8 }}><span style={{ color: '#16a34a' }}>·</span>{b}</div>
+              ))}
+              <div style={{ height: 1, backgroundColor: '#f3f4f6', margin: '14px 0' }} />
+              <div style={{ fontSize: 12, fontWeight: 700, color: '#7c3aed', marginBottom: 8 }}>🧭 How to Use</div>
+              <div style={{ fontSize: 12, color: '#9ca3af', lineHeight: 1.7, marginBottom: 16 }}>{selected.how_to_use}</div>
+              <button style={{ width: '100%', padding: '12px 0', backgroundColor: selected.in_stock ? '#7c3aed' : '#374151', color: '#fff', border: 'none', borderRadius: 10, fontSize: 14, fontWeight: 700 }}>
+                {selected.in_stock ? '🛒 Purchase Link Coming Soon' : 'Out of Stock'}
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 };
