@@ -2,7 +2,7 @@ import React from 'react';
 import { useAppSelector } from '../store/store';
 import Sidebar from '../components/Common/Sidebar';
 import Header  from '../components/Common/Header';
-import { useIsMobile } from '../hooks/useIsMobile';
+
 
 const ELEM_COLOR: Record<string, string> = {
   Wood: '#16a34a', Fire: '#ef4444', Earth: '#f59e0b', Metal: '#6b7280', Water: '#2563eb',
@@ -90,8 +90,6 @@ const Remedies: React.FC = () => {
   const yearElem  = 'Fire'; // 2026 = Fire Horse
   const favElems  = chart?.favorable_elements ?? [];
   const primaryElem = favElems[0] ?? dayElem;
-
-  const isMobile = useIsMobile();
 
   const daily   = DAILY_REMEDIES[dayElem]   ?? DAILY_REMEDIES['Wood'];
   const monthly = MONTHLY_REMEDIES[monthElem] ?? MONTHLY_REMEDIES['Wood'];

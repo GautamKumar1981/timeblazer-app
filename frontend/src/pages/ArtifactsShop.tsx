@@ -9,11 +9,6 @@ const ELEM_COLOR: Record<string, string> = {
   Wood: '#16a34a', Fire: '#ef4444', Earth: '#f59e0b', Metal: '#6b7280', Water: '#2563eb', All: '#7c3aed',
 };
 
-const CATEGORY_COLORS: Record<string, string> = {
-  Protection: '#ef4444', Prosperity: '#16a34a', 'Clarity & Metal': '#6b7280',
-  Harmony: '#f59e0b', Balance: '#7c3aed', Luck: '#f59e0b',
-  Wealth: '#16a34a', Navigation: '#2563eb',
-};
 
 interface Artifact {
   id: number; name: string; cn_name: string; emoji: string;

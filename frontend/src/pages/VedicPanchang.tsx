@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { vedicAPI } from '../services/api';
 import Sidebar from '../components/Common/Sidebar';
 import Header from '../components/Common/Header';
-import { useIsMobile } from '../hooks/useIsMobile';
 
 const QUALITY_COLOR: Record<string, string> = {
   excellent: '#065f46', auspicious: '#16a34a', mixed: '#d97706', inauspicious: '#dc2626',
@@ -47,7 +46,6 @@ const PanchangLimb: React.FC<{ label: string; nameEn: string; nameNp: string; qu
 
 const VedicPanchang: React.FC = () => {
   const navigate = useNavigate();
-  const isMobile = useIsMobile();
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [apiError, setApiError] = useState(false);
