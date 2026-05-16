@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { vedicAPI } from '../services/api';
 import Sidebar from '../components/Common/Sidebar';
 import Header from '../components/Common/Header';
+import { useIsMobile } from '../hooks/useIsMobile';
 
 const QUALITY_COLOR: Record<string, string> = {
   excellent: '#065f46', auspicious: '#16a34a', mixed: '#d97706', inauspicious: '#dc2626',
@@ -46,6 +47,7 @@ const PanchangLimb: React.FC<{ label: string; nameEn: string; nameNp: string; qu
 
 const VedicPanchang: React.FC = () => {
   const navigate = useNavigate();
+  const isMobile = useIsMobile();
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [apiError, setApiError] = useState(false);
@@ -188,19 +190,19 @@ const VedicPanchang: React.FC = () => {
       <Sidebar />
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
         <Header />
-        <main style={{ flex: 1, padding: '28px 32px', overflowY: 'auto', maxWidth: 800, margin: '0 auto', width: '100%' }}>
+        <main style={{ flex: 1, padding: isMobile ? '16px' : '28px 32px', overflowY: 'auto', maxWidth: 800, margin: '0 auto', width: '100%', boxSizing: 'border-box' }}>
 
           {/* Header */}
           <div style={{ marginBottom: 20 }}>
-            <h2 style={{ margin: 0, fontSize: 24, fontWeight: 900, color: '#2e1065' }}>🙏 Vedic Panchang</h2>
+            <h2 style={{ margin: 0, fontSize: isMobile ? 20 : 24, fontWeight: 900, color: '#2e1065' }}>🙏 Vedic Panchang</h2>
             {pan && (
-              <div style={{ display: 'flex', gap: 16, alignItems: 'center', marginTop: 8 }}>
-                <div style={{ fontSize: 14, color: '#374151', fontWeight: 600 }}>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: isMobile ? 6 : 16, alignItems: 'center', marginTop: 8 }}>
+                <div style={{ fontSize: 13, color: '#374151', fontWeight: 600 }}>
                   {pan.bs_date_str} BS
                 </div>
                 <div style={{ fontSize: 13, color: '#9ca3af' }}>·</div>
-                <div style={{ fontSize: 13, color: '#9ca3af' }}>
-                  {new Date(pan.ad_date).toLocaleDateString('en-GB', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
+                <div style={{ fontSize: 12, color: '#9ca3af' }}>
+                  {new Date(pan.ad_date).toLocaleDateString('en-GB', { weekday: isMobile ? 'short' : 'long', year: 'numeric', month: isMobile ? 'short' : 'long', day: 'numeric' })}
                 </div>
                 <div style={{
                   padding: '3px 10px', borderRadius: 20, fontSize: 12, fontWeight: 700,
@@ -227,11 +229,11 @@ const VedicPanchang: React.FC = () => {
           <div style={{ display: 'flex', gap: 4, marginBottom: 24, backgroundColor: '#f5f3ff', borderRadius: 10, padding: 4, overflowX: 'auto' }}>
             {TABS.map(t => (
               <button key={t.key} onClick={() => { setActiveTab(t.key as any); setGuideOpen(true); }} style={{
-                flex: 1, padding: '8px 12px', border: 'none', cursor: 'pointer', borderRadius: 8, whiteSpace: 'nowrap',
+                flex: 1, padding: isMobile ? '7px 6px' : '8px 12px', border: 'none', cursor: 'pointer', borderRadius: 8, whiteSpace: 'nowrap',
                 backgroundColor: activeTab === t.key ? '#7c3aed' : 'transparent',
                 color: activeTab === t.key ? '#fff' : '#7c3aed',
-                fontWeight: activeTab === t.key ? 700 : 500, fontSize: 13,
-              }}>{t.label}</button>
+                fontWeight: activeTab === t.key ? 700 : 500, fontSize: isMobile ? 11 : 13,
+              }}>{isMobile ? t.label.split(' ')[0] : t.label}</button>
             ))}
           </div>
 
@@ -437,13 +439,13 @@ const VedicPanchang: React.FC = () => {
                 <>
                   <Card title="🌀 Current Planetary Period (Vimshottari Dasha)">
                     <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', marginBottom: 16 }}>
-                      <div style={{ flex: 1, minWidth: 160, backgroundColor: `${dashaData.dasha.current_mahadasha.color}11`, borderRadius: 10, padding: '14px 18px', border: `1px solid ${dashaData.dasha.current_mahadasha.color}33` }}>
+                      <div style={{ flex: 1, minWidth: isMobile ? 130 : 160, backgroundColor: `${dashaData.dasha.current_mahadasha.color}11`, borderRadius: 10, padding: '14px 18px', border: `1px solid ${dashaData.dasha.current_mahadasha.color}33` }}>
                         <div style={{ fontSize: 11, fontWeight: 700, color: dashaData.dasha.current_mahadasha.color, textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 4 }}>Mahadasha (Major Period)</div>
                         <div style={{ fontSize: 20, fontWeight: 800, color: '#2e1065' }}>{dashaData.dasha.current_mahadasha.planet}</div>
                         <div style={{ fontSize: 12, color: '#9ca3af' }}>{dashaData.dasha.current_mahadasha.planet_np}</div>
                         <div style={{ fontSize: 12, color: '#6b7280', marginTop: 4 }}>{dashaData.dasha.current_mahadasha.start.slice(0, 7)} → {dashaData.dasha.current_mahadasha.end.slice(0, 7)}</div>
                       </div>
-                      <div style={{ flex: 1, minWidth: 160, backgroundColor: `${dashaData.dasha.current_antardasha.color}11`, borderRadius: 10, padding: '14px 18px', border: `1px solid ${dashaData.dasha.current_antardasha.color}33` }}>
+                      <div style={{ flex: 1, minWidth: isMobile ? 130 : 160, backgroundColor: `${dashaData.dasha.current_antardasha.color}11`, borderRadius: 10, padding: '14px 18px', border: `1px solid ${dashaData.dasha.current_antardasha.color}33` }}>
                         <div style={{ fontSize: 11, fontWeight: 700, color: dashaData.dasha.current_antardasha.color, textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 4 }}>Antardasha (Sub-Period)</div>
                         <div style={{ fontSize: 20, fontWeight: 800, color: '#2e1065' }}>{dashaData.dasha.current_antardasha.planet}</div>
                         <div style={{ fontSize: 12, color: '#9ca3af' }}>{dashaData.dasha.current_antardasha.planet_np}</div>
