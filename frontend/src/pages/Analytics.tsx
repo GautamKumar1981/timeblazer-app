@@ -2,6 +2,7 @@ import React from 'react';
 import { useAppSelector } from '../store/store';
 import Sidebar from '../components/Common/Sidebar';
 import Header  from '../components/Common/Header';
+import { useIsMobile } from '../hooks/useIsMobile';
 
 const ELEM_COLOR: Record<string, string> = {
   Wood: '#16a34a', Fire: '#ef4444', Earth: '#f59e0b', Metal: '#6b7280', Water: '#2563eb',
@@ -65,10 +66,10 @@ const LUCKY_ITEMS: Record<string, {
   },
 };
 
-const card: React.CSSProperties = {
-  backgroundColor: '#fff', borderRadius: 14, padding: '18px 20px',
+const cardStyle = (mobile: boolean): React.CSSProperties => ({
+  backgroundColor: '#fff', borderRadius: 14, padding: mobile ? '14px' : '18px 20px',
   border: '1px solid #e8e3f8', boxShadow: '0 2px 8px rgba(124,58,237,0.06)',
-};
+});
 
 const ComingSoon: React.FC<{ name: string; benefit: string }> = ({ name, benefit }) => (
   <div style={{ backgroundColor: '#f5f3ff', borderRadius: 8, padding: '12px 14px', border: '1px solid #e8e3f8', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 10 }}>
@@ -90,6 +91,8 @@ const Remedies: React.FC = () => {
   const favElems  = chart?.favorable_elements ?? [];
   const primaryElem = favElems[0] ?? dayElem;
 
+  const isMobile = useIsMobile();
+
   const daily   = DAILY_REMEDIES[dayElem]   ?? DAILY_REMEDIES['Wood'];
   const monthly = MONTHLY_REMEDIES[monthElem] ?? MONTHLY_REMEDIES['Wood'];
   const yearly  = YEARLY_REMEDIES[yearElem]  ?? YEARLY_REMEDIES['Fire'];
@@ -97,12 +100,12 @@ const Remedies: React.FC = () => {
   const elemColor = ELEM_COLOR[primaryElem] ?? '#8b5cf6';
 
   return (
-    <div style={{ display: 'flex', minHeight: '100vh', backgroundColor: '#f8f6ff' }}>
+    <div style={{ display: 'flex', minHeight: '100vh', backgroundColor: '#f8f6ff', width: '100%', overflow: 'hidden' }}>
       <Sidebar />
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+      <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column' }}>
         <Header />
-        <main style={{ flex: 1, padding: '28px 32px', overflowY: 'auto' }}>
-          <h2 style={{ margin: '0 0 4px', fontSize: 22, fontWeight: 800, color: '#2e1065' }}>💎 Remedies & Lucky Charms</h2>
+        <main style={{ flex: 1, minWidth: 0, padding: isMobile ? '16px' : '28px 32px', overflowY: 'auto', boxSizing: 'border-box' }}>
+          <h2 style={{ margin: '0 0 4px', fontSize: isMobile ? 18 : 22, fontWeight: 800, color: '#2e1065' }}>💎 Remedies & Lucky Charms</h2>
           <p style={{ color: '#9ca3af', fontSize: 13, margin: '0 0 24px' }}>
             Personalised remedies based on your Bazi chart — aligned to today's energy, the current month, and the year.
           </p>
@@ -116,9 +119,9 @@ const Remedies: React.FC = () => {
             </div>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20, marginBottom: 24 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 20, marginBottom: 24 }}>
             {/* Daily Remedies */}
-            <div style={card}>
+            <div style={cardStyle(isMobile)}>
               <div style={{ fontSize: 14, fontWeight: 700, color: '#4c1d95', marginBottom: 14 }}>🌅 Today's Remedies ({dayElem} Day)</div>
               {[
                 { time: 'Morning', text: daily.morning, color: '#d97706' },
@@ -137,7 +140,7 @@ const Remedies: React.FC = () => {
             </div>
 
             {/* Monthly Remedies */}
-            <div style={card}>
+            <div style={cardStyle(isMobile)}>
               <div style={{ fontSize: 14, fontWeight: 700, color: '#4c1d95', marginBottom: 14 }}>🌙 Monthly Activations ({monthElem} Month)</div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                 {monthly.map((tip, i) => (
@@ -151,11 +154,11 @@ const Remedies: React.FC = () => {
           </div>
 
           {/* Yearly Remedies */}
-          <div style={{ ...card, marginBottom: 24 }}>
+          <div style={{ ...cardStyle(isMobile), marginBottom: 24 }}>
             <div style={{ fontSize: 14, fontWeight: 700, color: '#dc2626', marginBottom: 6 }}>🔥 2026 Annual Remedies — {yearly.theme}</div>
-            <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', marginBottom: 14 }}>
+            <div style={{ display: 'flex', gap: 10, flexDirection: isMobile ? 'column' : 'row', flexWrap: isMobile ? 'nowrap' : 'wrap', marginBottom: 14 }}>
               {yearly.tips.map((tip, i) => (
-                <div key={i} style={{ flex: 1, minWidth: 200, backgroundColor: '#fef2f2', borderRadius: 8, padding: '10px 14px', border: '1px solid #fecaca', fontSize: 13, color: '#374151', lineHeight: 1.6 }}>{tip}</div>
+                <div key={i} style={{ flex: isMobile ? 'unset' : 1, minWidth: isMobile ? 'unset' : 200, backgroundColor: '#fef2f2', borderRadius: 8, padding: '10px 14px', border: '1px solid #fecaca', fontSize: 13, color: '#374151', lineHeight: 1.6 }}>{tip}</div>
               ))}
             </div>
             <div style={{ backgroundColor: '#ede9fe', borderRadius: 8, padding: '10px 14px', border: '1px solid #c4b5fd', fontSize: 13, color: '#6d28d9', fontStyle: 'italic', textAlign: 'center' }}>
@@ -165,23 +168,23 @@ const Remedies: React.FC = () => {
 
           {/* Lucky Items */}
           <h3 style={{ margin: '0 0 16px', fontSize: 16, fontWeight: 700, color: '#2e1065' }}>🛍️ Your Lucky Charms & Amulets ({primaryElem} Element)</h3>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 16, marginBottom: 24 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr 1fr', gap: 16, marginBottom: 24 }}>
             {/* Gemstones */}
-            <div style={card}>
+            <div style={cardStyle(isMobile)}>
               <div style={{ fontSize: 13, fontWeight: 700, color: '#4c1d95', marginBottom: 12 }}>💎 Lucky Gemstones</div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                 {items.gemstones.map(g => <ComingSoon key={g.name} name={g.name} benefit={g.benefit} />)}
               </div>
             </div>
             {/* Bracelets */}
-            <div style={card}>
+            <div style={cardStyle(isMobile)}>
               <div style={{ fontSize: 13, fontWeight: 700, color: '#4c1d95', marginBottom: 12 }}>📿 Lucky Bracelets</div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                 {items.bracelets.map(b => <ComingSoon key={b.name} name={b.name} benefit={b.benefit} />)}
               </div>
             </div>
             {/* Amulets */}
-            <div style={card}>
+            <div style={cardStyle(isMobile)}>
               <div style={{ fontSize: 13, fontWeight: 700, color: '#4c1d95', marginBottom: 12 }}>🏮 Lucky Amulets</div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                 {items.amulets.map(a => <ComingSoon key={a.name} name={a.name} benefit={a.benefit} />)}
