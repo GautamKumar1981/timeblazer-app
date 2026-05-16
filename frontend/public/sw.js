@@ -1,4 +1,4 @@
-const CACHE = 'dragonhour-v1';
+const CACHE = 'dragonhour-v3';
 
 self.addEventListener('install', () => self.skipWaiting());
 

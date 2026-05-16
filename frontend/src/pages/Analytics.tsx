@@ -104,8 +104,8 @@ const Remedies: React.FC = () => {
       <Sidebar />
       <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column' }}>
         <Header />
-        <main style={{ flex: 1, minWidth: 0, padding: isMobile ? '16px' : '28px 32px', overflowY: 'auto', boxSizing: 'border-box' }}>
-          <h2 style={{ margin: '0 0 4px', fontSize: isMobile ? 18 : 22, fontWeight: 800, color: '#2e1065' }}>💎 Remedies & Lucky Charms</h2>
+        <main style={{ flex: 1, minWidth: 0, padding: '16px', overflowY: 'auto', boxSizing: 'border-box' }}>
+          <h2 style={{ margin: '0 0 4px', fontSize: 18, fontWeight: 800, color: '#2e1065' }}>💎 Remedies & Lucky Charms</h2>
           <p style={{ color: '#9ca3af', fontSize: 13, margin: '0 0 24px' }}>
             Personalised remedies based on your Bazi chart — aligned to today's energy, the current month, and the year.
           </p>
