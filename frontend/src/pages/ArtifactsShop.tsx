@@ -3,6 +3,7 @@ import { artifactsAPI } from '../services/api';
 import Sidebar from '../components/Common/Sidebar';
 import Header  from '../components/Common/Header';
 import { useAppSelector } from '../store/store';
+import { useIsMobile } from '../hooks/useIsMobile';
 
 const ELEM_COLOR: Record<string, string> = {
   Wood: '#16a34a', Fire: '#ef4444', Earth: '#f59e0b', Metal: '#6b7280', Water: '#2563eb', All: '#7c3aed',
@@ -28,6 +29,7 @@ const ArtifactsShop: React.FC = () => {
   const [selected, setSelected]   = useState<Artifact | null>(null);
   const [filter, setFilter]       = useState<string>('All');
   const chart = useAppSelector((s) => s.bazi.chart);
+  const isMobile = useIsMobile();
 
   useEffect(() => {
     artifactsAPI.getAll().then((r) => {
@@ -50,7 +52,7 @@ const ArtifactsShop: React.FC = () => {
       <Sidebar />
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
         <Header />
-        <main style={{ flex: 1, padding: 32, overflowY: 'auto' }}>{content}</main>
+        <main style={{ flex: 1, padding: isMobile ? 16 : 32, overflowY: 'auto' }}>{content}</main>
       </div>
     </div>
   );
@@ -58,10 +60,10 @@ const ArtifactsShop: React.FC = () => {
   if (loading) return pageLayout(<div style={{ color: '#9ca3af' }}>Loading artifacts…</div>);
 
   return pageLayout(
-    <div style={{ display: 'grid', gridTemplateColumns: selected ? '1fr 380px' : '1fr', gap: 24 }}>
+    <div style={{ display: 'grid', gridTemplateColumns: (!isMobile && selected) ? '1fr 380px' : '1fr', gap: 24 }}>
       {/* Left: grid */}
       <div>
-        <h2 style={{ margin: '0 0 6px', fontSize: 22, fontWeight: 700, color: '#2e1065' }}>🏺 Sacred Artifacts</h2>
+        <h2 style={{ margin: '0 0 6px', fontSize: isMobile ? 18 : 22, fontWeight: 700, color: '#2e1065' }}>🏺 Sacred Artifacts</h2>
         <p style={{ color: '#6b7280', fontSize: 13, margin: '0 0 20px' }}>
           Authentic feng shui instruments and Bazi remedies to harmonise your elemental energies.
           Purchase links will be added soon — click any artifact to explore.
@@ -95,7 +97,7 @@ const ArtifactsShop: React.FC = () => {
         </div>
 
         {/* Artifact cards grid */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: 14 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(auto-fill, minmax(260px, 1fr))', gap: isMobile ? 10 : 14 }}>
           {filtered.map((a) => {
             const elemColor = ELEM_COLOR[a.element] || '#7c3aed';
             const catColor  = CATEGORY_COLORS[a.category] || '#7c3aed';
@@ -115,12 +117,12 @@ const ArtifactsShop: React.FC = () => {
               >
                 {/* Artifact image area */}
                 <div style={{
-                  height: 140, backgroundColor: elemColor + '12',
+                  height: isMobile ? 100 : 140, backgroundColor: elemColor + '12',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
                   position: 'relative',
                   borderBottom: `1px solid ${elemColor}22`,
                 }}>
-                  <span style={{ fontSize: 60 }}>{a.emoji}</span>
+                  <span style={{ fontSize: isMobile ? 44 : 60 }}>{a.emoji}</span>
                   {recommended && (
                     <div style={{
                       position: 'absolute', top: 8, right: 8, fontSize: 10, fontWeight: 700,
@@ -160,7 +162,7 @@ const ArtifactsShop: React.FC = () => {
         <div style={{
           backgroundColor: '#ffffff', borderRadius: 12,
           border: '1px solid #c4b5fd',
-          padding: 0, alignSelf: 'start', position: 'sticky', top: 0,
+          padding: 0, alignSelf: 'start', position: isMobile ? 'static' : 'sticky', top: 0,
           overflow: 'hidden',
         }}>
           {/* Hero area */}
