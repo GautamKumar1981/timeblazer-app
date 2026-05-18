@@ -29,6 +29,7 @@ import VedicPanchang  from './pages/VedicPanchang';
 import AdminPanel     from './pages/AdminPanel';
 import ResetPassword  from './pages/ResetPassword';
 import DownloadPage   from './pages/DownloadPage';
+import Privacy        from './pages/Privacy';
 
 const App: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -49,6 +50,7 @@ const App: React.FC = () => {
         <Route path="/"               element={auth ? <Navigate to="/dashboard" replace /> : <Login />} />
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/download"       element={<DownloadPage />} />
+        <Route path="/privacy"        element={<Privacy />} />
         <Route path="/upgrade"      element={auth ? <UpgradePage />      : <Navigate to="/" replace />} />
         <Route path="/subscription" element={auth ? <SubscriptionPage /> : <Navigate to="/" replace />} />
         <Route path="/settings"     element={auth ? <Settings />         : <Navigate to="/" replace />} />
