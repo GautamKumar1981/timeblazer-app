@@ -1,2 +1,0 @@
-[deploy]
-startCommand = "python cron_hora.py"
