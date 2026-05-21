@@ -45,12 +45,12 @@ def hora_notification():
     body  = meaning if meaning else f'{planet} rules this hour'
 
     # Append Choghadiya if available
-    if chog:
-        cname  = chog.get('name', '')
-        cicon  = CHOGHADIYA_ICON.get(cname, '')
-        cmean  = chog.get('meaning', '')
-        if cname:
-            body += f'  ·  {cicon} {cname}: {cmean}' if cmean else f'  ·  {cicon} {cname}'
+    current = chog.get('current', {}) if chog else {}
+    cname   = current.get('name_en', '')
+    cicon   = CHOGHADIYA_ICON.get(cname, '')
+    cmean   = current.get('meaning', '')
+    if cname:
+        body += f'  ·  {cicon} {cname}: {cmean}' if cmean else f'  ·  {cicon} {cname}'
 
     sent, failed = send_push_to_all(title, body, url='/vedic-panchang')
-    return jsonify({'sent': sent, 'failed': failed, 'hora': planet, 'choghadiya': chog.get('name') if chog else None})
+    return jsonify({'sent': sent, 'failed': failed, 'hora': planet, 'choghadiya': cname or None})
