@@ -21,7 +21,7 @@ const Privacy: React.FC = () => {
           </button>
           <div style={{ fontSize: 48, marginBottom: 12 }}>🐉</div>
           <h1 style={{ color: '#fff', fontSize: 26, fontWeight: 900, margin: '0 0 6px' }}>Privacy Policy</h1>
-          <p style={{ color: '#6b7280', fontSize: 13, margin: 0 }}>DragonHour · Last updated: May 2026</p>
+          <p style={{ color: '#6b7280', fontSize: 13, margin: 0 }}>DragonHour · Last updated: July 2026</p>
         </div>
 
         <Section title="1. Who We Are">
@@ -37,7 +37,8 @@ const Privacy: React.FC = () => {
           <strong style={{ color: '#e5e7eb' }}>Birth profile:</strong> Date of birth, time of birth, and birth location (city, country, latitude/longitude).
           This is used solely to calculate your Bazi chart, Four Pillars, Vedic Moon sign, and Dasha periods.
           <br /><br />
-          <strong style={{ color: '#e5e7eb' }}>Usage data:</strong> Pages visited and features used, collected anonymously to improve the app.
+          <strong style={{ color: '#e5e7eb' }}>Usage data:</strong> Pages visited and features used, associated with your account so we can
+          understand feature usage and improve the app. This data is not shared with third parties.
           <br /><br />
           <strong style={{ color: '#e5e7eb' }}>Push notification tokens:</strong> If you opt in to push notifications, we store your browser push subscription
           endpoint to send you hourly auspicious timing alerts. You can revoke this at any time in Settings.
